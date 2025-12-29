@@ -1,0 +1,1107 @@
+// ============================================
+// FOOD DATABASE - Comprehensive Nepal foods
+// ============================================
+
+import { FoodId, FoodItem } from '../types';
+
+// ============================================
+// Complete Food Database
+// ============================================
+export const FOOD_DATABASE: Record<FoodId, FoodItem> = {
+    // ========================================
+    // BREAKFAST FOODS
+    // ========================================
+    EGGS_BOILED: {
+        id: 'EGGS_BOILED',
+        emoji: '🥚',
+        label: 'Boiled Eggs',
+        qty: 2,
+        unit: 'eggs',
+        tags: ['protein', 'breakfast', 'quick'],
+        macros: { protein: 12, carbs: 1, fat: 10, calories: 140 },
+    },
+    EGGS_OMELETTE: {
+        id: 'EGGS_OMELETTE',
+        emoji: '🍳',
+        label: 'Egg Omelette',
+        qty: 2,
+        unit: 'eggs',
+        tags: ['protein', 'breakfast'],
+        macros: { protein: 12, carbs: 2, fat: 14, calories: 180 },
+    },
+    EGGS_FRIED: {
+        id: 'EGGS_FRIED',
+        emoji: '🍳',
+        label: 'Fried Eggs',
+        qty: 2,
+        unit: 'eggs',
+        tags: ['protein', 'breakfast'],
+        macros: { protein: 12, carbs: 1, fat: 14, calories: 180 },
+    },
+    EGGS_BHURJI: {
+        id: 'EGGS_BHURJI',
+        emoji: '🍳',
+        label: 'Egg Bhurji',
+        qty: 2,
+        unit: 'eggs',
+        tags: ['protein', 'breakfast'],
+        macros: { protein: 12, carbs: 3, fat: 14, calories: 185 },
+    },
+    CHIURA: {
+        id: 'CHIURA',
+        emoji: '🍚',
+        label: 'Chiura',
+        qty: 1,
+        unit: 'cup',
+        tags: ['carb', 'breakfast', 'quick'],
+        macros: { protein: 4, carbs: 45, fat: 1, calories: 200 },
+    },
+    CHIURA_DAHI: {
+        id: 'CHIURA_DAHI',
+        emoji: '🥣',
+        label: 'Chiura + Dahi',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'breakfast', 'quick'],
+        macros: { protein: 12, carbs: 50, fat: 6, calories: 300 },
+    },
+    CHIURA_TARKARI: {
+        id: 'CHIURA_TARKARI',
+        emoji: '🥣',
+        label: 'Chiura + Tarkari',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['breakfast'],
+        macros: { protein: 6, carbs: 50, fat: 5, calories: 270 },
+    },
+    PARATHA: {
+        id: 'PARATHA',
+        emoji: '🫓',
+        label: 'Plain Paratha',
+        qty: 2,
+        unit: 'pieces',
+        tags: ['carb', 'breakfast'],
+        macros: { protein: 6, carbs: 40, fat: 12, calories: 290 },
+    },
+    PARATHA_ALOO: {
+        id: 'PARATHA_ALOO',
+        emoji: '🥔',
+        label: 'Aloo Paratha',
+        qty: 2,
+        unit: 'pieces',
+        tags: ['carb', 'breakfast'],
+        macros: { protein: 8, carbs: 50, fat: 14, calories: 350 },
+    },
+    POORI_TARKARI: {
+        id: 'POORI_TARKARI',
+        emoji: '🫓',
+        label: 'Poori + Tarkari',
+        qty: 4,
+        unit: 'pieces',
+        tags: ['carb', 'breakfast'],
+        macros: { protein: 8, carbs: 55, fat: 18, calories: 400 },
+    },
+
+    // Bread options
+    BREAD_BUTTER: {
+        id: 'BREAD_BUTTER',
+        emoji: '🍞',
+        label: 'Bread + Butter',
+        qty: 2,
+        unit: 'slices',
+        tags: ['carb', 'breakfast', 'quick'],
+        macros: { protein: 4, carbs: 30, fat: 8, calories: 210 },
+    },
+    BREAD_JAM: {
+        id: 'BREAD_JAM',
+        emoji: '🍞',
+        label: 'Bread + Jam',
+        qty: 2,
+        unit: 'slices',
+        tags: ['carb', 'breakfast', 'quick'],
+        macros: { protein: 4, carbs: 40, fat: 2, calories: 195 },
+    },
+    BREAD_PEANUT_BUTTER: {
+        id: 'BREAD_PEANUT_BUTTER',
+        emoji: '🥜',
+        label: 'Bread + Peanut Butter',
+        qty: 2,
+        unit: 'slices',
+        tags: ['protein', 'breakfast', 'quick'],
+        macros: { protein: 12, carbs: 35, fat: 16, calories: 330 },
+    },
+    BREAD_HONEY: {
+        id: 'BREAD_HONEY',
+        emoji: '🍯',
+        label: 'Bread + Honey',
+        qty: 2,
+        unit: 'slices',
+        tags: ['carb', 'breakfast', 'quick'],
+        macros: { protein: 4, carbs: 45, fat: 2, calories: 215 },
+    },
+    TOAST_EGG: {
+        id: 'TOAST_EGG',
+        emoji: '🍳',
+        label: 'Toast + Egg',
+        qty: 2,
+        unit: 'pieces',
+        tags: ['protein', 'breakfast'],
+        macros: { protein: 14, carbs: 25, fat: 12, calories: 265 },
+    },
+
+    // Drinks
+    MILK: {
+        id: 'MILK',
+        emoji: '🥛',
+        label: 'Milk',
+        qty: 1,
+        unit: 'glass',
+        tags: ['protein', 'breakfast', 'drink'],
+        macros: { protein: 8, carbs: 12, fat: 8, calories: 150 },
+    },
+    TEA_PLAIN: {
+        id: 'TEA_PLAIN',
+        emoji: '🍵',
+        label: 'Tea (No Sugar)',
+        qty: 1,
+        unit: 'cup',
+        tags: ['drink', 'breakfast'],
+        macros: { protein: 1, carbs: 2, fat: 1, calories: 20 },
+    },
+    COFFEE_BLACK: {
+        id: 'COFFEE_BLACK',
+        emoji: '☕',
+        label: 'Black Coffee',
+        qty: 1,
+        unit: 'cup',
+        tags: ['drink', 'breakfast', 'quick'],
+        macros: { protein: 0, carbs: 0, fat: 0, calories: 5 },
+    },
+    COFFEE_MILK: {
+        id: 'COFFEE_MILK',
+        emoji: '☕',
+        label: 'Coffee with Milk',
+        qty: 1,
+        unit: 'cup',
+        tags: ['drink', 'breakfast'],
+        macros: { protein: 3, carbs: 6, fat: 3, calories: 60 },
+    },
+
+    // Oats
+    OATS: {
+        id: 'OATS',
+        emoji: '🥣',
+        label: 'Oats',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['carb', 'breakfast', 'healthy'],
+        macros: { protein: 6, carbs: 30, fat: 3, calories: 170 },
+    },
+    OATS_BANANA: {
+        id: 'OATS_BANANA',
+        emoji: '🍌',
+        label: 'Oats + Banana',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['carb', 'breakfast', 'healthy'],
+        macros: { protein: 8, carbs: 55, fat: 4, calories: 280 },
+    },
+    OATS_HONEY: {
+        id: 'OATS_HONEY',
+        emoji: '🍯',
+        label: 'Oats + Honey',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['carb', 'breakfast', 'healthy'],
+        macros: { protein: 6, carbs: 45, fat: 3, calories: 230 },
+    },
+    CORNFLAKES: {
+        id: 'CORNFLAKES',
+        emoji: '🥣',
+        label: 'Cornflakes + Milk',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['carb', 'breakfast', 'quick'],
+        macros: { protein: 6, carbs: 40, fat: 4, calories: 220 },
+    },
+    MUESLI: {
+        id: 'MUESLI',
+        emoji: '🥣',
+        label: 'Muesli + Dahi',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'breakfast', 'healthy', 'quick'],
+        macros: { protein: 12, carbs: 45, fat: 8, calories: 300 },
+    },
+    MUESLI_MILK: {
+        id: 'MUESLI_MILK',
+        emoji: '🥣',
+        label: 'Muesli + Milk',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'breakfast', 'quick'],
+        macros: { protein: 10, carbs: 50, fat: 6, calories: 290 },
+    },
+
+    // ========================================
+    // DAL BHAT VARIANTS - The staple meals!
+    // ========================================
+    DAL_BHAT_TARKARI: {
+        id: 'DAL_BHAT_TARKARI',
+        emoji: '🍛',
+        label: 'Dal Bhat + Tarkari (Veg)',
+        qty: 1,
+        unit: 'plate',
+        tags: ['lunch', 'dinner', 'staple'],
+        macros: { protein: 14, carbs: 75, fat: 8, calories: 430 },
+    },
+    DAL_BHAT_CHICKEN: {
+        id: 'DAL_BHAT_CHICKEN',
+        emoji: '🍗',
+        label: 'Dal Bhat + Chicken',
+        qty: 1,
+        unit: 'plate',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 38, carbs: 75, fat: 15, calories: 590 },
+    },
+    DAL_BHAT_MUTTON: {
+        id: 'DAL_BHAT_MUTTON',
+        emoji: '🍖',
+        label: 'Dal Bhat + Mutton',
+        qty: 1,
+        unit: 'plate',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 35, carbs: 75, fat: 20, calories: 620 },
+    },
+    DAL_BHAT_FISH: {
+        id: 'DAL_BHAT_FISH',
+        emoji: '🐟',
+        label: 'Dal Bhat + Fish',
+        qty: 1,
+        unit: 'plate',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 32, carbs: 75, fat: 12, calories: 540 },
+    },
+    DAL_BHAT_EGG: {
+        id: 'DAL_BHAT_EGG',
+        emoji: '🥚',
+        label: 'Dal Bhat + Egg Curry',
+        qty: 1,
+        unit: 'plate',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 24, carbs: 75, fat: 14, calories: 520 },
+    },
+    DAL_BHAT_PANEER: {
+        id: 'DAL_BHAT_PANEER',
+        emoji: '🧀',
+        label: 'Dal Bhat + Paneer',
+        qty: 1,
+        unit: 'plate',
+        tags: ['protein', 'lunch', 'dinner', 'veg'],
+        macros: { protein: 28, carbs: 75, fat: 18, calories: 570 },
+    },
+    DAL_BHAT_SOYA: {
+        id: 'DAL_BHAT_SOYA',
+        emoji: '🫘',
+        label: 'Dal Bhat + Soya Curry',
+        qty: 1,
+        unit: 'plate',
+        tags: ['protein', 'lunch', 'dinner', 'veg'],
+        macros: { protein: 32, carbs: 80, fat: 10, calories: 540 },
+    },
+    BHAT_MASU: {
+        id: 'BHAT_MASU',
+        emoji: '🍖',
+        label: 'Bhat Masu (Rice+Meat)',
+        qty: 1,
+        unit: 'plate',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 35, carbs: 60, fat: 15, calories: 520 },
+    },
+    BHAT_TARKARI: {
+        id: 'BHAT_TARKARI',
+        emoji: '🥬',
+        label: 'Bhat + Tarkari Only',
+        qty: 1,
+        unit: 'plate',
+        tags: ['lunch', 'dinner', 'veg'],
+        macros: { protein: 8, carbs: 65, fat: 6, calories: 350 },
+    },
+
+    // Individual components
+    DAL: {
+        id: 'DAL',
+        emoji: '🥘',
+        label: 'Dal (Lentils)',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 9, carbs: 20, fat: 1, calories: 120 },
+    },
+    RICE: {
+        id: 'RICE',
+        emoji: '🍚',
+        label: 'Rice',
+        qty: 1,
+        unit: 'plate',
+        tags: ['carb', 'staple'],
+        macros: { protein: 4, carbs: 45, fat: 0, calories: 200 },
+    },
+    TARKARI: {
+        id: 'TARKARI',
+        emoji: '🥬',
+        label: 'Mixed Tarkari',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'lunch', 'dinner'],
+        macros: { protein: 3, carbs: 12, fat: 4, calories: 90 },
+    },
+    ACHAR: {
+        id: 'ACHAR',
+        emoji: '🌶️',
+        label: 'Achar (Pickle)',
+        qty: 1,
+        unit: 'tbsp',
+        tags: ['side'],
+        macros: { protein: 1, carbs: 5, fat: 2, calories: 40 },
+    },
+    ROTI: {
+        id: 'ROTI',
+        emoji: '🫓',
+        label: 'Roti',
+        qty: 3,
+        unit: 'pieces',
+        tags: ['carb', 'dinner'],
+        macros: { protein: 9, carbs: 45, fat: 3, calories: 240 },
+    },
+    ROTI_DAL: {
+        id: 'ROTI_DAL',
+        emoji: '🫓',
+        label: 'Roti + Dal',
+        qty: 1,
+        unit: 'meal',
+        tags: ['protein', 'dinner'],
+        macros: { protein: 18, carbs: 65, fat: 5, calories: 380 },
+    },
+    ROTI_SABJI: {
+        id: 'ROTI_SABJI',
+        emoji: '🫓',
+        label: 'Roti + Sabji',
+        qty: 1,
+        unit: 'meal',
+        tags: ['dinner', 'veg'],
+        macros: { protein: 12, carbs: 55, fat: 8, calories: 340 },
+    },
+
+    // ========================================
+    // PROTEINS - CHICKEN
+    // ========================================
+    CHICKEN_CURRY: {
+        id: 'CHICKEN_CURRY',
+        emoji: '🍗',
+        label: 'Chicken Curry',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 30, carbs: 5, fat: 12, calories: 250 },
+    },
+    CHICKEN_FRY: {
+        id: 'CHICKEN_FRY',
+        emoji: '🍗',
+        label: 'Fried Chicken',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 28, carbs: 8, fat: 18, calories: 300 },
+    },
+    CHICKEN_GRILLED: {
+        id: 'CHICKEN_GRILLED',
+        emoji: '🍖',
+        label: 'Grilled Chicken',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein', 'healthy'],
+        macros: { protein: 35, carbs: 0, fat: 8, calories: 210 },
+    },
+    CHICKEN_AIRFRIED: {
+        id: 'CHICKEN_AIRFRIED',
+        emoji: '🍗',
+        label: 'Air-Fried Chicken',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein', 'healthy'],
+        macros: { protein: 35, carbs: 5, fat: 10, calories: 250 },
+    },
+    CHICKEN_CHILLI: {
+        id: 'CHICKEN_CHILLI',
+        emoji: '🌶️',
+        label: 'Chilli Chicken',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein'],
+        macros: { protein: 28, carbs: 10, fat: 14, calories: 280 },
+    },
+    CHICKEN_SEKUWA: {
+        id: 'CHICKEN_SEKUWA',
+        emoji: '🍢',
+        label: 'Chicken Sekuwa',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein'],
+        macros: { protein: 32, carbs: 3, fat: 10, calories: 230 },
+    },
+
+    // ========================================
+    // PROTEINS - OTHER MEATS
+    // ========================================
+    MUTTON_CURRY: {
+        id: 'MUTTON_CURRY',
+        emoji: '🍖',
+        label: 'Mutton Curry',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 28, carbs: 5, fat: 20, calories: 310 },
+    },
+    BUFF_CURRY: {
+        id: 'BUFF_CURRY',
+        emoji: '🥩',
+        label: 'Buff Curry',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 30, carbs: 5, fat: 8, calories: 210 },
+    },
+    BUFF_SUKUTI: {
+        id: 'BUFF_SUKUTI',
+        emoji: '🥩',
+        label: 'Buff Sukuti',
+        qty: 50,
+        unit: 'g',
+        tags: ['protein', 'snack'],
+        macros: { protein: 25, carbs: 2, fat: 5, calories: 150 },
+    },
+    FISH_CURRY: {
+        id: 'FISH_CURRY',
+        emoji: '🐟',
+        label: 'Fish Curry',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 25, carbs: 5, fat: 10, calories: 210 },
+    },
+    FISH_FRY: {
+        id: 'FISH_FRY',
+        emoji: '🐟',
+        label: 'Fried Fish',
+        qty: 150,
+        unit: 'g',
+        tags: ['protein'],
+        macros: { protein: 25, carbs: 8, fat: 15, calories: 270 },
+    },
+
+    // ========================================
+    // PROTEINS - EGGS
+    // ========================================
+    EGG_CURRY: {
+        id: 'EGG_CURRY',
+        emoji: '🥚',
+        label: 'Egg Curry',
+        qty: 2,
+        unit: 'eggs',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 14, carbs: 6, fat: 12, calories: 190 },
+    },
+    EGG_BHURJI: {
+        id: 'EGG_BHURJI',
+        emoji: '🍳',
+        label: 'Egg Bhurji',
+        qty: 2,
+        unit: 'eggs',
+        tags: ['protein', 'breakfast'],
+        macros: { protein: 12, carbs: 4, fat: 14, calories: 190 },
+    },
+
+    // ========================================
+    // PROTEINS - VEGETARIAN
+    // ========================================
+    PANEER: {
+        id: 'PANEER',
+        emoji: '🧀',
+        label: 'Paneer',
+        qty: 100,
+        unit: 'g',
+        tags: ['protein', 'veg'],
+        macros: { protein: 18, carbs: 4, fat: 20, calories: 260 },
+    },
+    PANEER_CURRY: {
+        id: 'PANEER_CURRY',
+        emoji: '🧀',
+        label: 'Paneer Curry',
+        qty: 100,
+        unit: 'g',
+        tags: ['protein', 'veg', 'lunch', 'dinner'],
+        macros: { protein: 18, carbs: 8, fat: 22, calories: 300 },
+    },
+    PANEER_BHURJI: {
+        id: 'PANEER_BHURJI',
+        emoji: '🧀',
+        label: 'Paneer Bhurji',
+        qty: 100,
+        unit: 'g',
+        tags: ['protein', 'veg', 'breakfast'],
+        macros: { protein: 18, carbs: 6, fat: 22, calories: 290 },
+    },
+    SOYA_CHUNKS: {
+        id: 'SOYA_CHUNKS',
+        emoji: '🫘',
+        label: 'Dal Bhat + Soya Chunks (dry)',
+        qty: 50,
+        unit: 'g',
+        tags: ['protein', 'veg'],
+        macros: { protein: 26, carbs: 15, fat: 1, calories: 170 },
+    },
+    SOYA_CURRY: {
+        id: 'SOYA_CURRY',
+        emoji: '🫘',
+        label: 'Soya Curry',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'veg', 'lunch', 'dinner'],
+        macros: { protein: 26, carbs: 20, fat: 8, calories: 250 },
+    },
+    KALA_CHANA: {
+        id: 'KALA_CHANA',
+        emoji: '🫘',
+        label: 'Kala Chana (Black)',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'breakfast', 'snack'],
+        macros: { protein: 15, carbs: 30, fat: 5, calories: 220 },
+    },
+    CHANA_BOILED: {
+        id: 'CHANA_BOILED',
+        emoji: '🫘',
+        label: 'Boiled Chana',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'snack', 'healthy'],
+        macros: { protein: 12, carbs: 25, fat: 3, calories: 180 },
+    },
+    CHANA_MASALA: {
+        id: 'CHANA_MASALA',
+        emoji: '🫘',
+        label: 'Chana Masala',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'lunch', 'dinner'],
+        macros: { protein: 14, carbs: 30, fat: 8, calories: 240 },
+    },
+    RAJMA: {
+        id: 'RAJMA',
+        emoji: '🫘',
+        label: 'Rajma (Kidney Beans)',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'lunch', 'dinner', 'veg'],
+        macros: { protein: 12, carbs: 35, fat: 3, calories: 215 },
+    },
+    DAHI: {
+        id: 'DAHI',
+        emoji: '🥛',
+        label: 'Dahi (Curd)',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['protein', 'breakfast', 'healthy'],
+        macros: { protein: 8, carbs: 8, fat: 5, calories: 100 },
+    },
+    LASSI: {
+        id: 'LASSI',
+        emoji: '🥛',
+        label: 'Lassi',
+        qty: 1,
+        unit: 'glass',
+        tags: ['protein', 'drink'],
+        macros: { protein: 6, carbs: 15, fat: 4, calories: 120 },
+    },
+    TOFU: {
+        id: 'TOFU',
+        emoji: '🧈',
+        label: 'Tofu',
+        qty: 100,
+        unit: 'g',
+        tags: ['protein', 'veg'],
+        macros: { protein: 12, carbs: 3, fat: 6, calories: 110 },
+    },
+
+    // ========================================
+    // SUPPLEMENTS
+    // ========================================
+    WHEY: {
+        id: 'WHEY',
+        emoji: '🥤',
+        label: 'Whey Protein',
+        qty: 1,
+        unit: 'scoop',
+        tags: ['protein', 'supplement'],
+        macros: { protein: 24, carbs: 3, fat: 1, calories: 120 },
+    },
+    CREATINE: {
+        id: 'CREATINE',
+        emoji: '💪',
+        label: 'Creatine',
+        qty: 5,
+        unit: 'g',
+        tags: ['supplement'],
+        macros: { protein: 0, carbs: 0, fat: 0, calories: 0 },
+    },
+
+    // ========================================
+    // VEGETABLES
+    // ========================================
+    VEG_TARKARI: {
+        id: 'VEG_TARKARI',
+        emoji: '🥬',
+        label: 'Mixed Sabji',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'lunch', 'dinner', 'healthy'],
+        macros: { protein: 3, carbs: 10, fat: 5, calories: 80 },
+    },
+    ALOO_TARKARI: {
+        id: 'ALOO_TARKARI',
+        emoji: '🥔',
+        label: 'Aloo Tarkari',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'lunch', 'dinner'],
+        macros: { protein: 3, carbs: 25, fat: 6, calories: 160 },
+    },
+    SAAG: {
+        id: 'SAAG',
+        emoji: '🥬',
+        label: 'Saag (Greens)',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'healthy'],
+        macros: { protein: 4, carbs: 6, fat: 3, calories: 60 },
+    },
+    SALAD: {
+        id: 'SALAD',
+        emoji: '🥗',
+        label: 'Fresh Salad',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'healthy', 'quick'],
+        macros: { protein: 2, carbs: 10, fat: 1, calories: 50 },
+    },
+    CUCUMBER: {
+        id: 'CUCUMBER',
+        emoji: '🥒',
+        label: 'Cucumber',
+        qty: 1,
+        unit: 'medium',
+        tags: ['veg', 'healthy', 'snack'],
+        macros: { protein: 1, carbs: 4, fat: 0, calories: 20 },
+    },
+    CAULIFLOWER: {
+        id: 'CAULIFLOWER',
+        emoji: '🥦',
+        label: 'Cauliflower',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'healthy'],
+        macros: { protein: 3, carbs: 8, fat: 4, calories: 70 },
+    },
+    CABBAGE: {
+        id: 'CABBAGE',
+        emoji: '🥬',
+        label: 'Cabbage',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'healthy'],
+        macros: { protein: 2, carbs: 6, fat: 3, calories: 55 },
+    },
+    BEANS: {
+        id: 'BEANS',
+        emoji: '🫛',
+        label: 'Green Beans',
+        qty: 1,
+        unit: 'bowl',
+        tags: ['veg', 'healthy'],
+        macros: { protein: 3, carbs: 8, fat: 2, calories: 55 },
+    },
+
+    // ========================================
+    // FRUITS
+    // ========================================
+    BANANA: {
+        id: 'BANANA',
+        emoji: '🍌',
+        label: 'Banana',
+        qty: 1,
+        unit: 'medium',
+        tags: ['fruit', 'snack', 'quick'],
+        macros: { protein: 1, carbs: 27, fat: 0, calories: 105 },
+    },
+    APPLE: {
+        id: 'APPLE',
+        emoji: '🍎',
+        label: 'Apple',
+        qty: 1,
+        unit: 'medium',
+        tags: ['fruit', 'snack', 'healthy'],
+        macros: { protein: 0, carbs: 25, fat: 0, calories: 95 },
+    },
+    ORANGE: {
+        id: 'ORANGE',
+        emoji: '🍊',
+        label: 'Orange',
+        qty: 1,
+        unit: 'medium',
+        tags: ['fruit', 'snack', 'healthy'],
+        macros: { protein: 1, carbs: 15, fat: 0, calories: 60 },
+    },
+    MANGO: {
+        id: 'MANGO',
+        emoji: '🥭',
+        label: 'Mango',
+        qty: 1,
+        unit: 'medium',
+        tags: ['fruit', 'snack'],
+        macros: { protein: 1, carbs: 35, fat: 0, calories: 135 },
+    },
+    PAPAYA: {
+        id: 'PAPAYA',
+        emoji: '🍈',
+        label: 'Papaya',
+        qty: 1,
+        unit: 'cup',
+        tags: ['fruit', 'healthy'],
+        macros: { protein: 1, carbs: 15, fat: 0, calories: 60 },
+    },
+    POMEGRANATE: {
+        id: 'POMEGRANATE',
+        emoji: '🍎',
+        label: 'Pomegranate',
+        qty: 1,
+        unit: 'medium',
+        tags: ['fruit', 'healthy'],
+        macros: { protein: 3, carbs: 35, fat: 2, calories: 160 },
+    },
+
+    // ========================================
+    // NUTS & SEEDS (Protein-rich snacks!)
+    // ========================================
+    PEANUTS: {
+        id: 'PEANUTS',
+        emoji: '🥜',
+        label: 'Peanuts',
+        qty: 30,
+        unit: 'g',
+        tags: ['protein', 'snack'],
+        macros: { protein: 8, carbs: 5, fat: 14, calories: 170 },
+    },
+    ALMONDS: {
+        id: 'ALMONDS',
+        emoji: '🌰',
+        label: 'Almonds',
+        qty: 30,
+        unit: 'g',
+        tags: ['protein', 'snack', 'healthy'],
+        macros: { protein: 6, carbs: 6, fat: 15, calories: 175 },
+    },
+    CASHEWS: {
+        id: 'CASHEWS',
+        emoji: '🌰',
+        label: 'Cashews',
+        qty: 30,
+        unit: 'g',
+        tags: ['protein', 'snack'],
+        macros: { protein: 5, carbs: 9, fat: 12, calories: 160 },
+    },
+    WALNUTS: {
+        id: 'WALNUTS',
+        emoji: '🌰',
+        label: 'Walnuts',
+        qty: 30,
+        unit: 'g',
+        tags: ['protein', 'snack', 'healthy'],
+        macros: { protein: 4, carbs: 4, fat: 18, calories: 185 },
+    },
+    MIXED_NUTS: {
+        id: 'MIXED_NUTS',
+        emoji: '🥜',
+        label: 'Mixed Nuts',
+        qty: 30,
+        unit: 'g',
+        tags: ['protein', 'snack'],
+        macros: { protein: 6, carbs: 6, fat: 15, calories: 175 },
+    },
+    PEANUT_BUTTER: {
+        id: 'PEANUT_BUTTER',
+        emoji: '🥜',
+        label: 'Peanut Butter',
+        qty: 2,
+        unit: 'tbsp',
+        tags: ['protein', 'snack'],
+        macros: { protein: 8, carbs: 6, fat: 16, calories: 190 },
+    },
+
+    // ========================================
+    // HEALTHY SNACKS
+    // ========================================
+    ROASTED_CHANA: {
+        id: 'ROASTED_CHANA',
+        emoji: '🫘',
+        label: 'Roasted Chana',
+        qty: 50,
+        unit: 'g',
+        tags: ['protein', 'snack', 'healthy'],
+        macros: { protein: 10, carbs: 25, fat: 3, calories: 160 },
+    },
+    MAKHANA: {
+        id: 'MAKHANA',
+        emoji: '🍿',
+        label: 'Makhana',
+        qty: 30,
+        unit: 'g',
+        tags: ['snack', 'healthy'],
+        macros: { protein: 3, carbs: 20, fat: 1, calories: 100 },
+    },
+    BISCUITS: {
+        id: 'BISCUITS',
+        emoji: '🍪',
+        label: 'Biscuits',
+        qty: 4,
+        unit: 'pieces',
+        tags: ['snack', 'carb'],
+        macros: { protein: 2, carbs: 20, fat: 5, calories: 130 },
+    },
+    DIGESTIVE_BISCUITS: {
+        id: 'DIGESTIVE_BISCUITS',
+        emoji: '🍪',
+        label: 'Digestive Biscuits',
+        qty: 4,
+        unit: 'pieces',
+        tags: ['snack', 'healthy'],
+        macros: { protein: 3, carbs: 22, fat: 4, calories: 135 },
+    },
+    PROTEIN_BAR: {
+        id: 'PROTEIN_BAR',
+        emoji: '🍫',
+        label: 'Protein Bar',
+        qty: 1,
+        unit: 'bar',
+        tags: ['protein', 'snack'],
+        macros: { protein: 20, carbs: 20, fat: 8, calories: 230 },
+    },
+    HONEY: {
+        id: 'HONEY',
+        emoji: '🍯',
+        label: 'Honey',
+        qty: 1,
+        unit: 'tbsp',
+        tags: ['carb', 'healthy'],
+        macros: { protein: 0, carbs: 17, fat: 0, calories: 65 },
+    },
+
+    // ========================================
+    // JUNK FOODS (for tracking)
+    // ========================================
+    MOMOS: {
+        id: 'MOMOS',
+        emoji: '🥟',
+        label: 'Momos',
+        qty: 8,
+        unit: 'pieces',
+        tags: ['junk', 'dinner'],
+        macros: { protein: 10, carbs: 35, fat: 12, calories: 280 },
+    },
+    BUFF_MOMO: {
+        id: 'BUFF_MOMO',
+        emoji: '🥟',
+        label: 'Buff Momo',
+        qty: 8,
+        unit: 'pieces',
+        tags: ['protein', 'dinner'],
+        macros: { protein: 18, carbs: 35, fat: 14, calories: 340 },
+    },
+    VEG_MOMO: {
+        id: 'VEG_MOMO',
+        emoji: '🥟',
+        label: 'Veg Momo',
+        qty: 8,
+        unit: 'pieces',
+        tags: ['junk', 'veg'],
+        macros: { protein: 6, carbs: 35, fat: 10, calories: 250 },
+    },
+    CHOWMEIN: {
+        id: 'CHOWMEIN',
+        emoji: '🍜',
+        label: 'Chowmein',
+        qty: 1,
+        unit: 'plate',
+        tags: ['junk', 'dinner'],
+        macros: { protein: 8, carbs: 55, fat: 15, calories: 380 },
+    },
+    SAMOSA: {
+        id: 'SAMOSA',
+        emoji: '🔺',
+        label: 'Samosa',
+        qty: 2,
+        unit: 'pieces',
+        tags: ['junk', 'snack'],
+        macros: { protein: 4, carbs: 30, fat: 15, calories: 270 },
+    },
+    PAKODA: {
+        id: 'PAKODA',
+        emoji: '🍘',
+        label: 'Pakoda',
+        qty: 5,
+        unit: 'pieces',
+        tags: ['junk', 'snack'],
+        macros: { protein: 4, carbs: 25, fat: 12, calories: 220 },
+    },
+    SUGARY_TEA: {
+        id: 'SUGARY_TEA',
+        emoji: '🍵',
+        label: 'Sugary Milk Tea',
+        qty: 1,
+        unit: 'cup',
+        tags: ['junk', 'drink'],
+        macros: { protein: 2, carbs: 20, fat: 3, calories: 110 },
+    },
+    PIZZA: {
+        id: 'PIZZA',
+        emoji: '🍕',
+        label: 'Pizza',
+        qty: 2,
+        unit: 'slices',
+        tags: ['junk'],
+        macros: { protein: 12, carbs: 40, fat: 18, calories: 370 },
+    },
+    BURGER: {
+        id: 'BURGER',
+        emoji: '🍔',
+        label: 'Burger',
+        qty: 1,
+        unit: 'piece',
+        tags: ['junk'],
+        macros: { protein: 15, carbs: 35, fat: 20, calories: 380 },
+    },
+    FRIES: {
+        id: 'FRIES',
+        emoji: '🍟',
+        label: 'French Fries',
+        qty: 1,
+        unit: 'portion',
+        tags: ['junk', 'snack'],
+        macros: { protein: 3, carbs: 35, fat: 15, calories: 280 },
+    },
+    COLD_DRINK: {
+        id: 'COLD_DRINK',
+        emoji: '🥤',
+        label: 'Cold Drink',
+        qty: 1,
+        unit: 'bottle',
+        tags: ['junk', 'drink'],
+        macros: { protein: 0, carbs: 40, fat: 0, calories: 160 },
+    },
+    INSTANT_NOODLES: {
+        id: 'INSTANT_NOODLES',
+        emoji: '🍜',
+        label: 'Instant Noodles',
+        qty: 1,
+        unit: 'pack',
+        tags: ['junk', 'quick'],
+        macros: { protein: 8, carbs: 50, fat: 12, calories: 340 },
+    },
+
+    // ========================================
+    // DRINKS
+    // ========================================
+    WATER: {
+        id: 'WATER',
+        emoji: '💧',
+        label: 'Water',
+        qty: 1,
+        unit: 'glass',
+        tags: ['drink', 'healthy'],
+        macros: { protein: 0, carbs: 0, fat: 0, calories: 0 },
+    },
+    BUTTERMILK: {
+        id: 'BUTTERMILK',
+        emoji: '🥛',
+        label: 'Buttermilk',
+        qty: 1,
+        unit: 'glass',
+        tags: ['drink', 'healthy'],
+        macros: { protein: 3, carbs: 5, fat: 1, calories: 40 },
+    },
+    LEMON_WATER: {
+        id: 'LEMON_WATER',
+        emoji: '🍋',
+        label: 'Lemon Water',
+        qty: 1,
+        unit: 'glass',
+        tags: ['drink', 'healthy'],
+        macros: { protein: 0, carbs: 2, fat: 0, calories: 10 },
+    },
+    COCONUT_WATER: {
+        id: 'COCONUT_WATER',
+        emoji: '🥥',
+        label: 'Coconut Water',
+        qty: 1,
+        unit: 'glass',
+        tags: ['drink', 'healthy'],
+        macros: { protein: 1, carbs: 9, fat: 0, calories: 45 },
+    },
+};
+
+// ============================================
+// Helper Functions
+// ============================================
+export function getFood(id: FoodId): FoodItem {
+    return FOOD_DATABASE[id] || FOOD_DATABASE['WATER'];
+}
+
+export function getFoodsByTag(tag: string): FoodItem[] {
+    return Object.values(FOOD_DATABASE).filter(food => food.tags.includes(tag));
+}
+
+export function getProteinFoods(): FoodItem[] {
+    return getFoodsByTag('protein');
+}
+
+export function getJunkFoods(): FoodItem[] {
+    return getFoodsByTag('junk');
+}
+
+export function getBreakfastFoods(): FoodItem[] {
+    return getFoodsByTag('breakfast');
+}
+
+export function getLunchDinnerFoods(): FoodItem[] {
+    return Object.values(FOOD_DATABASE).filter(
+        food => food.tags.includes('lunch') || food.tags.includes('dinner')
+    );
+}
+
+export function getSnackFoods(): FoodItem[] {
+    return getFoodsByTag('snack');
+}
+
+export function getHealthyFoods(): FoodItem[] {
+    return getFoodsByTag('healthy');
+}
+
+export function getDalBhatVariants(): FoodItem[] {
+    return Object.values(FOOD_DATABASE).filter(
+        food => food.id.startsWith('DAL_BHAT') || food.id.startsWith('BHAT')
+    );
+}
+
+export function getAllFoodIds(): FoodId[] {
+    return Object.keys(FOOD_DATABASE) as FoodId[];
+}

@@ -1,0 +1,414 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* ============================================
+   BARALI LIFE - Premium Design System
+   Inspired by Spotify / Notion / Apple
+   ============================================ */
+
+/* Design Tokens */
+@theme {
+  /* Background layers */
+  --color-bg-base: #0c0c14;
+  --color-bg-elevated: #121219;
+
+  /* Surface layers (cards, containers) */
+  --color-surface-900: #16161f;
+  --color-surface-800: #1c1c27;
+  --color-surface-700: #24243a;
+  --color-surface-600: #2d2d42;
+
+  /* Legacy support */
+  --color-dark-900: #0c0c14;
+  --color-dark-800: #121219;
+  --color-dark-700: #16161f;
+  --color-dark-600: #1c1c27;
+
+  /* Primary - Soft Emerald (not harsh neon) */
+  --color-primary: #34d399;
+  --color-primary-light: #6ee7b7;
+  --color-primary-dark: #10b981;
+
+  /* Legacy neon-teal for compatibility */
+  --color-neon-teal: #34d399;
+
+  /* Secondary - Soft Violet */
+  --color-secondary: #a78bfa;
+  --color-neon-purple: #a78bfa;
+
+  /* Accent - Warm Amber */
+  --color-accent: #fbbf24;
+  --color-neon-lime: #84cc16;
+
+  /* Semantic colors */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Text hierarchy */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-text-dim: #52525b;
+}
+
+/* Custom scrollbar - more subtle */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Base styles */
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0c0c14;
+  color: white;
+  line-height: 1.5;
+}
+
+/* Safe area for mobile */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* ============================================
+   Premium Glassmorphism
+   ============================================ */
+.glass {
+  background: rgba(22, 22, 31, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-subtle {
+  background: rgba(22, 22, 31, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ============================================
+   Premium Card Styles
+   ============================================ */
+.card-base {
+  background: linear-gradient(180deg,
+      rgba(28, 28, 39, 0.9) 0%,
+      rgba(22, 22, 31, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  transition: all 0.2s ease-out;
+}
+
+.card-base:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Current meal indicator - subtle left border */
+.card-current {
+  border-left: 3px solid var(--color-primary);
+  border-left-color: #34d399;
+}
+
+/* Completed state - subtle */
+.card-done {
+  opacity: 0.7;
+}
+
+/* ============================================
+   Premium Shadows
+   ============================================ */
+.shadow-soft {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-elevated {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.shadow-glow-primary {
+  box-shadow: 0 0 24px rgba(52, 211, 153, 0.15);
+}
+
+/* Legacy support */
+.shadow-neon-teal {
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.2);
+}
+
+.shadow-neon-purple {
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.2);
+}
+
+/* ============================================
+   Premium Animations
+   ============================================ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-subtle {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Legacy animation support */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes slide-in-from-top {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation-duration: 200ms;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slide-in-from-top;
+}
+
+.slide-in-from-bottom {
+  animation-name: slide-in-from-bottom;
+}
+
+.zoom-in-95 {
+  animation-name: zoom-in;
+}
+
+/* ============================================
+   Interactive States
+   ============================================ */
+.interactive {
+  transition: all 0.15s ease-out;
+}
+
+.interactive:hover {
+  transform: translateY(-1px);
+}
+
+.interactive:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Button hover states */
+.btn-hover {
+  transition: all 0.15s ease-out;
+}
+
+.btn-hover:hover {
+  filter: brightness(1.1);
+}
+
+.btn-hover:active {
+  filter: brightness(0.95);
+  transform: scale(0.98);
+}
+
+/* ============================================
+   Form Styles
+   ============================================ */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.3);
+}
+
+/* Hide number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ============================================
+   Selection & Highlights
+   ============================================ */
+::selection {
+  background: rgba(52, 211, 153, 0.25);
+  color: white;
+}
+
+/* ============================================
+   Progress Bar Styles
+   ============================================ */
+.progress-bar {
+  background: linear-gradient(90deg,
+      #34d399 0%,
+      #6ee7b7 50%,
+      #34d399 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #34d399 0%, #6ee7b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-secondary {
+  background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-subtle {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.border-hover:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}

@@ -1,0 +1,363 @@
+// ============================================
+// SETTINGS PAGE - App configuration
+// FIXED: Save Profile button recalculates targets
+// ============================================
+
+import React, { useState } from 'react';
+import { useStore } from '../state/store';
+import { Card } from '../ui/components/Card';
+import { useToast } from '../ui/components/Toast';
+import { FoodId } from '../types';
+import { getProteinFoods, getJunkFoods } from '../diet/foods';
+
+export function Settings() {
+    const profile = useStore((state) => state.profile);
+    const targets = useStore((state) => state.targets);
+    const inventory = useStore((state) => state.inventory);
+    const blacklist = useStore((state) => state.blacklist);
+    const updateProfile = useStore((state) => state.updateProfile);
+    const updateTargets = useStore((state) => state.updateTargets);
+    const updateInventory = useStore((state) => state.updateInventory);
+    const updateBlacklist = useStore((state) => state.updateBlacklist);
+    const resetDay = useStore((state) => state.resetDay);
+    const exportState = useStore((state) => state.exportState);
+    const importState = useStore((state) => state.importState);
+    const { showToast } = useToast();
+
+    // Local state for editing
+    const [editProfile, setEditProfile] = useState({
+        heightCm: profile.heightCm,
+        weightKg: profile.weightKg,
+        goal: profile.goal,
+    });
+
+    const [importJson, setImportJson] = useState('');
+    const [showDanger, setShowDanger] = useState(false);
+
+    // Protein foods for inventory
+    const proteinFoods = getProteinFoods();
+    const junkFoods = getJunkFoods();
+
+    // Calculate recommended targets based on profile
+    const calculateTargets = (weight: number, goal: string) => {
+        // Protein: 1.8g per kg for recomp/bulk, 2.2g for cut, 1.5g for maintain
+        let proteinMultiplier = 1.8;
+        if (goal === 'CUT') proteinMultiplier = 2.2;
+        if (goal === 'MAINTAIN') proteinMultiplier = 1.5;
+        if (goal === 'BULK') proteinMultiplier = 1.8;
+
+        // Calories: Estimate based on goal
+        // Rough TDEE estimate for moderately active person
+        const baseTDEE = weight * 30; // ~30 cal/kg for moderate activity
+        let calorieTarget = baseTDEE;
+        if (goal === 'CUT') calorieTarget = baseTDEE - 400;
+        if (goal === 'BULK') calorieTarget = baseTDEE + 300;
+        if (goal === 'BODY_RECOMPOSITION') calorieTarget = baseTDEE - 100;
+
+        return {
+            proteinPerDay: Math.round(weight * proteinMultiplier),
+            caloriesPerDay: Math.round(calorieTarget),
+            waterLiters: targets.waterLiters, // Keep water unchanged
+        };
+    };
+
+    const handleSaveProfile = () => {
+        // Update profile
+        updateProfile(editProfile);
+
+        // Recalculate and update targets
+        const newTargets = calculateTargets(editProfile.weightKg, editProfile.goal);
+        updateTargets(newTargets);
+
+        showToast('✅ Profile saved! Targets updated.', 'success');
+    };
+
+    const hasChanges =
+        editProfile.heightCm !== profile.heightCm ||
+        editProfile.weightKg !== profile.weightKg ||
+        editProfile.goal !== profile.goal;
+
+    const handleExport = () => {
+        const json = exportState();
+        navigator.clipboard.writeText(json);
+        showToast('Data copied to clipboard! 📋', 'success');
+    };
+
+    const handleImport = () => {
+        try {
+            const data = JSON.parse(importJson);
+            importState(data);
+            showToast('Data imported successfully! ✓', 'success');
+            setImportJson('');
+        } catch (e) {
+            showToast('Invalid JSON format', 'error');
+        }
+    };
+
+    const handleClearAll = () => {
+        localStorage.removeItem('baraliLife:v1');
+        showToast('All data cleared! Refreshing...', 'success');
+        setTimeout(() => window.location.reload(), 500);
+    };
+
+    const toggleInventory = (foodId: FoodId) => {
+        const newList = inventory.availableFoodIds.includes(foodId)
+            ? inventory.availableFoodIds.filter(id => id !== foodId)
+            : [...inventory.availableFoodIds, foodId];
+        updateInventory(newList);
+    };
+
+    const toggleBlacklist = (foodId: FoodId) => {
+        const newList = blacklist.includes(foodId)
+            ? blacklist.filter(id => id !== foodId)
+            : [...blacklist, foodId];
+        updateBlacklist(newList);
+    };
+
+    return (
+        <div className="space-y-6 pb-24">
+            {/* Header */}
+            <div className="text-center">
+                <h1 className="text-2xl font-bold text-white">Settings</h1>
+                <p className="text-zinc-400">Configure your app</p>
+            </div>
+
+            {/* Profile Section */}
+            <Card className={hasChanges ? 'border-yellow-500/50' : ''}>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-white">Profile</h2>
+                    {hasChanges && (
+                        <span className="text-xs text-yellow-400 px-2 py-1 bg-yellow-500/10 rounded-full">
+                            Unsaved changes
+                        </span>
+                    )}
+                </div>
+                <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-sm text-zinc-400 block mb-1">Height (cm)</label>
+                            <input
+                                type="number"
+                                value={editProfile.heightCm}
+                                onChange={(e) => setEditProfile({ ...editProfile, heightCm: Number(e.target.value) })}
+                                className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm text-zinc-400 block mb-1">Weight (kg)</label>
+                            <input
+                                type="number"
+                                value={editProfile.weightKg}
+                                onChange={(e) => setEditProfile({ ...editProfile, weightKg: Number(e.target.value) })}
+                                className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="text-sm text-zinc-400 block mb-1">Goal</label>
+                        <select
+                            value={editProfile.goal}
+                            onChange={(e) => setEditProfile({ ...editProfile, goal: e.target.value as any })}
+                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                        >
+                            <option value="BODY_RECOMPOSITION">Body Recomposition</option>
+                            <option value="BULK">Bulk</option>
+                            <option value="CUT">Cut</option>
+                            <option value="MAINTAIN">Maintain</option>
+                        </select>
+                    </div>
+
+                    {/* Save Button */}
+                    <button
+                        onClick={handleSaveProfile}
+                        disabled={!hasChanges}
+                        className={`
+                            w-full py-3 rounded-xl font-semibold transition-all
+                            ${hasChanges
+                                ? 'bg-neon-teal text-black hover:brightness-110'
+                                : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'}
+                        `}
+                    >
+                        {hasChanges ? '💾 Save Profile & Update Targets' : '✓ Profile Saved'}
+                    </button>
+
+                    {/* Preview of what will change */}
+                    {hasChanges && (
+                        <div className="p-3 bg-yellow-500/10 rounded-xl text-sm">
+                            <div className="text-yellow-400 font-medium mb-1">Preview after save:</div>
+                            <div className="text-zinc-400">
+                                Protein: {calculateTargets(editProfile.weightKg, editProfile.goal).proteinPerDay}g/day •
+                                Calories: {calculateTargets(editProfile.weightKg, editProfile.goal).caloriesPerDay}/day
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </Card>
+
+            {/* Daily Targets (Current values) */}
+            <Card>
+                <h2 className="text-lg font-semibold text-white mb-4">Daily Targets (Current)</h2>
+                <div className="space-y-4">
+                    <div>
+                        <label className="text-sm text-zinc-400 block mb-1">
+                            Protein Goal
+                            <span className="text-neon-teal ml-2">= {targets.proteinPerDay}g</span>
+                        </label>
+                        <input
+                            type="number"
+                            value={targets.proteinPerDay}
+                            onChange={(e) => updateTargets({ proteinPerDay: Number(e.target.value) })}
+                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-sm text-zinc-400 block mb-1">
+                            Calorie Goal
+                            <span className="text-neon-teal ml-2">= {targets.caloriesPerDay}</span>
+                        </label>
+                        <input
+                            type="number"
+                            value={targets.caloriesPerDay}
+                            onChange={(e) => updateTargets({ caloriesPerDay: Number(e.target.value) })}
+                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-sm text-zinc-400 block mb-1">Water (liters)</label>
+                        <input
+                            type="number"
+                            step="0.5"
+                            value={targets.waterLiters}
+                            onChange={(e) => updateTargets({ waterLiters: Number(e.target.value) })}
+                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                        />
+                    </div>
+                    <p className="text-xs text-zinc-500">
+                        💡 These targets update automatically when you save your profile, or you can adjust them manually here.
+                    </p>
+                </div>
+            </Card>
+
+            {/* Inventory */}
+            <Card>
+                <h2 className="text-lg font-semibold text-white mb-2">Inventory (What's at Home)</h2>
+                <p className="text-sm text-zinc-400 mb-4">Select protein sources you have available:</p>
+                <div className="flex flex-wrap gap-2 max-h-[400px] overflow-y-auto">
+                    {proteinFoods.map(food => (
+                        <button
+                            key={food.id}
+                            onClick={() => toggleInventory(food.id)}
+                            className={`
+                                flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all
+                                ${inventory.availableFoodIds.includes(food.id)
+                                    ? 'bg-neon-teal/20 text-neon-teal border border-neon-teal/30'
+                                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 border border-zinc-700'}
+                            `}
+                        >
+                            <span>{food.emoji}</span>
+                            <span>{food.label}</span>
+                        </button>
+                    ))}
+                </div>
+                <p className="text-xs text-zinc-500 mt-3">
+                    Showing all {proteinFoods.length} protein sources. Scroll to see more.
+                </p>
+            </Card>
+
+            {/* Blacklist */}
+            <Card>
+                <h2 className="text-lg font-semibold text-white mb-2">Blacklist (Junk Foods)</h2>
+                <p className="text-sm text-zinc-400 mb-4">Foods that trigger Damage Control:</p>
+                <div className="flex flex-wrap gap-2">
+                    {junkFoods.map(food => (
+                        <button
+                            key={food.id}
+                            onClick={() => toggleBlacklist(food.id)}
+                            className={`
+                                flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all
+                                ${blacklist.includes(food.id)
+                                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 border border-zinc-700'}
+                            `}
+                        >
+                            <span>{food.emoji}</span>
+                            <span>{food.label}</span>
+                        </button>
+                    ))}
+                </div>
+            </Card>
+
+            {/* Data Management */}
+            <Card>
+                <h2 className="text-lg font-semibold text-white mb-4">Data Management</h2>
+                <div className="space-y-3">
+                    <button
+                        onClick={handleExport}
+                        className="w-full py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-white transition-colors border border-zinc-700"
+                    >
+                        📋 Export Data (Copy to Clipboard)
+                    </button>
+                    <div>
+                        <textarea
+                            placeholder="Paste JSON here to import..."
+                            value={importJson}
+                            onChange={(e) => setImportJson(e.target.value)}
+                            className="w-full h-24 px-4 py-3 bg-zinc-800 rounded-xl text-white text-sm focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                        />
+                        <button
+                            onClick={handleImport}
+                            disabled={!importJson}
+                            className="w-full mt-2 py-3 bg-neon-teal text-black rounded-xl font-medium disabled:opacity-50"
+                        >
+                            Import Data
+                        </button>
+                    </div>
+                    <button
+                        onClick={() => {
+                            resetDay();
+                            showToast('Today reset! 🔄', 'success');
+                        }}
+                        className="w-full py-3 bg-orange-500/20 text-orange-400 rounded-xl hover:bg-orange-500/30 transition-colors"
+                    >
+                        🔄 Reset Today's Log
+                    </button>
+                </div>
+            </Card>
+
+            {/* Danger Zone */}
+            <Card className="border-red-500/30">
+                <button
+                    onClick={() => setShowDanger(!showDanger)}
+                    className="w-full flex items-center justify-between"
+                >
+                    <h2 className="text-lg font-semibold text-red-400">⚠️ Danger Zone</h2>
+                    <span className="text-zinc-400">{showDanger ? '▲' : '▼'}</span>
+                </button>
+
+                {showDanger && (
+                    <div className="mt-4 space-y-3">
+                        <p className="text-sm text-zinc-400">
+                            Use this during development to clear cached state:
+                        </p>
+                        <button
+                            onClick={handleClearAll}
+                            className="w-full py-3 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500/30 transition-colors font-medium"
+                        >
+                            🗑️ Clear All Data & Reload
+                        </button>
+                    </div>
+                )}
+            </Card>
+
+            {/* About */}
+            <Card>
+                <h2 className="text-lg font-semibold text-white mb-2">About</h2>
+                <div className="text-sm text-zinc-400 space-y-1">
+                    <p><strong>Barali Life</strong> v1.0</p>
+                    <p>Your personal diet & gym tracker</p>
+                    <p className="text-zinc-500">Made with 💪 in Nepal</p>
+                </div>
+            </Card>
+        </div>
+    );
+}
