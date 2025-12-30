@@ -330,29 +330,7 @@ export function Settings() {
             </Card>
 
             {/* Danger Zone */}
-            <Card className="border-red-500/30">
-                <button
-                    onClick={() => setShowDanger(!showDanger)}
-                    className="w-full flex items-center justify-between"
-                >
-                    <h2 className="text-lg font-semibold text-red-400">⚠️ Danger Zone</h2>
-                    <span className="text-zinc-400">{showDanger ? '▲' : '▼'}</span>
-                </button>
 
-                {showDanger && (
-                    <div className="mt-4 space-y-3">
-                        <p className="text-sm text-zinc-400">
-                            Use this during development to clear cached state:
-                        </p>
-                        <button
-                            onClick={handleClearAll}
-                            className="w-full py-3 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500/30 transition-colors font-medium"
-                        >
-                            🗑️ Clear All Data & Reload
-                        </button>
-                    </div>
-                )}
-            </Card>
 
             {/* About */}
             <Card>
