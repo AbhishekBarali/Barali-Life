@@ -237,7 +237,7 @@ export function MealTimeline() {
                                         foodId: food.id,
                                         originalId: food.originalId, // Pass original if food was swapped
                                     })}
-
+                                    isActiveSlot={status === 'current'}
                                 />
                             ))}
                         </div>

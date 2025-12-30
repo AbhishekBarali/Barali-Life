@@ -50,27 +50,27 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         BREAKFAST: {
             items: ['EGGS_BOILED', 'BREAD_PEANUT_BUTTER', 'BANANA', 'MILK'],
             intention: 'PROTEIN_FOCUS',
-            note: '7 AM - Start with protein',
+            note: 'Start with protein',
         },
         LUNCH: {
             items: ['DAL_BHAT_CHICKEN', 'SALAD'],
             intention: 'BALANCED',
-            note: '11 AM - Big lunch',
+            note: 'Big lunch',
         },
         MORNING_SNACK: {
             items: ['MIXED_NUTS', 'APPLE'],
             intention: 'LIGHT',
-            note: '1 PM Pre-workout snack',
+            note: 'Pre-workout snack',
         },
         EVENING_SNACK: {
             items: ['WHEY', 'BANANA'],
             intention: 'PROTEIN_FOCUS',
-            note: '4 PM Post-gym protein',
+            note: 'Post-gym protein',
         },
         DINNER: {
             items: ['DAL_BHAT_EGG', 'TARKARI', 'DAHI'],
             intention: 'BALANCED',
-            note: '8 PM Dinner',
+            note: 'Light & balanced',
         },
     },
 

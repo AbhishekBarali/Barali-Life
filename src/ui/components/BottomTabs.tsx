@@ -23,7 +23,7 @@ export function BottomTabs() {
     const location = useLocation();
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 glass border-t border-white/[0.04] safe-area-pb">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface-900 border-t border-white/10 safe-area-pb shadow-2xl">
             <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
                 {TABS.map((tab) => {
                     const isActive = location.pathname === tab.path;

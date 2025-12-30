@@ -15,6 +15,7 @@ import {
     MacroTargets,
     WeightMode,
     WorkoutSchedule,
+    ThemeType, // Added ThemeType
 } from '../types';
 import { generateMealsForMode, generateRandomizedMeals } from '../diet/templates';
 import { FOOD_DATABASE } from '../diet/foods';
@@ -89,6 +90,7 @@ export const useStore = create<AppState>()(
         (set, get) => ({
             // Initial state
             mode: 'STANDARD_DAY' as Mode,
+            theme: 'default' as ThemeType, // Added theme
             targets: DEFAULT_TARGETS,
             weightMode: 'MAINTAIN' as WeightMode,
             workoutSchedule: 'FOUR_DAY_PUSH_PULL' as WorkoutSchedule,
@@ -159,6 +161,11 @@ export const useStore = create<AppState>()(
                         },
                     }));
                 }
+            },
+
+            // Set theme
+            setTheme: (theme) => {
+                set({ theme });
             },
 
             // Log food

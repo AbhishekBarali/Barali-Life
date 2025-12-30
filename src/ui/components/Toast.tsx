@@ -71,22 +71,33 @@ function ToastContainer({ toasts, onHide }: { toasts: Toast[]; onHide: (id: stri
     };
 
     return (
-        <div className="fixed top-4 left-4 right-4 z-50 flex flex-col items-center gap-2 pointer-events-none">
-            {toasts.map((toast) => (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[60] pointer-events-none flex justify-center w-full max-w-sm px-4">
+            {toasts.slice(-1).map((toast) => (
                 <div
                     key={toast.id}
                     onClick={() => onHide(toast.id)}
                     className={`
-            ${typeStyles[toast.type]}
-            px-6 py-3 rounded-xl backdrop-blur-lg border
-            text-white font-medium shadow-lg
-            flex items-center gap-3
-            animate-in slide-in-from-top-2 duration-300
-            pointer-events-auto cursor-pointer
-          `}
+                        px-5 py-2.5 rounded-full backdrop-blur-md shadow-2xl border
+                        flex items-center gap-3 text-sm font-medium
+                        animate-in slide-in-from-bottom-4 zoom-in-95 duration-200
+                        pointer-events-auto cursor-pointer select-none
+                        ${toast.type === 'error'
+                            ? 'bg-red-500/90 border-red-400 text-white'
+                            : toast.type === 'success'
+                                ? 'bg-zinc-800/95 border-emerald-500/30 text-white'
+                                : 'bg-zinc-800/95 border-white/10 text-zinc-100'
+                        }
+                    `}
                 >
-                    <span className="text-xl">{toast.icon || defaultIcons[toast.type]}</span>
-                    <span>{toast.message}</span>
+                    <span className="text-lg leading-none">
+                        {toast.type === 'success' && '✅'}
+                        {toast.type === 'error' && '❌'}
+                        {toast.type === 'warning' && '⚠️'}
+                        {toast.type === 'info' && 'ℹ️'}
+                        {toast.type === 'xp' && '⚡'}
+                        {/* {toast.icon} */} {/* Simpler icons for pill look */}
+                    </span>
+                    <span className="truncate max-w-[200px]">{toast.message}</span>
                 </div>
             ))}
         </div>

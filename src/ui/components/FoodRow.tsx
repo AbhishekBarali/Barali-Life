@@ -14,20 +14,27 @@ interface FoodRowProps {
     intention: MealIntention;
     onToggleEaten: () => void;
     onSwap?: () => void;
+    isActiveSlot?: boolean; // New prop
 }
 
-export function FoodRow({ food, slot, isEaten, intention, onToggleEaten, onSwap }: FoodRowProps) {
+export function FoodRow({ food, slot, isEaten, intention, onToggleEaten, onSwap, isActiveSlot }: FoodRowProps) {
     const [showRecipe, setShowRecipe] = useState(false);
     const hasRecipeAvailable = hasRecipe(food.id);
+    const isJunk = food.tags.includes('junk');
 
     return (
-        <>
+        <div className="flex items-center gap-3 group">
+            {/* Main Pill */}
             <div
+                onClick={onToggleEaten}
                 className={`
-                    flex items-center gap-3 p-3 rounded-xl transition-all duration-150
+                    flex-1 flex items-center justify-between px-4 py-3 rounded-xl transition-all cursor-pointer relative overflow-hidden
                     ${isEaten
                         ? 'bg-primary/10 border border-primary/20'
-                        : 'bg-surface-700/50 hover:bg-surface-600/70 border border-transparent'}
+                        : isActiveSlot
+                            ? 'bg-surface-700/80 hover:bg-surface-600 border border-white/10 shadow-lg scale-[1.01]' // Active slot highlight
+                            : 'bg-surface-800/50 hover:bg-surface-700/50 border border-transparent'
+                    }
                 `}
             >
                 {/* Clickable food area */}
@@ -107,7 +114,7 @@ export function FoodRow({ food, slot, isEaten, intention, onToggleEaten, onSwap 
                 isOpen={showRecipe}
                 onClose={() => setShowRecipe(false)}
             />
-        </>
+        </div>
     );
 }
 

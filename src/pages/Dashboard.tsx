@@ -16,6 +16,8 @@ import { isBlacklisted } from '../diet/blacklist';
 import { getFood, FOOD_DATABASE } from '../diet/foods';
 import { hasRecipe } from '../diet/recipes';
 
+import { DIET_TIPS } from '../diet/tips';
+
 export function Dashboard() {
     const todayLog = useStore((state) => state.getTodayLog());
     const mode = useStore((state) => state.mode);
@@ -32,6 +34,20 @@ export function Dashboard() {
 
     const [selectedRecipe, setSelectedRecipe] = useState<FoodId | null>(null);
     const [showCalendar, setShowCalendar] = useState(false);
+
+    // Random Tip Logic
+    const [currentTip, setCurrentTip] = useState(() => {
+        const randomIndex = Math.floor(Math.random() * DIET_TIPS.length);
+        return DIET_TIPS[randomIndex];
+    });
+
+    const getNewTip = () => {
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * DIET_TIPS.length);
+        } while (DIET_TIPS[newIndex].text === currentTip.text);
+        setCurrentTip(DIET_TIPS[newIndex]);
+    };
 
     // Get day info
     const dayInfo = getDayInfo();
@@ -135,13 +151,26 @@ export function Dashboard() {
                 )}
             </div>
 
-            {/* Calendar Toggle */}
-            {/* <button
-                onClick={() => setShowCalendar(!showCalendar)}
-                className="w-full py-3 bg-surface-700 hover:bg-surface-600 rounded-xl text-white font-medium transition-colors flex items-center justify-center gap-2"
+            {/* Tip of the Day - Random on each refresh */}
+            <div
+                onClick={getNewTip}
+                className="mx-1 p-4 bg-gradient-to-br from-surface-800 to-surface-900 border border-white/5 rounded-2xl shadow-lg cursor-pointer hover:border-white/10 transition-all select-none group relative overflow-hidden"
             >
-                📅 {showCalendar ? 'Hide Calendar' : 'View Calendar'}
-            </button> */}
+                <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 text-xs">
+                    Tap for new tip 🎲
+                </div>
+                <div className="flex items-start gap-3">
+                    <span className="text-2xl mt-0.5">{currentTip.emoji}</span>
+                    <div>
+                        <div className="text-xs font-bold text-neon-teal uppercase tracking-wider mb-1">
+                            Daily Wisdom
+                        </div>
+                        <div className="text-sm text-zinc-300 font-medium leading-relaxed">
+                            "{currentTip.text}"
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {/* Calendar */}
             {showCalendar && <Calendar />}

@@ -292,6 +292,68 @@ export function Settings() {
                 </div>
             </Card>
 
+            {/* Personalization */}
+            <Card>
+                <h2 className="text-lg font-semibold text-white mb-4">Personalization</h2>
+                <div className="grid grid-cols-2 gap-3">
+                    <button
+                        onClick={() => useStore.getState().setTheme('default')}
+                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'default'
+                                ? 'bg-zinc-800 border-neon-teal'
+                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            }`}
+                    >
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-4 h-4 rounded-full bg-[#34d399]" />
+                            <span className="text-sm font-medium text-white">Vibey</span>
+                        </div>
+                        <div className="text-xs text-zinc-500">Dark + Emerald</div>
+                    </button>
+
+                    <button
+                        onClick={() => useStore.getState().setTheme('apple')}
+                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'apple'
+                                ? 'bg-zinc-800 border-[#0A84FF]'
+                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            }`}
+                    >
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-4 h-4 rounded-full bg-[#0A84FF]" />
+                            <span className="text-sm font-medium text-white">Apple Pro</span>
+                        </div>
+                        <div className="text-xs text-zinc-500">Sleek Blue</div>
+                    </button>
+
+                    <button
+                        onClick={() => useStore.getState().setTheme('sunset')}
+                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'sunset'
+                                ? 'bg-zinc-800 border-orange-500'
+                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            }`}
+                    >
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-4 h-4 rounded-full bg-orange-500" />
+                            <span className="text-sm font-medium text-white">Sunset</span>
+                        </div>
+                        <div className="text-xs text-zinc-500">Warm Stone</div>
+                    </button>
+
+                    <button
+                        onClick={() => useStore.getState().setTheme('neon')}
+                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'neon'
+                                ? 'bg-zinc-800 border-fuchsia-500'
+                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            }`}
+                    >
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-4 h-4 rounded-full bg-fuchsia-500" />
+                            <span className="text-sm font-medium text-white">Neon</span>
+                        </div>
+                        <div className="text-xs text-zinc-500">Cyberpunk</div>
+                    </button>
+                </div>
+            </Card>
+
             {/* Data Management */}
             <Card>
                 <h2 className="text-lg font-semibold text-white mb-4">Data Management</h2>

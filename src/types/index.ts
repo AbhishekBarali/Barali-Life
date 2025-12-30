@@ -259,9 +259,12 @@ export interface Streaks {
     protein: number;
 }
 
+export type ThemeType = 'default' | 'apple' | 'sunset' | 'neon';
+
 export interface AppState {
     // Current state
     mode: Mode;
+    theme: ThemeType; // Added theme
     targets: MacroTargets;
     weightMode: WeightMode;
     workoutSchedule: WorkoutSchedule;
@@ -288,6 +291,7 @@ export interface AppState {
     // Actions
     getTodayLog: () => DayLog;
     setMode: (mode: Mode) => void;
+    setTheme: (theme: ThemeType) => void; // Added setTheme
     logFood: (slot: MealSlot, foodId: FoodId, qty?: number) => void;
     unlogFood: (slot: MealSlot, foodId: FoodId) => void;
     logCustomFood: (slot: MealSlot, food: EatenEntry['customFood']) => void;
