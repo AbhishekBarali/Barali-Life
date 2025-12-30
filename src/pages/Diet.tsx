@@ -16,6 +16,7 @@ export function Diet() {
     const todayLog = useStore((state) => state.getTodayLog());
     const mode = useStore((state) => state.mode);
     const targets = useStore((state) => state.targets);
+    const calorieCycling = useStore((state) => state.calorieCycling); // Select calorieCycling
     const profile = useStore((state) => state.profile);
     const weightMode = useStore((state) => state.weightMode);
     const toggleGymDay = useStore((state) => state.toggleGymDay);
@@ -26,12 +27,26 @@ export function Diet() {
 
     const dayInfo = getDayInfo();
 
-    // Calculate dynamic targets
-    const dynamicTargets = calculateDynamicTargets(
-        dayInfo.isGymDay,
-        weightMode,
-        profile.weightKg
-    );
+    // Calculate effective targets (Dynamic Calorie Cycling) - Standardized with Dashboard
+    const effectiveTargets = React.useMemo(() => {
+        // Default to base targets
+        let currentTargets = { ...targets };
+
+        if (calorieCycling.enabled) {
+            const adjustment = dayInfo.isGymDay
+                ? calorieCycling.gymAdjustment
+                : calorieCycling.restAdjustment;
+
+            currentTargets.caloriesPerDay += adjustment;
+        }
+
+        return {
+            protein: currentTargets.proteinPerDay,
+            calories: currentTargets.caloriesPerDay,
+            carbs: currentTargets.carbsPerDay,
+            fat: currentTargets.fatPerDay
+        };
+    }, [targets, calorieCycling, dayInfo.isGymDay]);
 
     // Calculate today's macros
     const todayMacros = React.useMemo(() => {
@@ -55,8 +70,8 @@ export function Diet() {
         return { protein, carbs, fat, calories };
     }, [todayLog.eaten]);
 
-    const proteinProgress = Math.min(100, Math.round((todayMacros.protein / dynamicTargets.protein) * 100));
-    const calorieProgress = Math.min(100, Math.round((todayMacros.calories / dynamicTargets.calories) * 100));
+    const proteinProgress = Math.min(100, Math.round((todayMacros.protein / effectiveTargets.protein) * 100));
+    const calorieProgress = Math.min(100, Math.round((todayMacros.calories / effectiveTargets.calories) * 100));
 
     return (
         <div className="space-y-5 pb-24">
@@ -71,7 +86,12 @@ export function Diet() {
                         }`}>
                     {dayInfo.isGymDay ? '💪 Training Day' : '😴 Rest Day'}
                     <span className="text-xs opacity-75">
-                        {dayInfo.isGymDay ? `+${Math.abs(dynamicTargets.calories - 2400)}` : '-300'} kcal
+                        {/* Show dynamic adjustment if enabled, else show generic */}
+                        {calorieCycling.enabled
+                            ? (dayInfo.isGymDay
+                                ? (calorieCycling.gymAdjustment > 0 ? `+${calorieCycling.gymAdjustment}` : `${calorieCycling.gymAdjustment}`)
+                                : (calorieCycling.restAdjustment > 0 ? `+${calorieCycling.restAdjustment}` : `${calorieCycling.restAdjustment}`))
+                            : ''} kcal
                     </span>
                     <span className="text-xs opacity-50 ml-1">
                         (Tap to switch)
@@ -95,7 +115,7 @@ export function Diet() {
                             <span>📊</span> Daily Targets
                         </h2>
                         <div className="text-xs text-zinc-400 bg-surface-700/50 px-2 py-1 rounded-lg">
-                            {Math.round(todayMacros.calories / dynamicTargets.calories * 100)}% Complete
+                            {Math.round(todayMacros.calories / effectiveTargets.calories * 100)}% Complete
                         </div>
                     </div>
 
@@ -105,7 +125,7 @@ export function Diet() {
                             <span className="text-zinc-400 text-sm font-medium">Protein</span>
                             <div className="flex items-baseline gap-1">
                                 <span className="text-2xl font-bold text-neon-teal">{todayMacros.protein}g</span>
-                                <span className="text-sm text-zinc-500">/ {dynamicTargets.protein}g</span>
+                                <span className="text-sm text-zinc-500">/ {effectiveTargets.protein}g</span>
                             </div>
                         </div>
                         <div className="w-full h-4 bg-surface-950 rounded-full overflow-hidden border border-white/5 shadow-inner">
@@ -124,7 +144,7 @@ export function Diet() {
                             <span className="text-zinc-400 text-sm font-medium">Calories</span>
                             <div className="flex items-baseline gap-1">
                                 <span className="text-xl font-bold text-white">{todayMacros.calories}</span>
-                                <span className="text-sm text-zinc-500">/ {dynamicTargets.calories}</span>
+                                <span className="text-sm text-zinc-500">/ {effectiveTargets.calories}</span>
                             </div>
                         </div>
                         <div className="w-full h-3 bg-surface-950 rounded-full overflow-hidden border border-white/5 shadow-inner">

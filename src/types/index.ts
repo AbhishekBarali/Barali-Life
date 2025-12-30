@@ -259,6 +259,12 @@ export interface Streaks {
     protein: number;
 }
 
+export interface CalorieCycling {
+    enabled: boolean;
+    gymAdjustment: number;
+    restAdjustment: number;
+}
+
 export type ThemeType = 'default' | 'apple' | 'sunset' | 'neon';
 
 export interface AppState {
@@ -287,6 +293,11 @@ export interface AppState {
 
     // Streaks
     streaks: Streaks;
+
+    // Calorie Cycling
+    calorieCycling: CalorieCycling;
+    setCalorieCycling: (config: CalorieCycling) => void;
+    getDailyTargets: () => MacroTargets;
 
     // Actions
     getTodayLog: () => DayLog;

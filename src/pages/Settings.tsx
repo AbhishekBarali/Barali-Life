@@ -22,6 +22,10 @@ export function Settings() {
     const resetDay = useStore((state) => state.resetDay);
     const exportState = useStore((state) => state.exportState);
     const importState = useStore((state) => state.importState);
+    const calorieCycling = useStore((state) => state.calorieCycling);
+    const setCalorieCycling = useStore((state) => state.setCalorieCycling);
+    const theme = useStore((state) => state.theme);
+    const setTheme = useStore((state) => state.setTheme);
     const { showToast } = useToast();
 
     // Local state for editing
@@ -199,48 +203,131 @@ export function Settings() {
                 </div>
             </Card>
 
-            {/* Daily Targets (Current values) */}
+            {/* Daily Targets (Current) */}
             <Card>
-                <h2 className="text-lg font-semibold text-white mb-4">Daily Targets (Current)</h2>
-                <div className="space-y-4">
-                    <div>
-                        <label className="text-sm text-zinc-400 block mb-1">
-                            Protein Goal
-                            <span className="text-neon-teal ml-2">= {targets.proteinPerDay}g</span>
-                        </label>
-                        <input
-                            type="number"
-                            value={targets.proteinPerDay}
-                            onChange={(e) => updateTargets({ proteinPerDay: Number(e.target.value) })}
-                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
-                        />
-                    </div>
-                    <div>
-                        <label className="text-sm text-zinc-400 block mb-1">
-                            Calorie Goal
-                            <span className="text-neon-teal ml-2">= {targets.caloriesPerDay}</span>
-                        </label>
-                        <input
-                            type="number"
-                            value={targets.caloriesPerDay}
-                            onChange={(e) => updateTargets({ caloriesPerDay: Number(e.target.value) })}
-                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
-                        />
-                    </div>
-                    <div>
-                        <label className="text-sm text-zinc-400 block mb-1">Water (liters)</label>
-                        <input
-                            type="number"
-                            step="0.5"
-                            value={targets.waterLiters}
-                            onChange={(e) => updateTargets({ waterLiters: Number(e.target.value) })}
-                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
-                        />
-                    </div>
-                    <p className="text-xs text-zinc-500">
-                        💡 These targets update automatically when you save your profile, or you can adjust them manually here.
-                    </p>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-white">Daily Targets</h2>
                 </div>
+
+                <div className="space-y-6">
+                    {/* Calorie Cycling Section */}
+                    <div className="p-4 bg-zinc-800/50 rounded-xl border border-zinc-700">
+                        <div className="flex items-center justify-between mb-3">
+                            <div>
+                                <div className="font-medium text-white flex items-center gap-2">
+                                    🚲 Calorie Cycling
+                                    {calorieCycling.enabled && (
+                                        <span className="text-xs px-2 py-0.5 bg-neon-teal/20 text-neon-teal rounded-full">Active</span>
+                                    )}
+                                </div>
+                                <div className="text-xs text-zinc-400">Adjust calories based on activity</div>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={calorieCycling.enabled}
+                                    onChange={(e) => setCalorieCycling({
+                                        ...calorieCycling,
+                                        enabled: e.target.checked
+                                    })}
+                                />
+                                <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-teal"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    {calorieCycling.enabled && (
+                        <div className="space-y-3 animate-fade-in">
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-xs text-green-400 block mb-1">Gym Day Adjustment</label>
+                                    <div className="relative">
+                                        <input
+                                            type="number"
+                                            value={calorieCycling.gymAdjustment}
+                                            onChange={(e) => setCalorieCycling({
+                                                ...calorieCycling,
+                                                gymAdjustment: Number(e.target.value)
+                                            })}
+                                            className="w-full px-3 py-2 bg-zinc-900 rounded-lg text-white border border-zinc-700 focus:border-green-500 outline-none"
+                                        />
+                                        <div className="absolute right-3 top-2 text-xs text-zinc-500">kcal</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-orange-400 block mb-1">Rest Day Adjustment</label>
+                                    <div className="relative">
+                                        <input
+                                            type="number"
+                                            value={calorieCycling.restAdjustment}
+                                            onChange={(e) => setCalorieCycling({
+                                                ...calorieCycling,
+                                                restAdjustment: Number(e.target.value)
+                                            })}
+                                            className="w-full px-3 py-2 bg-zinc-900 rounded-lg text-white border border-zinc-700 focus:border-orange-500 outline-none"
+                                        />
+                                        <div className="absolute right-3 top-2 text-xs text-zinc-500">kcal</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="text-xs bg-zinc-900/50 p-3 rounded-lg border border-zinc-700/50 space-y-1">
+                                <div className="flex justify-between">
+                                    <span className="text-zinc-400">Base Goal:</span>
+                                    <span className="text-white">{targets.caloriesPerDay} kcal</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-green-400">Gym Days:</span>
+                                    <span className="text-white font-medium">{targets.caloriesPerDay + calorieCycling.gymAdjustment} kcal</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-orange-400">Rest Days:</span>
+                                    <span className="text-white font-medium">{targets.caloriesPerDay + calorieCycling.restAdjustment} kcal</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Standard Targets */}
+                <div>
+                    <label className="text-sm text-zinc-400 block mb-1">
+                        Base Protein Goal
+                        <span className="text-neon-teal ml-2">= {targets.proteinPerDay}g</span>
+                    </label>
+                    <input
+                        type="number"
+                        value={targets.proteinPerDay}
+                        onChange={(e) => updateTargets({ proteinPerDay: Number(e.target.value) })}
+                        className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                    />
+                </div>
+                <div>
+                    <label className="text-sm text-zinc-400 block mb-1">
+                        Base Calorie Goal
+                        <span className="text-neon-teal ml-2">= {targets.caloriesPerDay}</span>
+                    </label>
+                    <input
+                        type="number"
+                        value={targets.caloriesPerDay}
+                        onChange={(e) => updateTargets({ caloriesPerDay: Number(e.target.value) })}
+                        className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                    />
+                </div>
+                <div>
+                    <label className="text-sm text-zinc-400 block mb-1">Water (liters)</label>
+                    <input
+                        type="number"
+                        step="0.5"
+                        value={targets.waterLiters}
+                        onChange={(e) => updateTargets({ waterLiters: Number(e.target.value) })}
+                        className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
+                    />
+                </div>
+                <p className="text-xs text-zinc-500">
+                    💡 These are your base values. Calorie cycling will adjust them automatically based on your workout schedule.
+                </p>
             </Card>
 
             {/* Inventory */}
@@ -297,10 +384,10 @@ export function Settings() {
                 <h2 className="text-lg font-semibold text-white mb-4">Personalization</h2>
                 <div className="grid grid-cols-2 gap-3">
                     <button
-                        onClick={() => useStore.getState().setTheme('default')}
-                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'default'
-                                ? 'bg-zinc-800 border-neon-teal'
-                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                        onClick={() => setTheme('default')}
+                        className={`p-3 rounded-xl border text-left transition-all ${theme === 'default'
+                            ? 'bg-zinc-800 border-neon-teal'
+                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
@@ -311,10 +398,10 @@ export function Settings() {
                     </button>
 
                     <button
-                        onClick={() => useStore.getState().setTheme('apple')}
-                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'apple'
-                                ? 'bg-zinc-800 border-[#0A84FF]'
-                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                        onClick={() => setTheme('apple')}
+                        className={`p-3 rounded-xl border text-left transition-all ${theme === 'apple'
+                            ? 'bg-zinc-800 border-[#0A84FF]'
+                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
@@ -325,10 +412,10 @@ export function Settings() {
                     </button>
 
                     <button
-                        onClick={() => useStore.getState().setTheme('sunset')}
-                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'sunset'
-                                ? 'bg-zinc-800 border-orange-500'
-                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                        onClick={() => setTheme('sunset')}
+                        className={`p-3 rounded-xl border text-left transition-all ${theme === 'sunset'
+                            ? 'bg-zinc-800 border-orange-500'
+                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
@@ -339,10 +426,10 @@ export function Settings() {
                     </button>
 
                     <button
-                        onClick={() => useStore.getState().setTheme('neon')}
-                        className={`p-3 rounded-xl border text-left transition-all ${useStore.getState().theme === 'neon'
-                                ? 'bg-zinc-800 border-fuchsia-500'
-                                : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                        onClick={() => setTheme('neon')}
+                        className={`p-3 rounded-xl border text-left transition-all ${theme === 'neon'
+                            ? 'bg-zinc-800 border-fuchsia-500'
+                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
@@ -390,9 +477,6 @@ export function Settings() {
                     </button>
                 </div>
             </Card>
-
-            {/* Danger Zone */}
-
 
             {/* About */}
             <Card>

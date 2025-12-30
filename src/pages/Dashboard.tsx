@@ -22,6 +22,7 @@ export function Dashboard() {
     const todayLog = useStore((state) => state.getTodayLog());
     const mode = useStore((state) => state.mode);
     const targets = useStore((state) => state.targets);
+    const calorieCycling = useStore((state) => state.calorieCycling); // Select calorieCycling
     const blacklist = useStore((state) => state.blacklist);
     const streaks = useStore((state) => state.streaks);
     const logFood = useStore((state) => state.logFood);
@@ -52,6 +53,20 @@ export function Dashboard() {
     // Get day info
     const dayInfo = getDayInfo();
 
+    // Calculate effective targets (Dynamic Calorie Cycling)
+    const effectiveTargets = React.useMemo(() => {
+        if (!calorieCycling.enabled) return targets;
+
+        const adjustment = dayInfo.isGymDay
+            ? calorieCycling.gymAdjustment
+            : calorieCycling.restAdjustment;
+
+        return {
+            ...targets,
+            caloriesPerDay: targets.caloriesPerDay + adjustment
+        };
+    }, [targets, calorieCycling, dayInfo.isGymDay]);
+
     // Calculate today's macros from eaten foods
     const todayMacros = React.useMemo(() => {
         let protein = 0, carbs = 0, fat = 0, calories = 0;
@@ -74,8 +89,8 @@ export function Dashboard() {
         return { protein, carbs, fat, calories };
     }, [todayLog.eaten]);
 
-    const proteinNeeded = targets.proteinPerDay - todayMacros.protein;
-    const proteinProgress = Math.min(100, Math.round((todayMacros.protein / targets.proteinPerDay) * 100));
+    const proteinNeeded = effectiveTargets.proteinPerDay - todayMacros.protein;
+    const proteinProgress = Math.min(100, Math.round((todayMacros.protein / effectiveTargets.proteinPerDay) * 100));
 
     // Get current meal slot (Mode-Aware)
     const getCurrentSlot = (): MealSlot => {
@@ -169,7 +184,7 @@ export function Dashboard() {
                     <div className="text-sm text-zinc-400 mb-2">Today's Protein</div>
                     <div className="text-4xl font-bold text-white mb-2">
                         <span className="text-neon-teal">{todayMacros.protein}g</span>
-                        <span className="text-zinc-500 text-2xl"> / {targets.proteinPerDay}g</span>
+                        <span className="text-zinc-500 text-2xl"> / {effectiveTargets.proteinPerDay}g</span>
                     </div>
 
                     {/* Progress Bar */}
@@ -194,9 +209,18 @@ export function Dashboard() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-3 gap-3">
-                <Card className="text-center p-4">
-                    <div className="text-2xl font-bold text-white">{todayMacros.calories}</div>
-                    <div className="text-xs text-zinc-500">Calories</div>
+                <Card className="text-center p-4 relative overflow-hidden">
+                    <div className="text-2xl font-bold text-white relative z-10">
+                        {todayMacros.calories}
+                        <span className="text-xs font-normal text-zinc-500 ml-1">/ {effectiveTargets.caloriesPerDay}</span>
+                    </div>
+                    <div className="text-xs text-zinc-500 relative z-10">Calories</div>
+                    {/* Calorie Cycling Indicator */}
+                    {calorieCycling.enabled && (
+                        <div className={`absolute top-0 right-0 p-1`}>
+                            <div className={`w-2 h-2 rounded-full ${dayInfo.isGymDay ? 'bg-green-500' : 'bg-orange-500'}`}></div>
+                        </div>
+                    )}
                 </Card>
                 <Card className="text-center p-4">
                     <div className="text-2xl font-bold text-white">{todayMacros.carbs}g</div>
@@ -305,10 +329,17 @@ export function Dashboard() {
                                         const isEaten = isFoodEaten(slot, item.id);
                                         if (isEaten) return null;
                                         return (
-                                            <button
+                                            <div
                                                 key={item.id}
+                                                role="button"
+                                                tabIndex={0}
                                                 onClick={() => handleToggleFood(slot, item.id)}
-                                                className="flex items-center gap-2 px-3 py-2 bg-surface-700/80 hover:bg-surface-600 border border-white/10 shadow-lg rounded-xl text-sm transition-all scale-[1.01]"
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        handleToggleFood(slot, item.id);
+                                                    }
+                                                }}
+                                                className="flex items-center gap-2 px-3 py-2 bg-surface-700/80 hover:bg-surface-600 border border-white/10 shadow-lg rounded-xl text-sm transition-all scale-[1.01] cursor-pointer select-none"
                                             >
                                                 <span>{item.emoji}</span>
                                                 <span className="text-zinc-300">{item.label}</span>
@@ -323,7 +354,7 @@ export function Dashboard() {
                                                         📖
                                                     </button>
                                                 )}
-                                            </button>
+                                            </div>
                                         );
                                     })}
                                 </div>

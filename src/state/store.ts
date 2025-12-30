@@ -482,6 +482,55 @@ export const useStore = create<AppState>()(
                 }));
             },
 
+            // Calorie Cycling
+            calorieCycling: {
+                enabled: false,
+                gymAdjustment: 300,
+                restAdjustment: -200,
+            },
+
+            setCalorieCycling: (config) => {
+                set({ calorieCycling: config });
+            },
+
+            getDailyTargets: () => {
+                const state = get();
+                const today = getTodayDateString();
+                const currentLog = state.logs[today]; // Don't create if not exists, just check
+
+                // Base targets
+                let targets = { ...state.targets };
+
+                if (!state.calorieCycling.enabled) {
+                    return targets;
+                }
+
+                // Determine if today is a gym day (re-using logic from toggleGymDay roughly)
+                let isGymDay = false;
+
+                if (currentLog) {
+                    // If log exists, respect overrides or computed type
+                    const isAutoGymDay = currentLog.gym.workoutType !== 'REST';
+                    isGymDay = currentLog.isGymDayOverride !== undefined
+                        ? currentLog.isGymDayOverride
+                        : isAutoGymDay;
+                } else {
+                    // If no log yet, compute theoretical default
+                    const workoutType = getWorkoutTypeForDay(new Date(), state.workoutSchedule);
+                    isGymDay = workoutType !== 'REST';
+                }
+
+                // Apply adjustments
+                if (isGymDay) {
+                    targets.caloriesPerDay += state.calorieCycling.gymAdjustment;
+                    // Optional: Protein could scale too, but sticking to calories for now
+                } else {
+                    targets.caloriesPerDay += state.calorieCycling.restAdjustment;
+                }
+
+                return targets;
+            },
+
             // Dispatch action for various operations
             dispatch: (action: { type: string; payload?: any }) => {
                 const state = get();
