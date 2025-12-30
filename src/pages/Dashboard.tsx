@@ -151,30 +151,19 @@ export function Dashboard() {
                 )}
             </div>
 
-            {/* Tip of the Day - Elegant & Random */}
+            {/* Tip of the Day - Compact & Clean */}
             <div
-                className="group relative mx-1 p-5 bg-gradient-to-br from-surface-800 to-surface-900 border border-white/5 rounded-2xl shadow-lg transition-all hover:border-white/10"
+                className="group relative p-4 bg-surface-800/50 border border-white/5 rounded-2xl shadow-sm hover:bg-surface-800 transition-all"
+                onClick={getNewTip}
             >
-                <div className="flex items-start gap-4">
-                    <span className="text-3xl mt-1 select-none grayscale group-hover:grayscale-0 transition-all duration-500">{currentTip.emoji}</span>
-                    <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                            <div className="text-[10px] font-bold text-neon-teal uppercase tracking-widest opacity-80">
-                                Daily Wisdom
-                            </div>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    getNewTip();
-                                }}
-                                className="text-zinc-500 hover:text-white transition-colors p-1"
-                                title="Shuffle tip"
-                            >
-                                🔄
-                            </button>
+                <div className="flex items-center gap-3">
+                    <span className="text-xl select-none grayscale group-hover:grayscale-0 transition-all">{currentTip.emoji}</span>
+                    <div className="flex-1 flex items-center justify-between gap-4">
+                        <div className="text-sm text-zinc-300 font-medium">
+                            {currentTip.text}
                         </div>
-                        <div className="text-[15px] text-zinc-200 font-medium leading-relaxed italic">
-                            "{currentTip.text}"
+                        <div className="text-zinc-600 group-hover:text-neon-teal transition-colors text-lg opacity-50 group-hover:opacity-100">
+                            →
                         </div>
                     </div>
                 </div>
@@ -354,21 +343,35 @@ export function Dashboard() {
             </div>
 
             {/* Gym Status */}
+            {/* Gym Status */}
             {dayInfo.isGymDay && (
-                <Card className={todayLog.gym.completed ? 'border-green-500/30' : 'border-orange-500/30'}>
+                <Card
+                    className={`${todayLog.gym.completed ? 'border-green-500/30' : 'border-orange-500/30'} cursor-pointer hover:bg-surface-800 transition-colors`}
+                    onClick={() => {
+                        if (!todayLog.gym.completed) {
+                            useStore.getState().completeGym();
+                            showToast('💪 Workout marked as complete!', 'success');
+                        }
+                    }}
+                >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <span className="text-3xl">{todayLog.gym.completed ? '💪' : '🏋️'}</span>
                             <div>
                                 <div className="font-medium text-white">{WORKOUT_LABELS[dayInfo.workoutType]}</div>
                                 <div className="text-sm text-zinc-400">
-                                    {todayLog.gym.completed ? 'Completed!' : 'Pending'}
+                                    {todayLog.gym.completed ? 'Completed!' : 'Tap to mark done'}
                                 </div>
                             </div>
                         </div>
                         {todayLog.gym.completed && (
                             <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
                                 ✓ Done
+                            </span>
+                        )}
+                        {!todayLog.gym.completed && (
+                            <span className="px-3 py-1 bg-surface-700 text-zinc-400 rounded-full text-sm">
+                                Pending
                             </span>
                         )}
                     </div>
