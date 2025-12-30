@@ -134,22 +134,7 @@ export function Dashboard() {
 
     return (
         <div className="space-y-5 pb-24">
-            {/* Day Header with Streak */}
-            <div className="text-center py-4">
-                <div className="text-3xl font-bold text-white">
-                    {dayInfo.dayName}, {dayInfo.date}
-                </div>
-                <div className={`text-lg mt-1 ${dayInfo.isGymDay ? 'text-neon-teal' : 'text-zinc-400'}`}>
-                    {dayInfo.isGymDay ? `💪 ${WORKOUT_LABELS[dayInfo.workoutType]}` : '😴 Rest Day'}
-                </div>
-
-                {/* Streak badge */}
-                {streaks.gym > 0 && (
-                    <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-sm">
-                        🔥 {streaks.gym} day streak
-                    </div>
-                )}
-            </div>
+            {/* Day Header REMOVED as per user request */}
 
             {/* Tip of the Day - Compact & Clean */}
             <div
