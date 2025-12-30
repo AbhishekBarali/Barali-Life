@@ -52,6 +52,12 @@ export function FoodRow({ food, slot, isEaten, intention, onToggleEaten, onSwap 
                         <div className="text-[13px] text-zinc-500">
                             {food.qty} {food.unit} • <span className="text-primary/80">{food.macros.protein}g protein</span>
                         </div>
+                        {food.warning && (
+                            <div className="text-[11px] text-red-400 mt-0.5 flex items-center gap-1 font-medium">
+                                <span>⚠️</span>
+                                <span>{food.warning}</span>
+                            </div>
+                        )}
                     </div>
                 </button>
 

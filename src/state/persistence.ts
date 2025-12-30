@@ -1,141 +1,149 @@
 // ============================================
-// PERSISTENCE - LocalStorage management
+// PERSISTENCE - Day info and calculations
 // ============================================
 
-import { AppState, Mode, FoodId, WorkoutType } from '../types';
-
-export const STORAGE_KEY = 'baraliLife:v1';
+import { useStore } from './store';
+import { WorkoutType, DayType } from '../types';
 
 // ============================================
-// Get today's date in ISO format (Nepal timezone)
+// Get comprehensive day info
 // ============================================
-export function getTodayISO(): string {
-    const now = new Date();
-    // Nepal is UTC+5:45
-    const nepalOffset = 5 * 60 + 45;
-    const utcOffset = now.getTimezoneOffset();
-    const nepalTime = new Date(now.getTime() + (nepalOffset + utcOffset) * 60000);
-    return nepalTime.toISOString().split('T')[0];
+export interface DayInfo {
+    dayName: string;
+    date: string;
+    isGymDay: boolean;
+    dayType: DayType;
+    workoutType: WorkoutType;
+    isCollegeDay: boolean;
+    isSunday: boolean;
 }
 
-// Get current day info
-export function getDayInfo(): { dayName: string; date: string; isGymDay: boolean; workoutType: WorkoutType } {
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export function getDayInfo(): DayInfo {
     const now = new Date();
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const dayOfWeek = now.getDay();
-    const dayName = days[dayOfWeek];
+    const state = useStore.getState();
+    const schedule = state.workoutSchedule;
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = `${now.getDate()} ${months[now.getMonth()]}`;
+    // Determine workout type based on schedule
+    let workoutType: WorkoutType;
+    let isGymDay: boolean;
 
-    // 2-day cycle: Mon/Thu = Day A, Tue/Fri = Day B, Wed/Sat/Sun = Rest
-    let workoutType: WorkoutType = 'REST';
-    if (dayOfWeek === 1 || dayOfWeek === 4) {  // Mon, Thu
-        workoutType = 'DAY_A_PUSH';
-    } else if (dayOfWeek === 2 || dayOfWeek === 5) {  // Tue, Fri
-        workoutType = 'DAY_B_PULL';
-    }
-
-    const isGymDay = workoutType !== 'REST';
-
-    return { dayName, date, isGymDay, workoutType };
-}
-
-// ============================================
-// Default state
-// ============================================
-export const DEFAULT_STATE: AppState = {
-    mode: 'STANDARD_DAY' as Mode,
-    profile: {
-        heightCm: 175,
-        weightKg: 74,
-        goal: 'BODY_RECOMPOSITION',
-    },
-    targets: {
-        proteinPerDay: 130,
-        caloriesPerDay: 2200,
-        waterLiters: 3,
-    },
-    inventory: {
-        availableFoodIds: [
-            'EGGS_BOILED',
-            'EGGS_OMELETTE',
-            'CHICKEN_CURRY',
-            'CHICKEN_AIRFRIED',
-            'SOYA_CHUNKS',
-            'KALA_CHANA',
-            'PANEER',
-            'WHEY',
-            'DAHI',
-            'BANANA',
-            'PEANUTS',
-            'ALMONDS',
-            'PEANUT_BUTTER',
-            'BREAD_PEANUT_BUTTER',
-        ] as FoodId[],
-    },
-    blacklist: ['MOMOS', 'CHOWMEIN', 'SAMOSA', 'SUGARY_TEA', 'COLD_DRINK', 'INSTANT_NOODLES'] as FoodId[],
-    logs: {},
-    streaks: {
-        gym: 0,
-        nutrition: 0,
-    },
-    totalXP: {
-        gym: 0,
-    },
-};
-
-// ============================================
-// Load state from LocalStorage
-// ============================================
-export function loadState(): AppState {
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            return { ...DEFAULT_STATE, ...parsed };
+    if (schedule === 'FOUR_DAY_PUSH_PULL') {
+        // Mon/Thu = Pull, Tue/Fri = Push, Wed/Sat/Sun = Rest
+        if (dayOfWeek === 1 || dayOfWeek === 4) {
+            workoutType = 'DAY_A_PULL';
+            isGymDay = true;
+        } else if (dayOfWeek === 2 || dayOfWeek === 5) {
+            workoutType = 'DAY_B_PUSH';
+            isGymDay = true;
+        } else {
+            workoutType = 'REST';
+            isGymDay = false;
         }
-    } catch (e) {
-        console.error('Failed to load state:', e);
-    }
-    return DEFAULT_STATE;
-}
+    } else {
+        // THREE_DAY_LESS_TIME: Mon/Wed/Fri
+        const weekNumber = Math.floor(now.getTime() / (7 * 24 * 60 * 60 * 1000));
+        const isEvenWeek = weekNumber % 2 === 0;
 
-// ============================================
-// Save state to LocalStorage
-// ============================================
-export function saveState(state: AppState): void {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {
-        console.error('Failed to save state:', e);
-    }
-}
-
-// ============================================
-// Export state as JSON string
-// ============================================
-export function exportState(state: AppState): string {
-    return JSON.stringify(state, null, 2);
-}
-
-// ============================================
-// Import state from JSON object
-// ============================================
-export function importState(data: unknown): AppState | null {
-    try {
-        if (typeof data === 'object' && data !== null) {
-            return { ...DEFAULT_STATE, ...(data as AppState) };
+        if (dayOfWeek === 1) {
+            workoutType = isEvenWeek ? 'FULL_BODY_A' : 'FULL_BODY_B';
+            isGymDay = true;
+        } else if (dayOfWeek === 3) {
+            workoutType = isEvenWeek ? 'FULL_BODY_B' : 'FULL_BODY_A';
+            isGymDay = true;
+        } else if (dayOfWeek === 5) {
+            workoutType = isEvenWeek ? 'FULL_BODY_A' : 'FULL_BODY_B';
+            isGymDay = true;
+        } else {
+            workoutType = 'REST';
+            isGymDay = false;
         }
-    } catch (e) {
-        console.error('Failed to import state:', e);
     }
-    return null;
+
+    // Check for manual override in logs
+    const todayKey = now.toISOString().split('T')[0];
+    const todayLog = state.logs[todayKey];
+    if (todayLog && todayLog.isGymDayOverride !== undefined) {
+        isGymDay = todayLog.isGymDayOverride;
+    }
+
+    // College days: Mon-Fri (except holidays)
+    const isCollegeDay = dayOfWeek >= 1 && dayOfWeek <= 5;
+    const isSunday = dayOfWeek === 0;
+
+    // Day type for calorie adjustments
+    const dayType: DayType = isGymDay ? 'training' : 'rest';
+
+    return {
+        dayName: DAY_NAMES[dayOfWeek],
+        date: now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        isGymDay,
+        dayType,
+        workoutType,
+        isCollegeDay,
+        isSunday,
+    };
 }
 
 // ============================================
-// Clear all stored data
+// Calculate dynamic calorie targets
 // ============================================
-export function clearState(): void {
-    localStorage.removeItem(STORAGE_KEY);
+export function calculateDynamicTargets(
+    isTrainingDay: boolean,
+    weightMode: 'CUT' | 'MAINTAIN' | 'LEAN_BULK',
+    bodyweight: number
+): { protein: number; carbs: number; fat: number; calories: number } {
+    // Protein: 1.8g per kg, rounded to nearest 5, minimum 120g
+    const proteinTarget = Math.max(120, Math.round((1.8 * bodyweight) / 5) * 5);
+
+    // Base targets
+    let calories = isTrainingDay ? 2725 : 2400;
+    let carbs = isTrainingDay ? 355 : 300;
+    let fat = isTrainingDay ? 70 : 70;
+
+    // Mode adjustments
+    if (weightMode === 'CUT') {
+        calories -= isTrainingDay ? 300 : 375;
+        carbs -= isTrainingDay ? 50 : 75;
+    } else if (weightMode === 'LEAN_BULK') {
+        calories += isTrainingDay ? 250 : 150;
+        carbs += isTrainingDay ? 60 : 40;
+    }
+
+    return {
+        protein: proteinTarget,
+        carbs: Math.round(carbs),
+        fat: Math.round(fat),
+        calories: Math.round(calories),
+    };
+}
+
+// ============================================
+// Calculate rice portion based on mode
+// ============================================
+export function getRicePortion(
+    isTrainingDay: boolean,
+    weightMode: 'CUT' | 'MAINTAIN' | 'LEAN_BULK'
+): number {
+    // Base: 200g training, 150g rest
+    let portion = isTrainingDay ? 200 : 150;
+
+    // Mode adjustments
+    if (weightMode === 'CUT') {
+        portion -= 50;
+    } else if (weightMode === 'LEAN_BULK') {
+        portion += 50;
+    }
+
+    return portion;
+}
+
+// ============================================
+// Check if post-workout slot should be shown
+// ============================================
+export function shouldShowPostWorkout(): boolean {
+    const { isGymDay } = getDayInfo();
+    return isGymDay;
 }

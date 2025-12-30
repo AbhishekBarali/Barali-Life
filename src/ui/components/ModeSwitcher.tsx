@@ -13,6 +13,7 @@ const MODE_ICONS: Record<Mode, string> = {
     COLLEGE_RUSH: '🏃',
     BURNT_OUT: '😴',
     BURNT_OUT_COLLEGE: '🎓',
+    SUNDAY_SPECIAL: '🚌',
 };
 
 export function ModeSwitcher() {
@@ -66,7 +67,7 @@ export function ModeSwitcher() {
         setIsOpen(false);
     };
 
-    const modes: Mode[] = ['STANDARD_DAY', 'COLLEGE_RUSH', 'BURNT_OUT', 'BURNT_OUT_COLLEGE'];
+    const modes: Mode[] = ['STANDARD_DAY', 'COLLEGE_RUSH', 'BURNT_OUT', 'BURNT_OUT_COLLEGE', 'SUNDAY_SPECIAL'];
 
     return (
         <>

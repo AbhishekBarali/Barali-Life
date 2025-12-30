@@ -198,7 +198,7 @@ const SPECIFIC_SWAPS: Partial<Record<FoodId, { alternatives: FoodId[]; hints: Pa
             DAHI: '2 bowls + egg',
             MILK: '2 glasses',
             PEANUT_BUTTER: '3 tbsp',
-            ALMONDS: '60g (lots!)',
+            ALMONDS: 'High calorie check!',
             PANEER: '80g',
         },
     },
@@ -266,15 +266,16 @@ const SPECIFIC_SWAPS: Partial<Record<FoodId, { alternatives: FoodId[]; hints: Pa
 
 // Categories for smart fallback
 const FOOD_CATEGORIES: Record<string, FoodId[]> = {
-    PROTEIN_HIGH: ['CHICKEN_CURRY', 'CHICKEN_AIRFRIED', 'CHICKEN_GRILLED', 'BUFF_CURRY', 'FISH_CURRY', 'EGGS_BOILED', 'SOYA_CHUNKS', 'PANEER', 'WHEY', 'DAL_BHAT_CHICKEN'],
-    PROTEIN_VEG: ['SOYA_CHUNKS', 'SOYA_CURRY', 'PANEER', 'PANEER_CURRY', 'KALA_CHANA', 'RAJMA', 'TOFU', 'DAL', 'DAHI'],
-    EGGS: ['EGGS_BOILED', 'EGGS_OMELETTE', 'EGGS_FRIED', 'EGGS_BHURJI', 'EGG_CURRY', 'TOAST_EGG'],
-    DAL_BHAT: ['DAL_BHAT_TARKARI', 'DAL_BHAT_CHICKEN', 'DAL_BHAT_EGG', 'DAL_BHAT_PANEER', 'DAL_BHAT_SOYA', 'DAL_BHAT_FISH', 'DAL_BHAT_MUTTON', 'BHAT_MASU', 'BHAT_TARKARI'],
+    PROTEIN_HIGH: ['CHICKEN_CURRY', 'CHICKEN_AIRFRIED', 'CHICKEN_GRILLED', 'BUFF_CURRY', 'FISH_CURRY', 'EGGS_BOILED', 'SOYA_CHUNKS', 'PANEER', 'WHEY', 'DAL_BHAT_CHICKEN', 'SUKUTI', 'CHOILA_BUFF', 'CHOILA_CHICKEN', 'ROTI_CHICKEN', 'ROTI_MUTTON', 'ROTI_EGG'],
+    PROTEIN_VEG: ['SOYA_CHUNKS', 'SOYA_CURRY', 'PANEER', 'PANEER_CURRY', 'KALA_CHANA', 'RAJMA', 'TOFU', 'DAL', 'DAHI', 'GUNDRUK', 'DAL_BHAT_SOYA', 'ROTI_PANEER', 'ROTI_DAL', 'ROTI_SABJI'],
+    EGGS: ['EGGS_BOILED', 'EGGS_OMELETTE', 'EGGS_FRIED', 'EGGS_BHURJI', 'EGG_CURRY', 'TOAST_EGG', 'ROTI_EGG', 'DAL_BHAT_EGG'],
+    DAL_BHAT: ['DAL_BHAT_TARKARI', 'DAL_BHAT_CHICKEN', 'DAL_BHAT_EGG', 'DAL_BHAT_PANEER', 'DAL_BHAT_SOYA', 'DAL_BHAT_FISH', 'DAL_BHAT_MUTTON', 'BHAT_MASU', 'BHAT_TARKARI', 'KHICHDI', 'ROTI_DAL', 'ROTI_SABJI', 'ROTI_CHICKEN', 'ROTI_MUTTON', 'ROTI_EGG', 'ROTI_PANEER'],
     DAIRY: ['MILK', 'DAHI', 'LASSI', 'BUTTERMILK', 'PANEER', 'CHIURA_DAHI'],
     NUTS: ['PEANUTS', 'ALMONDS', 'CASHEWS', 'WALNUTS', 'MIXED_NUTS', 'ROASTED_CHANA', 'PEANUT_BUTTER'],
     FRUITS: ['BANANA', 'APPLE', 'ORANGE', 'MANGO', 'PAPAYA', 'POMEGRANATE'],
-    BREAKFAST: ['OATS', 'OATS_BANANA', 'OATS_HONEY', 'CORNFLAKES', 'CHIURA_DAHI', 'BREAD_PEANUT_BUTTER', 'TOAST_EGG', 'PARATHA'],
-    SNACKS: ['PEANUTS', 'ALMONDS', 'ROASTED_CHANA', 'MAKHANA', 'DIGESTIVE_BISCUITS', 'PROTEIN_BAR'],
+    BREAKFAST: ['OATS', 'OATS_BANANA', 'OATS_HONEY', 'MUESLI', 'MUESLI_MILK', 'CORNFLAKES', 'CHIURA_DAHI', 'BREAD_PEANUT_BUTTER', 'TOAST_EGG', 'PARATHA', 'PARATHA_ALOO', 'SEL_ROTI', 'MALPUWA'],
+    SNACKS: ['PEANUTS', 'ALMONDS', 'ROASTED_CHANA', 'MAKHANA', 'DIGESTIVE_BISCUIT', 'PROTEIN_BAR', 'DARK_CHOCOLATE', 'MARIE_BISCUIT', 'POPCORN', 'WAI_WAI_DRY', 'KURKURE', 'SUKUTI'],
+    CHEAT: ['MOMO_BUFF', 'MOMO_FRIED', 'CHOWMEIN', 'WAI_WAI_DRY', 'KURKURE', 'SEL_ROTI', 'MALPUWA', 'COKE', 'BEER', 'SAMOSA'],
 };
 
 // Get food category
@@ -305,6 +306,33 @@ function generateUniversalSwaps(foodId: FoodId): { alternatives: FoodId[]; hints
             if (altFood) {
                 hints[f] = `${altFood.macros.protein}g protein`;
             }
+        });
+    }
+
+    // Fallback: Use tags if no alternatives found yet (e.g. Muesli)
+    if (alternatives.length === 0 && food.tags && food.tags.length > 0) {
+        const sameTagFoods = Object.values(FOOD_DATABASE).filter(f =>
+            f.id !== foodId &&
+            f.tags.some(t => food.tags.includes(t)) &&
+            (food.tags.includes('junk') || !f.tags.includes('junk')) // Don't suggest junk for healthy food
+        );
+
+        // Sort by tag relevance (more matching tags = better)
+        sameTagFoods.sort((a, b) => {
+            const aMatch = a.tags.filter(t => food.tags.includes(t)).length;
+            const bMatch = b.tags.filter(t => food.tags.includes(t)).length;
+            return bMatch - aMatch;
+        });
+
+        const startIdx = 0;
+        const endIdx = 8;
+        const bestMatches = sameTagFoods.slice(startIdx, endIdx).map(f => f.id);
+
+        alternatives.push(...bestMatches);
+
+        bestMatches.forEach(id => {
+            const f = FOOD_DATABASE[id];
+            hints[id] = `Similar item`;
         });
     }
 

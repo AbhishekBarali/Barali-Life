@@ -13,7 +13,7 @@ Barali Life has 4 modes to match different daily schedules.
 ### COLLEGE_RUSH
 - **Wake time**: 5:30 AM
 - **Target user**: College days with early classes
-- **Schedule**: Breakfast 5:30AM → Lunch 10AM → Pre-workout 1PM → Post-workout 4PM → Dinner 7:30PM
+- **Schedule**: Breakfast 5:30AM → Tiffin (Packed) 9:05AM → Lunch (Home) 12PM → Post-workout 4PM → Dinner 7:30PM
 
 ### BURNT_OUT
 - **Wake time**: 7:00 AM
@@ -23,7 +23,7 @@ Barali Life has 4 modes to match different daily schedules.
 ### BURNT_OUT_COLLEGE
 - **Wake time**: 5:30 AM  
 - **Target user**: Low energy college days
-- **Key feature**: Same as BURNT_OUT but with 5:30 AM schedule
+- **Key feature**: Same logistics as COLLEGE_RUSH (Tiffin @ 9:05, Home Lunch @ 12) but with minimal effort foods
 
 ## Important Rules for Developers
 

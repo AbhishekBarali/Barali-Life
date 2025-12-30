@@ -161,11 +161,17 @@ export function MealTimeline() {
 
             {mealSlots.map(slot => {
                 const meal = todayLog.meals[slot];
+                if (!meal) return null;
+
                 const status = getMealStatus(slot);
                 const eatenCount = todayLog.eaten.filter(e => e.slot === slot).length;
                 const slotProtein = getSlotProtein(slot);
 
-                if (!meal) return null;
+                // Find extra items (logged but not in plan)
+                const extraEaten = todayLog.eaten.filter(e =>
+                    e.slot === slot &&
+                    !meal.items.some(i => i.id === e.foodId)
+                );
 
                 return (
                     <Card
@@ -231,9 +237,42 @@ export function MealTimeline() {
                                         foodId: food.id,
                                         originalId: food.originalId, // Pass original if food was swapped
                                     })}
+
                                 />
                             ))}
                         </div>
+
+                        {/* Extra Logged Items */}
+                        {extraEaten.length > 0 && (
+                            <div className="mt-4 pt-4 border-t border-white/5 space-y-2">
+                                <div className="text-xs text-zinc-500 font-medium px-1 uppercase tracking-wider">
+                                    Extra / Custom
+                                </div>
+                                {extraEaten.map((entry) => {
+                                    const food = entry.customFood ? {
+                                        id: entry.foodId,
+                                        emoji: '🍽️',
+                                        label: entry.customFood.name,
+                                        qty: entry.qty || 1,
+                                        unit: 'serving',
+                                        tags: ['custom'],
+                                        macros: entry.customFood
+                                    } : getFood(entry.foodId);
+
+                                    return (
+                                        <FoodRow
+                                            key={entry.foodId}
+                                            food={food}
+                                            slot={slot}
+                                            isEaten={true}
+                                            intention={meal.intention}
+                                            onToggleEaten={() => handleToggleEaten(slot, entry.foodId)}
+
+                                        />
+                                    );
+                                })}
+                            </div>
+                        )}
                     </Card>
                 );
             })}

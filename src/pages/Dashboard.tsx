@@ -136,12 +136,12 @@ export function Dashboard() {
             </div>
 
             {/* Calendar Toggle */}
-            <button
+            {/* <button
                 onClick={() => setShowCalendar(!showCalendar)}
                 className="w-full py-3 bg-surface-700 hover:bg-surface-600 rounded-xl text-white font-medium transition-colors flex items-center justify-center gap-2"
             >
                 📅 {showCalendar ? 'Hide Calendar' : 'View Calendar'}
-            </button>
+            </button> */}
 
             {/* Calendar */}
             {showCalendar && <Calendar />}

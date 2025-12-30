@@ -11,10 +11,20 @@ import { BigButton } from '../ui/components/BigButton';
 import { Calendar } from '../ui/components/Calendar';
 import { useToast } from '../ui/components/Toast';
 
-// YOUR ACTUAL GYM ROUTINE (2-day cycle)
-const WORKOUTS = {
-    'DAY_A_PUSH': {
-        name: 'Day A: Push + Legs',
+// YOUR ACTUAL GYM ROUTINE (supports both schedules)
+const WORKOUTS: Record<string, { name: string; description: string; exercises: { name: string; sets: string; emoji: string; muscle: string }[] }> = {
+    'DAY_A_PULL': {
+        name: 'Day A: Pull + Deadlift',
+        description: 'Back, Biceps, Deadlift',
+        exercises: [
+            { name: 'Lat Pulldown', sets: '4x10-12', emoji: '💪', muscle: 'Lats' },
+            { name: 'Cable Rows', sets: '4x10-12', emoji: '🚣', muscle: 'Back' },
+            { name: 'Bicep Curls', sets: '3x12-15', emoji: '💪', muscle: 'Biceps' },
+            { name: 'Deadlift', sets: '4x5-6', emoji: '🏋️', muscle: 'Full Body' },
+        ],
+    },
+    'DAY_B_PUSH': {
+        name: 'Day B: Push + Squats',
         description: 'Chest, Shoulders, Legs',
         exercises: [
             { name: 'Bench Press', sets: '4x8-10', emoji: '🏋️', muscle: 'Chest' },
@@ -23,14 +33,24 @@ const WORKOUTS = {
             { name: 'Squats', sets: '4x8-10', emoji: '🦵', muscle: 'Legs' },
         ],
     },
-    'DAY_B_PULL': {
-        name: 'Day B: Pull + Arms',
-        description: 'Back, Biceps, Deadlift',
+    'FULL_BODY_A': {
+        name: 'Full Body A',
+        description: 'Squat, Bench, Row',
         exercises: [
-            { name: 'Lat Pulldown', sets: '4x10-12', emoji: '💪', muscle: 'Lats' },
-            { name: 'Cable Rows', sets: '4x10-12', emoji: '🚣', muscle: 'Back' },
+            { name: 'Squat', sets: '3x8-10', emoji: '🦵', muscle: 'Legs' },
+            { name: 'Bench Press', sets: '3x8-10', emoji: '🏋️', muscle: 'Chest' },
+            { name: 'Barbell Row', sets: '3x8-10', emoji: '🚣', muscle: 'Back' },
+            { name: 'Shoulder Press', sets: '3x10-12', emoji: '💪', muscle: 'Shoulders' },
+        ],
+    },
+    'FULL_BODY_B': {
+        name: 'Full Body B',
+        description: 'Deadlift, Press, Pulldown',
+        exercises: [
+            { name: 'Deadlift', sets: '3x5-6', emoji: '🏋️', muscle: 'Full Body' },
+            { name: 'Incline Press', sets: '3x8-10', emoji: '🏋️', muscle: 'Chest' },
+            { name: 'Lat Pulldown', sets: '3x10-12', emoji: '💪', muscle: 'Lats' },
             { name: 'Bicep Curls', sets: '3x12-15', emoji: '💪', muscle: 'Biceps' },
-            { name: 'Deadlift', sets: '4x5-6', emoji: '🏋️', muscle: 'Full Body' },
         ],
     },
     'REST': {
@@ -147,7 +167,7 @@ export function Gym() {
     const todayLog = useStore((state) => state.getTodayLog());
     const streaks = useStore((state) => state.streaks);
     const completeGym = useStore((state) => state.completeGym);
-    const missGym = useStore((state) => state.missGym);
+    const skipGym = useStore((state) => state.skipGym);
     const { showToast } = useToast();
 
     const [showCalendar, setShowCalendar] = useState(false);
@@ -157,9 +177,11 @@ export function Gym() {
     const workoutType = todayLog.gym.workoutType;
     const workout = WORKOUTS[workoutType] || WORKOUTS['REST'];
 
-    // Get tips based on workout type
-    const tips = workoutType === 'DAY_A_PUSH' ? PUSH_TIPS
-        : workoutType === 'DAY_B_PULL' ? PULL_TIPS
+    // Get tips based on workout type (PUSH or FULL_BODY_A/B for push days, PULL for pull days)
+    const tips = (workoutType === 'DAY_B_PUSH' || workoutType === 'FULL_BODY_A' || workoutType === 'FULL_BODY_B')
+        ? PUSH_TIPS
+        : (workoutType === 'DAY_A_PULL')
+            ? PULL_TIPS
             : REST_TIPS;
 
     // Randomize on mount
@@ -177,7 +199,7 @@ export function Gym() {
     };
 
     const handleSkip = () => {
-        missGym();
+        skipGym();
         showToast('Streak reset. Get it tomorrow! 💪', 'warning');
     };
 

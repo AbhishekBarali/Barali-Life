@@ -1,128 +1,335 @@
 // ============================================
-// DIET PAGE - Meal planning and tracking
-// FIXED: Progress bar shows actual % (not capped at 100)
+// DIET PAGE - Detailed meal planning & tracking
 // ============================================
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../state/store';
-import { selectTodayMacros } from '../state/selectors';
-import { getDayInfo } from '../state/persistence';
 import { Card } from '../ui/components/Card';
-import { ModeSwitcher } from '../ui/components/ModeSwitcher';
 import { MealTimeline } from '../ui/components/MealTimeline';
-import { MODE_LABELS, WORKOUT_LABELS } from '../types';
+import { ModeSwitcher } from '../ui/components/ModeSwitcher';
+import { useToast } from '../ui/components/Toast';
+import { getDayInfo, calculateDynamicTargets, shouldShowPostWorkout } from '../state/persistence';
+import { FOOD_DATABASE } from '../diet/foods';
+import { DIET_TIPS } from '../diet/tips';
 
 export function Diet() {
     const todayLog = useStore((state) => state.getTodayLog());
-    const targets = useStore((state) => state.targets);
     const mode = useStore((state) => state.mode);
+    const targets = useStore((state) => state.targets);
+    const profile = useStore((state) => state.profile);
+    const weightMode = useStore((state) => state.weightMode);
+    const toggleGymDay = useStore((state) => state.toggleGymDay);
+    const { showToast } = useToast();
+
+    const [showTiffinLibrary, setShowTiffinLibrary] = useState(false);
+    const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * DIET_TIPS.length));
 
     const dayInfo = getDayInfo();
-    const todayMacros = selectTodayMacros(todayLog);
 
-    // Calculate actual percentage (can go above 100%)
-    const proteinProgress = Math.round((todayMacros.protein / targets.proteinPerDay) * 100);
-    // For progress bar width, cap at 100%
-    const progressBarWidth = Math.min(100, proteinProgress);
-    // Show different color when over target
-    const isOverTarget = proteinProgress > 100;
+    // Calculate dynamic targets
+    const dynamicTargets = calculateDynamicTargets(
+        dayInfo.isGymDay,
+        weightMode,
+        profile.weightKg
+    );
+
+    // Calculate today's macros
+    const todayMacros = React.useMemo(() => {
+        let protein = 0, carbs = 0, fat = 0, calories = 0;
+        for (const entry of todayLog.eaten) {
+            if (entry.foodId === 'CUSTOM' && entry.customFood) {
+                protein += entry.customFood.protein;
+                carbs += entry.customFood.carbs;
+                fat += entry.customFood.fat;
+                calories += entry.customFood.calories;
+            } else if (entry.foodId !== 'CUSTOM') {
+                const food = FOOD_DATABASE[entry.foodId];
+                if (food) {
+                    protein += food.macros.protein;
+                    carbs += food.macros.carbs;
+                    fat += food.macros.fat;
+                    calories += food.macros.calories;
+                }
+            }
+        }
+        return { protein, carbs, fat, calories };
+    }, [todayLog.eaten]);
+
+    const proteinProgress = Math.min(100, Math.round((todayMacros.protein / dynamicTargets.protein) * 100));
+    const calorieProgress = Math.min(100, Math.round((todayMacros.calories / dynamicTargets.calories) * 100));
 
     return (
-        <div className="space-y-6 pb-24">
-            {/* Header - Vibrant */}
-            <div className="text-center py-2">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-neon-teal via-green-400 to-neon-teal bg-clip-text text-transparent">
-                    Diet Plan
-                </h1>
-                <p className="text-zinc-400 mt-1">{dayInfo.dayName}, {dayInfo.date}</p>
-                {dayInfo.isGymDay && (
-                    <span className="inline-block mt-2 px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-sm font-medium">
-                        💪 {WORKOUT_LABELS[dayInfo.workoutType]} Day
+        <div className="space-y-5 pb-24">
+            {/* Day Type Badge */}
+            {/* Day Type Badge - Click to toggle */}
+            <div className="text-center">
+                <button
+                    onClick={toggleGymDay}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all hover:opacity-80 active:scale-95 ${dayInfo.isGymDay
+                        ? 'bg-green-500/20 text-green-400'
+                        : 'bg-blue-500/20 text-blue-400'
+                        }`}>
+                    {dayInfo.isGymDay ? '💪 Training Day' : '😴 Rest Day'}
+                    <span className="text-xs opacity-75">
+                        {dayInfo.isGymDay ? `+${Math.abs(dynamicTargets.calories - 2400)}` : '-300'} kcal
                     </span>
-                )}
+                    <span className="text-xs opacity-50 ml-1">
+                        (Tap to switch)
+                    </span>
+                </button>
             </div>
 
             {/* Mode Switcher */}
-            <Card className="border-white/10">
-                <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2">Current Mode</div>
-                <ModeSwitcher />
-            </Card>
+            <ModeSwitcher />
 
-            {/* Macro Summary - Shows actual percentage */}
-            <Card className={`
-                bg-gradient-to-br border shadow-lg
-                ${isOverTarget
-                    ? 'from-green-500/20 via-surface-800 to-emerald-500/10 border-green-500/40 shadow-green-500/20'
-                    : 'from-neon-teal/20 via-surface-800 to-purple-500/10 border-neon-teal/30 shadow-neon-teal/10'}
-            `}>
-                {/* Progress bar at top */}
-                <div className="mb-4">
-                    <div className="flex justify-between text-xs text-zinc-400 mb-1">
-                        <span>Protein Progress</span>
-                        <span className={`font-bold ${isOverTarget ? 'text-green-400' : 'text-neon-teal'}`}>
-                            {proteinProgress}%
-                            {isOverTarget && ' 🎉'}
-                        </span>
-                    </div>
-                    <div className="h-3 bg-surface-700 rounded-full overflow-hidden">
-                        <div
-                            className={`h-full rounded-full transition-all duration-500 relative ${isOverTarget
-                                ? 'bg-gradient-to-r from-green-400 via-emerald-400 to-green-500'
-                                : 'bg-gradient-to-r from-neon-teal via-green-400 to-emerald-400'
-                                }`}
-                            style={{ width: `${progressBarWidth}%` }}
-                        >
-                            <div className="absolute inset-0 bg-white/20 animate-pulse" />
+            {/* Macro Progress */}
+            {/* Macro Progress - Premium UI */}
+            <Card className="relative overflow-hidden border border-white/5 bg-gradient-to-br from-surface-800 to-surface-900 shadow-xl">
+                {/* Background decorative glow */}
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+
+                <div className="space-y-6 relative">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                            <span>📊</span> Daily Targets
+                        </h2>
+                        <div className="text-xs text-zinc-400 bg-surface-700/50 px-2 py-1 rounded-lg">
+                            {Math.round(todayMacros.calories / dynamicTargets.calories * 100)}% Complete
                         </div>
                     </div>
-                </div>
 
-                {/* Macro grid */}
-                <div className="grid grid-cols-4 gap-3">
-                    <div className="text-center p-3 bg-surface-800/50 rounded-xl">
-                        <div className={`text-2xl font-bold ${isOverTarget ? 'text-green-400' : 'text-neon-teal'}`}>
-                            {todayMacros.protein}g
+                    {/* Protein Bar - The Hero */}
+                    <div>
+                        <div className="flex justify-between items-end mb-2">
+                            <span className="text-zinc-400 text-sm font-medium">Protein</span>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-2xl font-bold text-neon-teal">{todayMacros.protein}g</span>
+                                <span className="text-sm text-zinc-500">/ {dynamicTargets.protein}g</span>
+                            </div>
                         </div>
-                        <div className="text-xs text-zinc-500 mt-1">Protein</div>
+                        <div className="w-full h-4 bg-surface-950 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                            <div
+                                className="h-full bg-gradient-to-r from-teal-600 via-neon-teal to-emerald-400 transition-all duration-700 ease-out relative"
+                                style={{ width: `${Math.min(proteinProgress, 100)}%` }}
+                            >
+                                <div className="absolute inset-0 bg-white/20 opacity-0 animate-pulse-slow"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="text-center p-3 bg-surface-800/50 rounded-xl">
-                        <div className="text-2xl font-bold text-white">{todayMacros.carbs}g</div>
-                        <div className="text-xs text-zinc-500 mt-1">Carbs</div>
-                    </div>
-                    <div className="text-center p-3 bg-surface-800/50 rounded-xl">
-                        <div className="text-2xl font-bold text-white">{todayMacros.fat}g</div>
-                        <div className="text-xs text-zinc-500 mt-1">Fat</div>
-                    </div>
-                    <div className="text-center p-3 bg-surface-800/50 rounded-xl">
-                        <div className="text-2xl font-bold text-white">{todayMacros.calories}</div>
-                        <div className="text-xs text-zinc-500 mt-1">kcal</div>
-                    </div>
-                </div>
 
-                {/* Target message */}
-                <div className="mt-4 text-center text-sm">
-                    {isOverTarget ? (
-                        <span className="text-green-400">
-                            🏆 Goal exceeded by {todayMacros.protein - targets.proteinPerDay}g! Amazing!
-                        </span>
-                    ) : (
-                        <span className="text-yellow-400/80">
-                            ⚡ {targets.proteinPerDay - todayMacros.protein}g more protein to hit your goal!
-                        </span>
-                    )}
+                    {/* Calories Bar */}
+                    <div>
+                        <div className="flex justify-between items-end mb-2">
+                            <span className="text-zinc-400 text-sm font-medium">Calories</span>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-xl font-bold text-white">{todayMacros.calories}</span>
+                                <span className="text-sm text-zinc-500">/ {dynamicTargets.calories}</span>
+                            </div>
+                        </div>
+                        <div className="w-full h-3 bg-surface-950 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                            <div
+                                className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 transition-all duration-700 ease-out"
+                                style={{ width: `${Math.min(calorieProgress, 100)}%` }}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Mini Stats Grid */}
+                    <div className="grid grid-cols-2 gap-4 pt-2">
+                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5 flex items-center justify-between">
+                            <div>
+                                <div className="text-xs text-zinc-400">Carbs</div>
+                                <div className="text-lg font-bold text-blue-400">{todayMacros.carbs}g</div>
+                            </div>
+                        </div>
+                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5 flex items-center justify-between">
+                            <div>
+                                <div className="text-xs text-zinc-400">Fats</div>
+                                <div className="text-lg font-bold text-purple-400">{todayMacros.fat}g</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </Card>
 
             {/* Meal Timeline */}
-            <div>
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                    <span>🍽️</span>
-                    <span>Today's Meals</span>
-                </h2>
-                <MealTimeline />
-            </div>
+            <MealTimeline />
+
+            {/* Training Day Nutrition Note - Moved to bottom */}
+            {/* Daily Diet Tip - Shufflable */}
+            <Card className="border-neon-teal/20 bg-neon-teal/5">
+                <div className="flex items-start gap-4">
+                    <span className="text-3xl animate-bounce-slow">{DIET_TIPS[tipIndex].emoji}</span>
+                    <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                            <h3 className="font-bold text-neon-teal">Pro Tip</h3>
+                            <button
+                                onClick={() => setTipIndex(prev => (prev + 1) % DIET_TIPS.length)}
+                                className="text-xs bg-surface-800 hover:bg-surface-700 text-zinc-300 px-2 py-1 rounded-md transition-colors flex items-center gap-1"
+                            >
+                                <span>🎲</span> Shuffle
+                            </button>
+                        </div>
+                        <p className="text-sm text-zinc-300 leading-relaxed">
+                            {DIET_TIPS[tipIndex].text}
+                        </p>
+                    </div>
+                </div>
+            </Card>
 
 
-        </div>
+            {/* Tiffin Library Toggle */}
+            {
+                mode.includes('COLLEGE') && (
+                    <button
+                        onClick={() => setShowTiffinLibrary(!showTiffinLibrary)}
+                        className="w-full py-3 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-xl text-purple-400 font-medium transition-colors"
+                    >
+                        🍱 {showTiffinLibrary ? 'Hide' : 'View'} Tiffin Ideas
+                    </button>
+                )
+            }
+
+            {/* Tiffin Library */}
+            {
+                showTiffinLibrary && (
+                    <div className="space-y-3">
+                        <h3 className="text-lg font-semibold text-white">Tiffin Library (≥20g protein)</h3>
+                        {TIFFIN_OPTIONS.map((option, i) => (
+                            <Card key={i} className="border-purple-500/20">
+                                <div className="flex items-start gap-3">
+                                    <span className="text-2xl">{option.emoji}</span>
+                                    <div className="flex-1">
+                                        <div className="font-medium text-white">{option.name}</div>
+                                        <div className="text-sm text-zinc-400 mt-1">{option.contents}</div>
+                                        <div className="flex items-center gap-3 mt-2 text-xs">
+                                            <span className="text-green-400 font-medium">~{option.protein}g protein</span>
+                                            <span className="text-zinc-500">⏱ {option.packTime}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                )
+            }
+        </div >
     );
 }
+
+// Tiffin options data
+const TIFFIN_OPTIONS = [
+    {
+        emoji: '🥚',
+        name: '2 Boiled Eggs + Dahi',
+        contents: '2 boiled eggs + dahi 200g',
+        protein: 20,
+        packTime: '2 min',
+    },
+    {
+        emoji: '🥚',
+        name: '3 Boiled Eggs + Fruit',
+        contents: '3 boiled eggs + apple/banana + milk 200ml',
+        protein: 25,
+        packTime: '3 min',
+    },
+    {
+        emoji: '🍗',
+        name: 'Chicken + Roti',
+        contents: 'Chicken pieces 100g + roti 1',
+        protein: 30,
+        packTime: '5 min',
+    },
+    {
+        emoji: '🫘',
+        name: 'Soya Chunks (Dry)',
+        contents: 'Soya chunks 40g (dry masala) + cucumber',
+        protein: 21,
+        packTime: '5 min',
+    },
+    {
+        emoji: '🧀',
+        name: 'Paneer + Apple',
+        contents: 'Paneer 120g + apple',
+        protein: 22,
+        packTime: '2 min',
+    },
+    {
+        emoji: '🥣',
+        name: 'Dahi + Chana + Egg',
+        contents: 'Dahi 250g + roasted chana 40g + 1 egg',
+        protein: 24,
+        packTime: '3 min',
+    },
+    {
+        emoji: '🥜',
+        name: 'PB Sandwich + Milk',
+        contents: 'Bread 2 + peanut butter 30g + milk 250ml',
+        protein: 24,
+        packTime: '3 min',
+    },
+    {
+        emoji: '🍳',
+        name: 'Roti Omelette Roll',
+        contents: 'Roti 1 + omelette (2 eggs) + dahi 100g',
+        protein: 22,
+        packTime: '5 min',
+    },
+    {
+        emoji: '🥣',
+        name: 'Overnight Oats',
+        contents: 'Oats 50g + milk 250ml + dahi 100g + nuts',
+        protein: 24,
+        packTime: 'Night before',
+    },
+    {
+        emoji: '🫘',
+        name: 'Chickpea (Chana) Sadeko',
+        contents: 'Boiled chana 200g + onion + tomato + lemon',
+        protein: 15,
+        packTime: '5 min',
+    },
+    {
+        emoji: '🌭',
+        name: 'Soya Chilli',
+        contents: 'Fried soya chunks 50g with capsicum/onion',
+        protein: 26,
+        packTime: '10 min',
+    },
+    {
+        emoji: '🥞',
+        name: 'Besan Cheela (Pancakes)',
+        contents: 'Besan 50g + dahi 100g + veggies',
+        protein: 15,
+        packTime: '10 min',
+    },
+    {
+        emoji: '🥤',
+        name: 'Satu Shake (Power Drink)',
+        contents: 'Satu 4 tbsp + water/milk + sugar/honey',
+        protein: 18,
+        packTime: '1 min',
+    },
+    {
+        emoji: '🥪',
+        name: 'Egg Bhurji Sandwich',
+        contents: '2 Brown bread + 2 egg bhurji',
+        protein: 18,
+        packTime: '5 min',
+    },
+    {
+        emoji: '🥗',
+        name: 'Sprouts Salad',
+        contents: 'Sprouted moong 1 bowl + paneer cubes',
+        protein: 15,
+        packTime: '2 min',
+    },
+    {
+        emoji: '🥜',
+        name: 'Roasted Peanuts Pack',
+        contents: 'Peanuts 50g + Apple + Dahi cup',
+        protein: 16,
+        packTime: '1 min',
+    }
+];

@@ -160,6 +160,35 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
             note: '7:30 PM - Super easy khichdi',
         },
     },
+
+    // SUNDAY SPECIAL - College + commute, no gym, late lunch
+    SUNDAY_SPECIAL: {
+        BREAKFAST: {
+            items: ['MILK', 'BANANA', 'ROASTED_CHANA'],
+            intention: 'LIGHT',
+            note: '5:45 AM - Quick before leaving',
+        },
+        MORNING_SNACK: {
+            items: ['EGGS_BOILED', 'DAHI'],
+            intention: 'PROTEIN_FOCUS',
+            note: '🍱 Tiffin at 9:15 AM',
+        },
+        LUNCH: {
+            items: ['DAL_BHAT_CHICKEN', 'TARKARI', 'SALAD'],
+            intention: 'BALANCED',
+            note: '2:00 PM - Late lunch after bus',
+        },
+        EVENING_SNACK: {
+            items: ['DAHI', 'BANANA'],
+            intention: 'LIGHT',
+            note: '4:30 PM - Light snack (no gym)',
+        },
+        DINNER: {
+            items: ['DAL_BHAT_EGG', 'TARKARI', 'DAHI'],
+            intention: 'BALANCED',
+            note: '7:30 PM - Dinner',
+        },
+    },
 };
 
 // ============================================
@@ -167,6 +196,13 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
 // ============================================
 export function generateMealsForMode(mode: Mode): Record<MealSlot, MealPlan> {
     const template = MEAL_TEMPLATES[mode];
+
+    // Fallback to STANDARD_DAY if mode doesn't exist in templates
+    if (!template) {
+        console.warn(`Template not found for mode "${mode}", falling back to STANDARD_DAY`);
+        return generateMealsForMode('STANDARD_DAY');
+    }
+
     const result: Partial<Record<MealSlot, MealPlan>> = {};
 
     for (const slot of Object.keys(template) as MealSlot[]) {

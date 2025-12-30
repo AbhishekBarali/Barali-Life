@@ -7,6 +7,7 @@ import { Dashboard } from '../pages/Dashboard';
 import { Diet } from '../pages/Diet';
 import { Gym } from '../pages/Gym';
 import { Settings } from '../pages/Settings';
+import { FoodManager } from '../pages/FoodManager';
 
 export const router = createBrowserRouter([
     {
@@ -25,4 +26,9 @@ export const router = createBrowserRouter([
         path: '/settings',
         element: <Settings />,
     },
+    {
+        path: '/foods',
+        element: <FoodManager />,
+    },
 ]);
+

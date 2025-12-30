@@ -23,6 +23,15 @@
 ### Dairy
 - Milk ↔ Dahi ↔ Paneer (as standalone)
 
+### Tiffin Packs (College Mode)
+- Must be dry/easy to pack (no curry spills)
+- Paratha + Dry Aloo ↔ Bread + Peanut Butter ↔ Boiled Eggs + Apple
+- Never swap with liquid gravies
+
+## Naming Conventions
+- **Dal Bhat items** are now explicitly labeled (e.g., "Dal Bhat + Chicken") to indicate the full meal.
+- **Tiffin** is the 9:05 AM slot for College modes.
+
 ## Implementation
 
 Foods have a `swapGroup` tag in their definition:

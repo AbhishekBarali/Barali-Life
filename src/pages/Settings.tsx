@@ -155,16 +155,21 @@ export function Settings() {
                     </div>
                     <div>
                         <label className="text-sm text-zinc-400 block mb-1">Goal</label>
-                        <select
-                            value={editProfile.goal}
-                            onChange={(e) => setEditProfile({ ...editProfile, goal: e.target.value as any })}
-                            className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700"
-                        >
-                            <option value="BODY_RECOMPOSITION">Body Recomposition</option>
-                            <option value="BULK">Bulk</option>
-                            <option value="CUT">Cut</option>
-                            <option value="MAINTAIN">Maintain</option>
-                        </select>
+                        <div className="relative">
+                            <select
+                                value={editProfile.goal}
+                                onChange={(e) => setEditProfile({ ...editProfile, goal: e.target.value as any })}
+                                className="w-full px-4 py-3 bg-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-neon-teal outline-none border border-zinc-700 appearance-none pr-10 touch-manipulation"
+                            >
+                                <option className="bg-zinc-800 text-white py-2" value="BODY_RECOMPOSITION">Body Recomposition</option>
+                                <option className="bg-zinc-800 text-white py-2" value="BULK">Bulk</option>
+                                <option className="bg-zinc-800 text-white py-2" value="CUT">Cut</option>
+                                <option className="bg-zinc-800 text-white py-2" value="MAINTAIN">Maintain</option>
+                            </select>
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none text-xs">
+                                ▼
+                            </div>
+                        </div>
                     </div>
 
                     {/* Save Button */}
