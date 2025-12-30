@@ -137,15 +137,21 @@ export function Dashboard() {
             {/* Day Header REMOVED as per user request */}
 
             {/* Tip of the Day - Compact & Clean */}
+            {/* Tip of the Day - Compact & Clean */}
             <div
-                className="group relative p-4 bg-surface-800/50 border border-white/5 rounded-2xl shadow-sm hover:bg-surface-800 transition-all"
+                className="group relative p-4 bg-surface-800/50 border border-white/5 rounded-2xl shadow-sm hover:bg-surface-800 transition-all cursor-pointer"
                 onClick={getNewTip}
             >
-                <div className="flex items-center gap-3">
-                    <span className="text-xl select-none grayscale group-hover:grayscale-0 transition-all">{currentTip.emoji}</span>
+                <div className="flex items-center gap-4">
+                    <span className="text-2xl select-none grayscale group-hover:grayscale-0 transition-all">{currentTip.emoji}</span>
                     <div className="flex-1 flex items-center justify-between gap-4">
-                        <div className="text-sm text-zinc-300 font-medium">
-                            {currentTip.text}
+                        <div>
+                            <div className="text-[10px] font-bold text-neon-teal uppercase tracking-widest mb-0.5 opacity-80">
+                                Daily Wisdom
+                            </div>
+                            <div className="text-sm text-zinc-300 font-medium leading-snug">
+                                {currentTip.text}
+                            </div>
                         </div>
                         <div className="text-zinc-600 group-hover:text-neon-teal transition-colors text-lg opacity-50 group-hover:opacity-100">
                             →
