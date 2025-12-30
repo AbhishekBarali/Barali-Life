@@ -113,12 +113,12 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         LUNCH: {
             items: ['DAL_BHAT_TARKARI', 'DAHI'],
             intention: 'LIGHT',
-            note: '11 AM - Simple dal bhat',
+            note: 'Simple dal bhat',
         },
         MORNING_SNACK: {
             items: ['PEANUTS', 'ORANGE'],
             intention: 'LIGHT',
-            note: '1 PM - Light snack, skip gym if tired',
+            note: 'Light snack',
         },
         EVENING_SNACK: {
             items: ['WHEY', 'BANANA'],
@@ -128,7 +128,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         DINNER: {
             items: ['ROTI_DAL', 'DAHI'],
             intention: 'LIGHT',
-            note: '8 PM - Simple roti dal',
+            note: 'Simple roti dal',
         },
     },
 
@@ -137,7 +137,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         BREAKFAST: {
             items: ['MUESLI', 'BANANA', 'MILK'],
             intention: 'LIGHT',
-            note: '5:30 AM - Zero effort breakfast',
+            note: 'Zero effort breakfast',
         },
         MORNING_SNACK: {
             items: ['BREAD_PEANUT_BUTTER', 'APPLE'],
@@ -147,7 +147,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         LUNCH: {
             items: ['DAL_BHAT_TARKARI', 'DAHI'],
             intention: 'LIGHT',
-            note: '12 PM - Simple home meal',
+            note: 'Simple home meal',
         },
         EVENING_SNACK: {
             items: ['WHEY'],
@@ -157,7 +157,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         DINNER: {
             items: ['KHICHDI', 'DAHI'],
             intention: 'LIGHT',
-            note: '7:30 PM - Super easy khichdi',
+            note: 'Super easy khichdi',
         },
     },
 
@@ -166,7 +166,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         BREAKFAST: {
             items: ['MILK', 'BANANA', 'ROASTED_CHANA'],
             intention: 'LIGHT',
-            note: '5:45 AM - Quick before leaving',
+            note: 'Quick before leaving',
         },
         MORNING_SNACK: {
             items: ['EGGS_BOILED', 'DAHI'],
@@ -176,17 +176,17 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         LUNCH: {
             items: ['DAL_BHAT_CHICKEN', 'TARKARI', 'SALAD'],
             intention: 'BALANCED',
-            note: '2:00 PM - Late lunch after bus',
+            note: 'Late lunch after bus',
         },
         EVENING_SNACK: {
             items: ['DAHI', 'BANANA'],
             intention: 'LIGHT',
-            note: '4:30 PM - Light snack (no gym)',
+            note: 'Light snack (no gym)',
         },
         DINNER: {
             items: ['DAL_BHAT_EGG', 'TARKARI', 'DAHI'],
             intention: 'BALANCED',
-            note: '7:30 PM - Dinner',
+            note: 'Dinner',
         },
     },
 };

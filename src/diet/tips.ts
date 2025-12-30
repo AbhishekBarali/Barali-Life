@@ -135,5 +135,66 @@ export const DIET_TIPS: DietTip[] = [
     { emoji: '🦷', text: 'Brush your teeth after dinner. Signals "eating window closed".' },
     { emoji: '📝', text: 'Write down what you eat. You\'d be surprised how much you snack.' },
     { emoji: '💧', text: 'Carry a water bottle everywhere. If it\'s there, you\'ll drink it.' },
-    { emoji: '🍬', text: 'Chewing gum can curb cravings in a pinch.' }
+    { emoji: '🍬', text: 'Chewing gum can curb cravings in a pinch.' },
+
+    // --- NEW BATCH 3 (50+ MORE) ---
+    // --- STOIC MINDSET ---
+    { emoji: '🏛️', text: 'We suffer more often in imagination than in reality.' },
+    { emoji: '🧠', text: 'Control what you can. Accept what you can\'t. Know the difference.' },
+    { emoji: '⚡', text: 'Amor Fati: Love your fate. Even the bad parts. It shapes you.' },
+    { emoji: '🔥', text: 'The obstacle is the way. What stands in the way becomes the way.' },
+    { emoji: '⏳', text: 'Memento Mori. You could leave life right now. Let that determine what you do.' },
+    { emoji: '🤐', text: 'Speak only if it improves upon the silence.' },
+    { emoji: '🛡️', text: 'No one can hurt you without your consent. Taking offense is a choice.' },
+    { emoji: '🌅', text: 'Begin each day by telling yourself: Today I shall meet ungrateful, violent, treacherous, envious, uncharitable men.' },
+    { emoji: '🧍', text: 'Stand up straight, not straightened.' },
+    { emoji: '🌱', text: 'Growth happens when you want to quit but don\'t.' },
+
+    // --- PRODUCTIVITY & FOCUS ---
+    { emoji: '🍅', text: 'Pomodoro Technique: 25 mins focus, 5 mins break. It works.' },
+    { emoji: '🐸', text: 'Eat the frog. Do the hardest task first thing in the morning.' },
+    { emoji: '📵', text: 'Put your phone in another room while working. Out of sight, out of mind.' },
+    { emoji: '📝', text: 'If it\'s not on your calendar, it doesn\'t exist.' },
+    { emoji: '🔄', text: 'Batch similar tasks together. Switching context kills focus.' },
+    { emoji: '📉', text: 'Perfectionism is procrastination in a fancy dress.' },
+    { emoji: '🚀', text: 'Done is better than perfect.' },
+    { emoji: '🎧', text: 'White noise or Lo-fi beats can help you enter flow state.' },
+    { emoji: '🧹', text: 'Clean desk, clear mind. Clutter competes for your attention.' },
+    { emoji: '🛑', text: 'Learn to say No. It\'s the ultimate productivity hack.' },
+
+    // --- RELATIONSHIPS & SOCIAL ---
+    { emoji: '👂', text: 'Listen to understand, not to reply.' },
+    { emoji: '🤝', text: 'You are the average of the 5 people you spend the most time with.' },
+    { emoji: '🎁', text: 'Give without expecting anything in return.' },
+    { emoji: '👁️', text: 'Eye contact shows confidence and respect.' },
+    { emoji: '🗣️', text: 'People won\'t remember what you said, but how you made them feel.' },
+    { emoji: '🚪', text: 'Don\'t burn bridges. The world is smaller than you think.' },
+    { emoji: '🙏', text: 'Forgive others, not because they deserve forgiveness, but because you deserve peace.' },
+    { emoji: '🤐', text: 'Never gossip. It makes you look untrustworthy.' },
+    { emoji: '🙌', text: 'Praise in public, criticize in private.' },
+    { emoji: '💡', text: 'Be interested, not interesting.' },
+
+    // --- FINANCIAL WISDOM ---
+    { emoji: '💰', text: 'Spend less than you earn. Invest the difference.' },
+    { emoji: '📈', text: 'Compound interest is the 8th wonder of the world.' },
+    { emoji: '🛍️', text: 'Don\'t buy things you don\'t need to impress people you don\'t like.' },
+    { emoji: '💳', text: 'Credit cards are tools, not free money. Pay full balance every month.' },
+    { emoji: '🎓', text: 'Invest in yourself. Skills pay the highest dividends.' },
+    { emoji: '🏦', text: 'Emergency fund: 6 months of expenses. Peace of mind has a price.' },
+    { emoji: '📉', text: 'Buy low, sell high. Easier said than done. Just HODL.' },
+    { emoji: '💸', text: 'Inflation is the silent killer of savings.' },
+    { emoji: '🧾', text: 'Track every rupee. Awareness is the first step to wealth.' },
+    { emoji: '🤔', text: 'Price is what you pay. Value is what you get.' },
+
+    // --- FITNESS REMINDERS ---
+    { emoji: '👟', text: 'The only bad workout is the one that didn\'t happen.' },
+    { emoji: '💧', text: 'Drinking water reduces bloating. Sounds counterintuitive, but true.' },
+    { emoji: '🍗', text: 'Protein keeps you full longer than carbs.' },
+    { emoji: '⚖️', text: 'Scale weight fluctuates. Trust the mirror and how clothes fit.' },
+    { emoji: '🚶', text: '10k steps a day burns ~400-500 calories. That\'s a meal.' },
+    { emoji: '🧘', text: 'Stretching prevents injuries. Don\'t skip it.' },
+    { emoji: '💪', text: 'Strength training builds bone density. Important as you age.' },
+    { emoji: '🚴', text: 'Mix up your cardio. Boredom is the enemy.' },
+    { emoji: '🍏', text: 'An apple a day... actually has good fiber and keeps you regular.' },
+    { emoji: '🧂', text: 'Salt isn\'t bad unless you have high BP. You need it for pumps.' }
 ];

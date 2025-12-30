@@ -151,21 +151,29 @@ export function Dashboard() {
                 )}
             </div>
 
-            {/* Tip of the Day - Random on each refresh */}
+            {/* Tip of the Day - Elegant & Random */}
             <div
-                onClick={getNewTip}
-                className="mx-1 p-4 bg-gradient-to-br from-surface-800 to-surface-900 border border-white/5 rounded-2xl shadow-lg cursor-pointer hover:border-white/10 transition-all select-none group relative overflow-hidden"
+                className="group relative mx-1 p-5 bg-gradient-to-br from-surface-800 to-surface-900 border border-white/5 rounded-2xl shadow-lg transition-all hover:border-white/10"
             >
-                <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 text-xs">
-                    Tap for new tip 🎲
-                </div>
-                <div className="flex items-start gap-3">
-                    <span className="text-2xl mt-0.5">{currentTip.emoji}</span>
-                    <div>
-                        <div className="text-xs font-bold text-neon-teal uppercase tracking-wider mb-1">
-                            Daily Wisdom
+                <div className="flex items-start gap-4">
+                    <span className="text-3xl mt-1 select-none grayscale group-hover:grayscale-0 transition-all duration-500">{currentTip.emoji}</span>
+                    <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                            <div className="text-[10px] font-bold text-neon-teal uppercase tracking-widest opacity-80">
+                                Daily Wisdom
+                            </div>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    getNewTip();
+                                }}
+                                className="text-zinc-500 hover:text-white transition-colors p-1"
+                                title="Shuffle tip"
+                            >
+                                🔄
+                            </button>
                         </div>
-                        <div className="text-sm text-zinc-300 font-medium leading-relaxed">
+                        <div className="text-[15px] text-zinc-200 font-medium leading-relaxed italic">
                             "{currentTip.text}"
                         </div>
                     </div>
@@ -241,7 +249,7 @@ export function Dashboard() {
                     return (
                         <Card
                             key={slot}
-                            status={status as 'current' | 'done' | 'default'}
+                            status="current" // Always highlighted as requested
                         >
                             {/* Meal Header */}
                             <div className="flex items-center justify-between mb-3">
@@ -269,8 +277,8 @@ export function Dashboard() {
                                 )}
                             </div>
 
-                            {/* Meal note */}
-                            {meal?.note && status === 'current' && (
+                            {/* Meal note - Always show since we removed the weird boolean logic */}
+                            {meal?.note && (
                                 <div className="text-sm text-zinc-400 mb-3 italic">
                                     💡 {meal.note}
                                 </div>
@@ -320,7 +328,7 @@ export function Dashboard() {
                                             <button
                                                 key={item.id}
                                                 onClick={() => handleToggleFood(slot, item.id)}
-                                                className="flex items-center gap-2 px-3 py-2 bg-surface-600 hover:bg-surface-500 rounded-xl text-sm transition-all"
+                                                className="flex items-center gap-2 px-3 py-2 bg-surface-700/80 hover:bg-surface-600 border border-white/10 shadow-lg rounded-xl text-sm transition-all scale-[1.01]"
                                             >
                                                 <span>{item.emoji}</span>
                                                 <span className="text-zinc-300">{item.label}</span>

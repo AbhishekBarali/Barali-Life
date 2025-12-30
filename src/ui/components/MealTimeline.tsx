@@ -176,7 +176,7 @@ export function MealTimeline() {
                 return (
                     <Card
                         key={slot}
-                        status={status as 'current' | 'done' | 'default'}
+                        status="current" // Always highlighted
                         className="animate-fade-in"
                     >
                         {/* Header */}
@@ -186,7 +186,7 @@ export function MealTimeline() {
                                     {SLOT_ICONS[slot]}
                                 </span>
                                 <div>
-                                    <div className={`font-semibold text-lg ${status === 'current' ? 'text-white' : 'text-zinc-200'}`}>
+                                    <div className={`font-semibold text-lg text-white`}>
                                         {mealLabels[slot]}
                                     </div>
                                     <div className="text-xs text-zinc-500">{mealTimes[slot]}</div>
@@ -208,8 +208,8 @@ export function MealTimeline() {
                             </div>
                         </div>
 
-                        {/* Meal note/intention */}
-                        {meal.note && status === 'current' && (
+                        {/* Meal note/intention - Always show */}
+                        {meal.note && (
                             <div className="mb-4 px-3 py-2 bg-primary/5 rounded-lg border border-primary/10">
                                 <span className="text-sm text-primary/80">💡 {meal.note}</span>
                             </div>
@@ -237,7 +237,7 @@ export function MealTimeline() {
                                         foodId: food.id,
                                         originalId: food.originalId, // Pass original if food was swapped
                                     })}
-                                    isActiveSlot={status === 'current'}
+                                    isActiveSlot={true} // Always highlighted as requested
                                 />
                             ))}
                         </div>
