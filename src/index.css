@@ -45,9 +45,39 @@
   --color-text-muted: var(--text-muted);
 }
 
-/* Base Theme Variables (Default = Midnight Pro) */
-/* Deep, professional slate blue. Think GitHub Dark / VS Code */
+/* Base Theme Variables (Default = Obsidian / Focus) */
+/* True Black. High contrast. Zero visual noise. Now with subtle sleekness. */
 :root {
+  --bg-base: #000000;
+  --bg-elevated: #121212;
+  /* Fallback */
+
+  /* Gradient Overrides for sleek look */
+  --bg-gradient-base: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000000 70%);
+
+  --surface-900: #121212;
+  --surface-800: #1e1e1e;
+  --surface-700: #2d2d2d;
+  --surface-600: #3f3f3f;
+
+  --primary: #ffffff;
+  /* Pure White */
+  --primary-light: #e5e5e5;
+  --primary-dark: #a3a3a3;
+
+  --secondary: #525252;
+  /* Neutral 600 */
+  --accent: #22c55e;
+  /* Green 500 */
+
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #525252;
+}
+
+/* Midnight Pro (formerly Default) */
+/* Deep, professional slate blue. Think GitHub Dark / VS Code */
+[data-theme="midnight"] {
   --bg-base: #0f172a;
   /* Slate 900 */
   --bg-elevated: #1e293b;
@@ -131,28 +161,6 @@
   /* Red 500 - Only for important things */
 }
 
-/* Obsidian / Focus (formerly Neon) */
-/* True Black. High contrast. Zero visual noise. */
-[data-theme="neon"] {
-  --bg-base: #000000;
-  --bg-elevated: #121212;
-
-  --surface-900: #121212;
-  --surface-800: #1e1e1e;
-  --surface-700: #2d2d2d;
-  --surface-600: #3f3f3f;
-
-  --primary: #ffffff;
-  /* Pure White */
-  --primary-light: #e5e5e5;
-  --primary-dark: #a3a3a3;
-
-  --secondary: #525252;
-  /* Neutral 600 */
-  --accent: #22c55e;
-  /* Green 500 */
-}
-
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
@@ -178,7 +186,7 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-base);
+  background: var(--bg-gradient-base, var(--bg-base));
   color: var(--text-primary);
   line-height: 1.5;
 }

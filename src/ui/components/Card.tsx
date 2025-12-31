@@ -74,11 +74,11 @@ export function MiniCard({ label, value, icon, className = '', highlight = false
                 : 'bg-surface-700/50 border border-white/[0.04]'}
             ${className}
         `}>
-            <div className={`flex items-center gap-2 text-xs mb-1 ${highlight ? 'text-primary' : 'text-zinc-500'}`}>
+            <div className={`flex items-center gap-2 text-xs mb-1 ${highlight ? 'text-[var(--primary)]' : 'text-[var(--text-muted)]'}`}>
                 {icon && <span>{icon}</span>}
                 <span className="font-medium">{label}</span>
             </div>
-            <div className={`font-semibold text-lg ${highlight ? 'text-primary' : 'text-white'}`}>
+            <div className={`font-semibold text-lg ${highlight ? 'text-[var(--primary)]' : 'text-[var(--text-primary)]'}`}>
                 {value}
             </div>
         </div>

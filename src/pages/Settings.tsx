@@ -418,6 +418,20 @@ export function Settings() {
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
+                            <div className="w-4 h-4 rounded-full bg-[#ffffff] border border-zinc-700" />
+                            <span className="text-sm font-medium text-[var(--text-primary)]">Obsidian (Default)</span>
+                        </div>
+                        <div className="text-xs text-[var(--text-secondary)]">True Black & Gradient</div>
+                    </button>
+
+                    <button
+                        onClick={() => setTheme('midnight')}
+                        className={`p-3 rounded-xl border text-left transition-all ${theme === 'midnight'
+                            ? 'bg-[var(--surface-800)] border-[var(--primary)] ring-1 ring-[var(--primary)]'
+                            : 'bg-[var(--surface-900)] border-transparent hover:bg-[var(--surface-800)]'
+                            }`}
+                    >
+                        <div className="flex items-center gap-2 mb-2">
                             <div className="w-4 h-4 rounded-full bg-[#38bdf8]" />
                             <span className="text-sm font-medium text-[var(--text-primary)]">Midnight Pro</span>
                         </div>
@@ -450,20 +464,6 @@ export function Settings() {
                             <span className="text-sm font-medium text-[var(--text-primary)]">Slate</span>
                         </div>
                         <div className="text-xs text-[var(--text-secondary)]">Monochrome</div>
-                    </button>
-
-                    <button
-                        onClick={() => setTheme('neon')}
-                        className={`p-3 rounded-xl border text-left transition-all ${theme === 'neon'
-                            ? 'bg-[var(--surface-800)] border-[var(--primary)] ring-1 ring-[var(--primary)]'
-                            : 'bg-[var(--surface-900)] border-transparent hover:bg-[var(--surface-800)]'
-                            }`}
-                    >
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="w-4 h-4 rounded-full bg-[#ffffff] border border-zinc-700" />
-                            <span className="text-sm font-medium text-[var(--text-primary)]">Obsidian</span>
-                        </div>
-                        <div className="text-xs text-[var(--text-secondary)]">True Black</div>
                     </button>
                 </div>
             </Card>

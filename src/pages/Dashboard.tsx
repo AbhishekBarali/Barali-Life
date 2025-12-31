@@ -411,7 +411,7 @@ export function Dashboard() {
                             </span>
                         )}
                         {!todayLog.gym.completed && (
-                            <span className="px-3 py-1 bg-surface-700 text-zinc-400 rounded-full text-sm">
+                            <span className="px-3 py-1 bg-[var(--surface-700)] text-[var(--text-muted)] rounded-full text-sm">
                                 Pending
                             </span>
                         )}

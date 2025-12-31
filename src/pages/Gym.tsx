@@ -257,10 +257,10 @@ export function Gym() {
                                 <span className="text-xl">{ex.emoji}</span>
                                 <div>
                                     <span className="text-white font-medium">{ex.name}</span>
-                                    <div className="text-xs text-zinc-500">{ex.muscle}</div>
+                                    <div className="text-xs text-[var(--text-muted)]">{ex.muscle}</div>
                                 </div>
                             </div>
-                            <span className="text-neon-teal font-mono">{ex.sets}</span>
+                            <span className="text-[var(--primary)] font-mono">{ex.sets}</span>
                         </div>
                     ))}
                 </div>

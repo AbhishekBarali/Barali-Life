@@ -266,7 +266,7 @@ export interface CalorieCycling {
     restAdjustment: number;
 }
 
-export type ThemeType = 'default' | 'apple' | 'sunset' | 'neon';
+export type ThemeType = 'default' | 'apple' | 'sunset' | 'neon' | 'midnight';
 
 export interface AppState {
     // Current state

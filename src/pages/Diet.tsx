@@ -131,16 +131,14 @@ export function Diet() {
                             <span className="text-[var(--text-secondary)] text-sm font-medium">Protein</span>
                             <div className="flex items-baseline gap-1.5">
                                 <span className="text-xl font-bold text-[var(--primary)]">{todayMacros.protein}g</span>
-                                <span className="text-base text-[var(--text-muted)]">/ {effectiveTargets.protein}g</span>
+                                <span className="text-sm text-[var(--text-muted)]">/ {effectiveTargets.protein}g</span>
                             </div>
                         </div>
-                        <div className="w-full h-4 bg-[var(--surface-950)] rounded-full overflow-hidden border border-white/5 shadow-inner">
+                        <div className="w-full h-2 bg-[var(--bg-elevated)] rounded-full overflow-hidden border border-white/5 shadow-inner">
                             <div
                                 className="h-full bg-[var(--primary)] transition-all duration-700 ease-out relative"
                                 style={{ width: `${Math.min(proteinProgress, 100)}%` }}
-                            >
-                                <div className="absolute inset-0 bg-white/20 opacity-0 animate-pulse-slow"></div>
-                            </div>
+                            />
                         </div>
                     </div>
 
@@ -149,11 +147,11 @@ export function Diet() {
                         <div className="flex justify-between items-end mb-2">
                             <span className="text-[var(--text-secondary)] text-sm font-medium">Calories</span>
                             <div className="flex items-baseline gap-1.5">
-                                <span className="text-lg font-bold text-[var(--text-primary)]">{todayMacros.calories}</span>
+                                <span className="text-xl font-bold text-[var(--text-primary)]">{todayMacros.calories}</span>
                                 <span className="text-sm text-[var(--text-muted)]">/ {effectiveTargets.calories}</span>
                             </div>
                         </div>
-                        <div className="w-full h-3 bg-[var(--surface-950)] rounded-full overflow-hidden border border-white/5 shadow-inner">
+                        <div className="w-full h-2 bg-[var(--bg-elevated)] rounded-full overflow-hidden border border-white/5 shadow-inner">
                             <div
                                 className="h-full bg-[var(--text-secondary)] transition-all duration-700 ease-out"
                                 style={{ width: `${Math.min(calorieProgress, 100)}%` }}
@@ -234,7 +232,7 @@ export function Diet() {
                                             : 'bg-transparent text-[var(--text-secondary)] hover:bg-[var(--surface-800)] border border-transparent'
                                             }`}
                                     >
-                                        <span className="mr-1 grayscale">{info.emoji}</span>
+                                        <span className="mr-1">{info.emoji}</span>
                                         <span>{info.label}</span>
                                     </button>
                                 );
@@ -255,13 +253,13 @@ export function Diet() {
                                         onClick={() => setExpandedTiffinId(isExpanded ? null : tiffin.id)}
                                         className={`rounded-2xl border transition-all duration-200 cursor-pointer overflow-hidden ${isExpanded
                                             ? 'bg-[var(--surface-800)] border-[var(--surface-600)]'
-                                            : 'bg-[var(--surface-800)]/40 border-[var(--surface-700)] hover:bg-[var(--surface-800)]'
+                                            : 'bg-[var(--surface-800)]/90 border-[var(--surface-700)] hover:bg-[var(--surface-800)]'
                                             }`}
                                     >
                                         <div className="p-4">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-2xl grayscale opacity-80">{tiffin.emoji}</span>
+                                                    <span className="text-2xl">{tiffin.emoji}</span>
                                                     <div>
                                                         <div className="font-medium text-[var(--text-primary)]">{tiffin.name}</div>
                                                         <div className="flex items-center gap-2 mt-1 text-xs">
