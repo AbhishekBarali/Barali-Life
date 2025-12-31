@@ -7,10 +7,14 @@ import { useStore } from '../state/store';
 import { Card } from '../ui/components/Card';
 import { MealTimeline } from '../ui/components/MealTimeline';
 import { ModeSwitcher } from '../ui/components/ModeSwitcher';
+import { RecipeModal } from '../ui/components/RecipeModal';
 import { useToast } from '../ui/components/Toast';
 import { getDayInfo, calculateDynamicTargets, shouldShowPostWorkout } from '../state/persistence';
-import { FOOD_DATABASE } from '../diet/foods';
+import { FOOD_DATABASE, getFood } from '../diet/foods';
+import { hasRecipe } from '../diet/recipes';
 import { DIET_TIPS } from '../diet/tips';
+import { TiffinCategory, TIFFIN_CATEGORIES, getTiffinsByCategory } from '../diet/tiffins';
+import { FoodId } from '../types';
 
 export function Diet() {
     const todayLog = useStore((state) => state.getTodayLog());
@@ -20,9 +24,12 @@ export function Diet() {
     const profile = useStore((state) => state.profile);
     const weightMode = useStore((state) => state.weightMode);
     const toggleGymDay = useStore((state) => state.toggleGymDay);
+    const logFood = useStore((state) => state.logFood);
     const { showToast } = useToast();
 
     const [showTiffinLibrary, setShowTiffinLibrary] = useState(false);
+    const [tiffinCategory, setTiffinCategory] = useState<TiffinCategory>('QUICK_RUSH');
+    const [selectedRecipe, setSelectedRecipe] = useState<FoodId | null>(null);
     const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * DIET_TIPS.length));
 
     const dayInfo = getDayInfo();
@@ -211,145 +218,112 @@ export function Diet() {
                 )
             }
 
-            {/* Tiffin Library */}
+            {/* Tiffin Library - Now with Categories! */}
             {
                 showTiffinLibrary && (
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold text-white">Tiffin Library (≥20g protein)</h3>
-                        {TIFFIN_OPTIONS.map((option, i) => (
-                            <Card key={i} className="border-purple-500/20">
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">{option.emoji}</span>
-                                    <div className="flex-1">
-                                        <div className="font-medium text-white">{option.name}</div>
-                                        <div className="text-sm text-zinc-400 mt-1">{option.contents}</div>
-                                        <div className="flex items-center gap-3 mt-2 text-xs">
-                                            <span className="text-green-400 font-medium">~{option.protein}g protein</span>
-                                            <span className="text-zinc-500">⏱ {option.packTime}</span>
+                    <div className="space-y-4">
+                        {/* Category Tabs */}
+                        <div className="flex gap-2">
+                            {(['QUICK_RUSH', 'MEDIUM_TIME', 'MEAL_PREP'] as TiffinCategory[]).map((cat) => {
+                                const info = TIFFIN_CATEGORIES[cat];
+                                const isActive = tiffinCategory === cat;
+                                return (
+                                    <button
+                                        key={cat}
+                                        onClick={() => setTiffinCategory(cat)}
+                                        className={`flex-1 py-2 px-2 rounded-xl text-xs font-medium transition-all ${isActive
+                                            ? 'bg-purple-500 text-white'
+                                            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+                                            }`}
+                                    >
+                                        <span className="mr-1">{info.emoji}</span>
+                                        <span>{info.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Category Description */}
+                        <p className="text-xs text-zinc-500 text-center">
+                            {TIFFIN_CATEGORIES[tiffinCategory].emoji} {TIFFIN_CATEGORIES[tiffinCategory].description}
+                        </p>
+
+                        {/* Tiffin List */}
+                        <div className="space-y-3">
+                            {getTiffinsByCategory(tiffinCategory).map((tiffin) => (
+                                <Card key={tiffin.id} className="border-purple-500/20">
+                                    <div className="flex items-start gap-3">
+                                        <span className="text-2xl">{tiffin.emoji}</span>
+                                        <div className="flex-1">
+                                            <div className="font-medium text-white">{tiffin.name}</div>
+                                            <div className="text-sm text-zinc-400 mt-1">{tiffin.prepNote}</div>
+
+                                            {/* Tip */}
+                                            {tiffin.tip && (
+                                                <div className="text-xs text-purple-400 mt-1 flex items-center gap-1">
+                                                    <span>💡</span>
+                                                    <span>{tiffin.tip}</span>
+                                                </div>
+                                            )}
+
+                                            <div className="flex items-center gap-3 mt-2 text-xs">
+                                                <span className="text-green-400 font-medium">{tiffin.totalProtein}g protein</span>
+                                                <span className="text-zinc-500">{tiffin.totalCalories} kcal</span>
+                                                <span className="text-zinc-500">⏱ {tiffin.prepTime}</span>
+                                            </div>
+
+                                            {/* Items with Recipe Links */}
+                                            <div className="flex flex-wrap gap-1 mt-2">
+                                                {tiffin.items.map((foodId) => {
+                                                    const food = getFood(foodId);
+                                                    const hasRecipeForItem = hasRecipe(foodId);
+                                                    return (
+                                                        <span
+                                                            key={foodId}
+                                                            className={`px-2 py-0.5 bg-zinc-700/50 rounded text-xs text-zinc-400 ${hasRecipeForItem ? 'cursor-pointer hover:bg-zinc-600' : ''
+                                                                }`}
+                                                            onClick={() => {
+                                                                if (hasRecipeForItem) {
+                                                                    setSelectedRecipe(foodId);
+                                                                }
+                                                            }}
+                                                        >
+                                                            {food.emoji} {food.label}
+                                                            {hasRecipeForItem && ' 📖'}
+                                                        </span>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {/* Quick Add Button */}
+                                            <button
+                                                onClick={() => {
+                                                    tiffin.items.forEach(foodId => {
+                                                        logFood('MORNING_SNACK', foodId);
+                                                    });
+                                                    showToast(`Added ${tiffin.name} to Tiffin! 🍱`, 'success');
+                                                }}
+                                                className="mt-3 w-full py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <span>➕</span>
+                                                <span>Quick Add to Tiffin</span>
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            </Card>
-                        ))}
+                                </Card>
+                            ))}
+                        </div>
                     </div>
                 )
             }
+
+            {/* Recipe Modal */}
+            <RecipeModal
+                foodId={selectedRecipe}
+                isOpen={!!selectedRecipe}
+                onClose={() => setSelectedRecipe(null)}
+            />
         </div >
     );
 }
 
-// Tiffin options data
-const TIFFIN_OPTIONS = [
-    {
-        emoji: '🥚',
-        name: '2 Boiled Eggs + Dahi',
-        contents: '2 boiled eggs + dahi 200g',
-        protein: 20,
-        packTime: '2 min',
-    },
-    {
-        emoji: '🥚',
-        name: '3 Boiled Eggs + Fruit',
-        contents: '3 boiled eggs + apple/banana + milk 200ml',
-        protein: 25,
-        packTime: '3 min',
-    },
-    {
-        emoji: '🍗',
-        name: 'Chicken + Roti',
-        contents: 'Chicken pieces 100g + roti 1',
-        protein: 30,
-        packTime: '5 min',
-    },
-    {
-        emoji: '🫘',
-        name: 'Soya Chunks (Dry)',
-        contents: 'Soya chunks 40g (dry masala) + cucumber',
-        protein: 21,
-        packTime: '5 min',
-    },
-    {
-        emoji: '🧀',
-        name: 'Paneer + Apple',
-        contents: 'Paneer 120g + apple',
-        protein: 22,
-        packTime: '2 min',
-    },
-    {
-        emoji: '🥣',
-        name: 'Dahi + Chana + Egg',
-        contents: 'Dahi 250g + roasted chana 40g + 1 egg',
-        protein: 24,
-        packTime: '3 min',
-    },
-    {
-        emoji: '🥜',
-        name: 'PB Sandwich + Milk',
-        contents: 'Bread 2 + peanut butter 30g + milk 250ml',
-        protein: 24,
-        packTime: '3 min',
-    },
-    {
-        emoji: '🍳',
-        name: 'Roti Omelette Roll',
-        contents: 'Roti 1 + omelette (2 eggs) + dahi 100g',
-        protein: 22,
-        packTime: '5 min',
-    },
-    {
-        emoji: '🥣',
-        name: 'Overnight Oats',
-        contents: 'Oats 50g + milk 250ml + dahi 100g + nuts',
-        protein: 24,
-        packTime: 'Night before',
-    },
-    {
-        emoji: '🫘',
-        name: 'Chickpea (Chana) Sadeko',
-        contents: 'Boiled chana 200g + onion + tomato + lemon',
-        protein: 15,
-        packTime: '5 min',
-    },
-    {
-        emoji: '🌭',
-        name: 'Soya Chilli',
-        contents: 'Fried soya chunks 50g with capsicum/onion',
-        protein: 26,
-        packTime: '10 min',
-    },
-    {
-        emoji: '🥞',
-        name: 'Besan Cheela (Pancakes)',
-        contents: 'Besan 50g + dahi 100g + veggies',
-        protein: 15,
-        packTime: '10 min',
-    },
-    {
-        emoji: '🥤',
-        name: 'Satu Shake (Power Drink)',
-        contents: 'Satu 4 tbsp + water/milk + sugar/honey',
-        protein: 18,
-        packTime: '1 min',
-    },
-    {
-        emoji: '🥪',
-        name: 'Egg Bhurji Sandwich',
-        contents: '2 Brown bread + 2 egg bhurji',
-        protein: 18,
-        packTime: '5 min',
-    },
-    {
-        emoji: '🥗',
-        name: 'Sprouts Salad',
-        contents: 'Sprouted moong 1 bowl + paneer cubes',
-        protein: 15,
-        packTime: '2 min',
-    },
-    {
-        emoji: '🥜',
-        name: 'Roasted Peanuts Pack',
-        contents: 'Peanuts 50g + Apple + Dahi cup',
-        protein: 16,
-        packTime: '1 min',
-    }
-];

@@ -10,6 +10,7 @@ import { getDayInfo } from '../state/persistence';
 import { Card } from '../ui/components/Card';
 import { useToast } from '../ui/components/Toast';
 import { RecipeModal } from '../ui/components/RecipeModal';
+import { TiffinIdeasModal } from '../ui/components/TiffinIdeasModal';
 import { Calendar } from '../ui/components/Calendar';
 import { FoodId, MealSlot, MODE_MEAL_LABELS, MODE_MEAL_TIMES, MODE_MEAL_ORDER, WORKOUT_LABELS } from '../types';
 import { isBlacklisted } from '../diet/blacklist';
@@ -35,6 +36,7 @@ export function Dashboard() {
 
     const [selectedRecipe, setSelectedRecipe] = useState<FoodId | null>(null);
     const [showCalendar, setShowCalendar] = useState(false);
+    const [showTiffinIdeas, setShowTiffinIdeas] = useState(false);
 
     // Random Tip Logic
     const [currentTip, setCurrentTip] = useState(() => {
@@ -267,6 +269,17 @@ export function Dashboard() {
                                     </div>
                                 </div>
 
+                                {/* Tiffin Ideas Button - only for MORNING_SNACK */}
+                                {slot === 'MORNING_SNACK' && (
+                                    <button
+                                        onClick={() => setShowTiffinIdeas(true)}
+                                        className="px-3 py-1.5 bg-purple-500/20 text-purple-400 rounded-lg text-xs font-medium hover:bg-purple-500/30 transition-colors flex items-center gap-1"
+                                    >
+                                        <span>💡</span>
+                                        <span>Ideas</span>
+                                    </button>
+                                )}
+
                                 {eatenInSlot.length > 0 && (
                                     <div className="text-sm text-primary">
                                         +{eatenInSlot.reduce((sum, e) => {
@@ -405,6 +418,16 @@ export function Dashboard() {
                 foodId={selectedRecipe}
                 isOpen={!!selectedRecipe}
                 onClose={() => setSelectedRecipe(null)}
+            />
+
+            {/* Tiffin Ideas Modal */}
+            <TiffinIdeasModal
+                isOpen={showTiffinIdeas}
+                onClose={() => setShowTiffinIdeas(false)}
+                onOpenRecipe={(foodId) => {
+                    setShowTiffinIdeas(false);
+                    setSelectedRecipe(foodId);
+                }}
             />
         </div>
     );
