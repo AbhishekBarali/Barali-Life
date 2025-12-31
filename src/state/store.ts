@@ -174,6 +174,13 @@ export const useStore = create<AppState>()(
                 const state = get();
                 const currentLog = state.logs[today] || createDefaultDayLog(state.mode, state.workoutSchedule);
 
+                // Check dependencies (prevent duplicate non-custom items)
+                const isAlreadyLogged = currentLog.eaten.some(
+                    (e) => e.slot === slot && e.foodId === foodId && foodId !== 'CUSTOM'
+                );
+
+                if (isAlreadyLogged) return; // Prevent duplicates
+
                 const entry: EatenEntry = { slot, foodId };
                 if (qty !== undefined) entry.qty = qty;
 
