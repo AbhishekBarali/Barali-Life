@@ -76,9 +76,9 @@ function createDefaultDayLog(mode: Mode, schedule: WorkoutSchedule): DayLog {
 // ============================================
 const DEFAULT_TARGETS: MacroTargets = {
     proteinPerDay: 140,
-    carbsPerDay: 350,
-    fatPerDay: 70,
-    caloriesPerDay: 2700,
+    carbsPerDay: 280,
+    fatPerDay: 65,
+    caloriesPerDay: 2250,
     waterLiters: 2.5,
 };
 
@@ -108,11 +108,11 @@ function scaleMealsToTarget(meals: Record<MealSlot, MealPlan>, targetCalories: n
 
     const ratio = targetCalories / currentCalories;
 
-    // Safety bounds: Don't scale too wildly (0.5x to 1.5x)
-    // If ratio is extreme, maybe the template is just too far off, but we'll cap it
-    const safeRatio = Math.max(0.5, Math.min(1.5, ratio));
+    // Safety bounds: 0.7x to 1.3x (allows 2250/2700 = 0.83x scaling)
+    const safeRatio = Math.max(0.7, Math.min(1.3, ratio));
 
-    if (Math.abs(safeRatio - 1) < 0.05) return meals; // Ignore small changes
+    // Ignore very small changes (< 3% difference)
+    if (Math.abs(safeRatio - 1) < 0.03) return meals;
 
     const newMeals = { ...meals };
 
@@ -122,22 +122,24 @@ function scaleMealsToTarget(meals: Record<MealSlot, MealPlan>, targetCalories: n
         if (!plan) return;
 
         const newItems = plan.items.map(item => {
-            // Only scale items that make sense to scale (e.g. rice, chicken, oats)
-            // Don't scale "1 banana" or "2 slices bread" as easily (unless we want 1.2 bananas?)
-            // Let's scale 'g', 'ml', 'plate', 'bowl'.
-            // Exclude 'pieces', 'slices', 'medium', 'eggs' (discrete units)
+            // Scale items with scalable units (g, ml, plate, bowl, cup)
+            // Don't scale discrete units (pieces, slices, eggs, medium)
             const scalableUnits = ['g', 'ml', 'plate', 'bowl', 'cup'];
 
             if (scalableUnits.includes(item.unit)) {
                 const newQty = item.qty * safeRatio;
                 // Round nicely:
                 // If g/ml, round to nearest 5 or 10
-                // If plate/bowl, round to 1 decimal
+                // If plate/bowl/cup, round to 1 decimal
                 let roundedQty = newQty;
                 if (item.unit === 'g' || item.unit === 'ml') {
                     roundedQty = Math.round(newQty / 5) * 5;
+                    // Minimum 10g/10ml
+                    roundedQty = Math.max(10, roundedQty);
                 } else {
                     roundedQty = Math.round(newQty * 10) / 10;
+                    // Minimum 0.5 plates/bowls
+                    roundedQty = Math.max(0.5, roundedQty);
                 }
 
                 // Recalculate macros based on ACTUAL ratio of change (rounded / old)
@@ -151,10 +153,18 @@ function scaleMealsToTarget(meals: Record<MealSlot, MealPlan>, targetCalories: n
                         carbs: Math.round(item.macros.carbs * actualItemRatio),
                         fat: Math.round(item.macros.fat * actualItemRatio),
                         calories: Math.round(item.macros.calories * actualItemRatio),
+                        fiber: item.macros.fiber ? Math.round(item.macros.fiber * actualItemRatio) : undefined,
                     }
                 };
             }
-            return item;
+            // For non-scalable units, still preserve fiber in macros
+            return {
+                ...item,
+                macros: {
+                    ...item.macros,
+                    fiber: item.macros.fiber,
+                }
+            };
         });
 
         newMeals[slot] = {

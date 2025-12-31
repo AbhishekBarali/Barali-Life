@@ -71,13 +71,14 @@ export function Dashboard() {
 
     // Calculate today's macros from eaten foods
     const todayMacros = React.useMemo(() => {
-        let protein = 0, carbs = 0, fat = 0, calories = 0;
+        let protein = 0, carbs = 0, fat = 0, calories = 0, fiber = 0;
         for (const entry of todayLog.eaten) {
             if (entry.foodId === 'CUSTOM' && entry.customFood) {
                 protein += entry.customFood.protein;
                 carbs += entry.customFood.carbs;
                 fat += entry.customFood.fat;
                 calories += entry.customFood.calories;
+                // Custom foods may not have fiber
             } else if (entry.foodId !== 'CUSTOM') {
                 const food = FOOD_DATABASE[entry.foodId];
                 if (food) {
@@ -85,10 +86,11 @@ export function Dashboard() {
                     carbs += food.macros.carbs;
                     fat += food.macros.fat;
                     calories += food.macros.calories;
+                    fiber += food.macros.fiber || 0;
                 }
             }
         }
-        return { protein, carbs, fat, calories };
+        return { protein, carbs, fat, calories, fiber };
     }, [todayLog.eaten]);
 
     const proteinNeeded = effectiveTargets.proteinPerDay - todayMacros.protein;
@@ -210,13 +212,13 @@ export function Dashboard() {
             </Card>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-3">
-                <Card className="text-center p-4 relative overflow-hidden">
-                    <div className="text-2xl font-bold text-white relative z-10">
+            <div className="grid grid-cols-4 gap-2">
+                <Card className="text-center p-3 relative overflow-hidden">
+                    <div className="text-xl font-bold text-white relative z-10">
                         {todayMacros.calories}
-                        <span className="text-xs font-normal text-zinc-500 ml-1">/ {effectiveTargets.caloriesPerDay}</span>
+                        <span className="text-[10px] font-normal text-zinc-500 ml-0.5">/{effectiveTargets.caloriesPerDay}</span>
                     </div>
-                    <div className="text-xs text-zinc-500 relative z-10">Calories</div>
+                    <div className="text-[10px] text-zinc-500 relative z-10">Calories</div>
                     {/* Calorie Cycling Indicator */}
                     {calorieCycling.enabled && (
                         <div className={`absolute top-0 right-0 p-1`}>
@@ -224,13 +226,17 @@ export function Dashboard() {
                         </div>
                     )}
                 </Card>
-                <Card className="text-center p-4">
-                    <div className="text-2xl font-bold text-white">{todayMacros.carbs}g</div>
-                    <div className="text-xs text-zinc-500">Carbs</div>
+                <Card className="text-center p-3">
+                    <div className="text-xl font-bold text-white">{todayMacros.carbs}g</div>
+                    <div className="text-[10px] text-zinc-500">Carbs</div>
                 </Card>
-                <Card className="text-center p-4">
-                    <div className="text-2xl font-bold text-white">{todayMacros.fat}g</div>
-                    <div className="text-xs text-zinc-500">Fat</div>
+                <Card className="text-center p-3">
+                    <div className="text-xl font-bold text-white">{todayMacros.fat}g</div>
+                    <div className="text-[10px] text-zinc-500">Fat</div>
+                </Card>
+                <Card className="text-center p-3">
+                    <div className="text-xl font-bold text-green-400">{todayMacros.fiber}g</div>
+                    <div className="text-[10px] text-zinc-500">Fiber</div>
                 </Card>
             </div>
 

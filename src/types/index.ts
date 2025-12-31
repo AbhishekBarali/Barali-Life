@@ -12,6 +12,7 @@ export interface Macros {
     carbs: number;
     fat: number;
     calories: number;
+    fiber?: number; // Optional - fiber content in grams
 }
 
 export interface FoodItem {

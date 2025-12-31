@@ -19,18 +19,22 @@ const BREAKFAST_PROTEINS = ['EGGS_BOILED', 'EGGS_OMELETTE', 'EGGS_FRIED', 'EGGS_
 const BREAKFAST_CARBS = ['BREAD_PEANUT_BUTTER', 'PARATHA', 'OATS', 'BREAD_HONEY', 'MUESLI'];
 const BREAKFAST_EXTRAS = ['BANANA', 'MILK', 'APPLE', 'TEA_PLAIN', 'COFFEE_MILK'];
 
-const LUNCH_MAINS = ['DAL_BHAT_CHICKEN', 'DAL_BHAT_MUTTON', 'DAL_BHAT_EGG', 'DAL_BHAT_FISH', 'DAL_BHAT_PANEER', 'DAL_BHAT_TARKARI'];
-const LUNCH_SIDES = ['SALAD', 'TARKARI', 'ACHAR', 'DAHI'];
+const LUNCH_MAINS = ['DAL_BHAT_CHICKEN', 'DAL_BHAT_MUTTON', 'DAL_BHAT_EGG', 'DAL_BHAT_FISH', 'DAL_BHAT_PANEER'];
+const LUNCH_SIDES = ['SALAD', 'VEG_TARKARI', 'ACHAR', 'DAHI', 'GOBI_TARKARI', 'SAAG'];
 
-const DINNER_MAINS = ['DAL_BHAT_EGG', 'DAL_BHAT_SOYA', 'DAL_BHAT_PANEER', 'ROTI_DAL', 'DAL_BHAT_CHICKEN', 'KHICHDI'];
-const DINNER_SIDES = ['DAHI', 'TARKARI', 'SALAD'];
+// Dinner mains - lighter options, no overlap with lunch proteins
+const DINNER_MAINS = ['DAL_BHAT_TARKARI', 'DAL_BHAT_EGG', 'ROTI_DAL', 'KHICHDI', 'DAL_BHAT_PANEER'];
+// More tarkari variety for dinner sides
+const DINNER_SIDES = ['DAHI', 'VEG_TARKARI', 'SALAD', 'SAAG', 'BODI_TARKARI', 'GOBI_TARKARI', 'ALOO_TARKARI'];
+// Specific tarkari pool for variety
+const TARKARI_OPTIONS = ['VEG_TARKARI', 'SAAG', 'GOBI_TARKARI', 'BODI_TARKARI', 'ALOO_TARKARI', 'PHARSI', 'BHANTA_TARKARI', 'LAUKA', 'PALUNGO'];
 
 const SNACK_PROTEINS = ['WHEY', 'PEANUTS', 'ALMONDS', 'ROASTED_CHANA', 'MIXED_NUTS', 'EGGS_BOILED'];
 const SNACK_EXTRAS = ['BANANA', 'APPLE', 'ORANGE', 'DIGESTIVE_BISCUITS', 'BREAD_PEANUT_BUTTER'];
 
 // Low effort pools for Burnt Out modes
 const QUICK_BREAKFAST = ['MUESLI', 'BREAD_PEANUT_BUTTER', 'OATS', 'BANANA', 'MILK'];
-const QUICK_MEALS = ['DAL_BHAT_TARKARI', 'KHICHDI', 'ROTI_DAL', 'INSTANT_NOODLES_EGG', 'BREAD_PEANUT_BUTTER'];
+const QUICK_MEALS = ['DAL_BHAT_TARKARI', 'KHICHDI', 'ROTI_DAL', 'DAL_BHAT_EGG'];
 const QUICK_SNACKS = ['PEANUTS', 'ROASTED_CHANA', 'BANANA', 'ALMONDS', 'DAHI'];
 
 // Helper to pick random item from array
@@ -277,16 +281,21 @@ export function generateRandomizedMeals(mode: Mode, inventory: string[] = []): R
             items: breakfastItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
 
-        // Lunch: 2 items (Main, Side)
-        const lunchItems = pickUniqueFromPools([LUNCH_MAINS, LUNCH_SIDES], inventory, 2);
+        // Lunch: 1 Main + 1 Side (with tarkari)
+        const lunchMain = pickSmart(LUNCH_MAINS, inventory);
+        const lunchTarkari = pickSmart(TARKARI_OPTIONS, inventory);
+        const lunchItems = [lunchMain, lunchTarkari];
 
         base['LUNCH'] = {
             ...base['LUNCH'],
             items: lunchItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
 
-        // Dinner: 3 items (Main, Side, Side)
-        const dinnerItems = pickUniqueFromPools([DINNER_MAINS, DINNER_SIDES], inventory, 3);
+        // Dinner: 1 Main + 1 Tarkari + 1 Side (no duplicate mains!)
+        const dinnerMain = pickSmart(DINNER_MAINS, inventory);
+        const dinnerTarkari = pickSmart(TARKARI_OPTIONS.filter(t => t !== lunchTarkari), inventory); // Different tarkari than lunch
+        const dinnerSide = pickSmart(['DAHI', 'SALAD'].filter(s => s !== lunchTarkari && s !== dinnerTarkari), inventory);
+        const dinnerItems = [dinnerMain, dinnerTarkari, dinnerSide];
 
         base['DINNER'] = {
             ...base['DINNER'],

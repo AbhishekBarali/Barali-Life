@@ -33,7 +33,7 @@ export function QuickAddFoodModal({ isOpen, onClose }: QuickAddFoodModalProps) {
     });
 
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState<'all' | 'protein' | 'junk' | 'snacks' | 'custom'>('all');
+    const [selectedCategory, setSelectedCategory] = useState<'all' | 'protein' | 'tarkari' | 'junk' | 'snacks' | 'custom'>('all');
 
     // Custom food state
     const [customName, setCustomName] = useState('');
@@ -53,6 +53,9 @@ export function QuickAddFoodModal({ isOpen, onClose }: QuickAddFoodModalProps) {
         // Category filter
         if (selectedCategory === 'protein') {
             return matchesSearch && food.macros.protein >= 8;
+        }
+        if (selectedCategory === 'tarkari') {
+            return matchesSearch && food.tags.includes('tarkari');
         }
         if (selectedCategory === 'junk') {
             return matchesSearch && food.tags.includes('junk');
@@ -145,6 +148,7 @@ export function QuickAddFoodModal({ isOpen, onClose }: QuickAddFoodModalProps) {
                         {[
                             { key: 'all', label: 'All', emoji: '📋' },
                             { key: 'protein', label: 'Protein', emoji: '💪' },
+                            { key: 'tarkari', label: 'Tarkari', emoji: '🥬' },
                             { key: 'snacks', label: 'Snacks', emoji: '🍎' },
                             { key: 'junk', label: 'Junk', emoji: '🍕' },
                             { key: 'custom', label: 'Custom', emoji: '✏️' },

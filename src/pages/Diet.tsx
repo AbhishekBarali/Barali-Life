@@ -57,7 +57,7 @@ export function Diet() {
 
     // Calculate today's macros
     const todayMacros = React.useMemo(() => {
-        let protein = 0, carbs = 0, fat = 0, calories = 0;
+        let protein = 0, carbs = 0, fat = 0, calories = 0, fiber = 0;
         for (const entry of todayLog.eaten) {
             if (entry.foodId === 'CUSTOM' && entry.customFood) {
                 protein += entry.customFood.protein;
@@ -71,10 +71,11 @@ export function Diet() {
                     carbs += food.macros.carbs;
                     fat += food.macros.fat;
                     calories += food.macros.calories;
+                    fiber += food.macros.fiber || 0;
                 }
             }
         }
-        return { protein, carbs, fat, calories };
+        return { protein, carbs, fat, calories, fiber };
     }, [todayLog.eaten]);
 
     const proteinProgress = Math.min(100, Math.round((todayMacros.protein / effectiveTargets.protein) * 100));
@@ -163,18 +164,18 @@ export function Diet() {
                     </div>
 
                     {/* Mini Stats Grid */}
-                    <div className="grid grid-cols-2 gap-4 pt-2">
-                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5 flex items-center justify-between">
-                            <div>
-                                <div className="text-xs text-zinc-400">Carbs</div>
-                                <div className="text-lg font-bold text-blue-400">{todayMacros.carbs}g</div>
-                            </div>
+                    <div className="grid grid-cols-3 gap-3 pt-2">
+                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5">
+                            <div className="text-xs text-zinc-400">Carbs</div>
+                            <div className="text-lg font-bold text-blue-400">{todayMacros.carbs}g</div>
                         </div>
-                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5 flex items-center justify-between">
-                            <div>
-                                <div className="text-xs text-zinc-400">Fats</div>
-                                <div className="text-lg font-bold text-purple-400">{todayMacros.fat}g</div>
-                            </div>
+                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5">
+                            <div className="text-xs text-zinc-400">Fats</div>
+                            <div className="text-lg font-bold text-purple-400">{todayMacros.fat}g</div>
+                        </div>
+                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5">
+                            <div className="text-xs text-zinc-400">Fiber</div>
+                            <div className="text-lg font-bold text-green-400">{todayMacros.fiber}g</div>
                         </div>
                     </div>
                 </div>
