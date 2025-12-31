@@ -379,9 +379,36 @@ export function Settings() {
                 </div>
             </Card>
 
-            {/* Personalization */}
+
+
+            {/* Preferences */}
             <Card>
-                <h2 className="text-lg font-semibold text-white mb-4">Personalization</h2>
+                <h2 className="text-lg font-semibold text-white mb-4">Preferences</h2>
+
+                {/* Smart Shuffle Toggle */}
+                <div className="p-4 bg-zinc-800/50 rounded-xl border border-zinc-700 mb-4">
+                    <div className="flex items-center justify-between mb-3">
+                        <div>
+                            <div className="font-medium text-white flex items-center gap-2">
+                                🔀 Smart Shuffle
+                                {useStore((state) => state.smartShuffle) && (
+                                    <span className="text-xs px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded-full">Active</span>
+                                )}
+                            </div>
+                            <div className="text-xs text-zinc-400">Prioritize items from your Inventory (80% chance)</div>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={useStore((state) => state.smartShuffle)}
+                                onChange={(e) => useStore.getState().setSmartShuffle(e.target.checked)}
+                            />
+                            <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                        </label>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-3">
                     <button
                         onClick={() => setTheme('default')}

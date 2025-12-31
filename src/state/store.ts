@@ -538,6 +538,13 @@ export const useStore = create<AppState>()(
                 return targets;
             },
 
+            // Smart Shuffle
+            smartShuffle: true, // Default to true
+
+            setSmartShuffle: (enabled: boolean) => {
+                set({ smartShuffle: enabled });
+            },
+
             // Dispatch action for various operations
             dispatch: (action: { type: string; payload?: any }) => {
                 const state = get();
@@ -546,8 +553,11 @@ export const useStore = create<AppState>()(
 
                 switch (action.type) {
                     case 'SHUFFLE_DAY':
-                        // Regenerate meals with some variety, prioritizing inventory
-                        const shuffledMeals = generateRandomizedMeals(state.mode, state.inventory.availableFoodIds);
+                        // Regenerate meals with some variety
+                        // If smartShuffle is on, use inventory. Else pass empty array.
+                        const inventoryToUse = state.smartShuffle ? state.inventory.availableFoodIds : [];
+                        const shuffledMeals = generateRandomizedMeals(state.mode, inventoryToUse);
+
                         set((s) => ({
                             logs: {
                                 ...s.logs,
@@ -565,6 +575,21 @@ export const useStore = create<AppState>()(
         }),
         {
             name: 'barali-life-storage',
+            partialize: (state) => ({
+                // Persist these fields
+                mode: state.mode,
+                theme: state.theme,
+                targets: state.targets,
+                profile: state.profile,
+                inventory: state.inventory,
+                blacklist: state.blacklist,
+                logs: state.logs,
+                streaks: state.streaks,
+                calorieCycling: state.calorieCycling,
+                smartShuffle: state.smartShuffle,
+                weightMode: state.weightMode,
+                workoutSchedule: state.workoutSchedule,
+            }),
         }
     )
 );

@@ -299,6 +299,10 @@ export interface AppState {
     setCalorieCycling: (config: CalorieCycling) => void;
     getDailyTargets: () => MacroTargets;
 
+    // Smart Shuffle
+    smartShuffle: boolean;
+    setSmartShuffle: (enabled: boolean) => void;
+
     // Actions
     getTodayLog: () => DayLog;
     setMode: (mode: Mode) => void;

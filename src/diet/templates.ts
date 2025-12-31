@@ -236,70 +236,96 @@ export function generateMealsForMode(mode: Mode): Record<MealSlot, MealPlan> {
 // Generate RANDOMIZED meals for variety
 // FIXED: Supports ALL modes and Inventory prioritization
 // ============================================
+// Helper to pick unique items from multiple pools
+function pickUniqueFromPools(pools: string[][], inventory: string[], count: number): string[] {
+    const selected = new Set<string>();
+    const allOptions = pools.flat();
+
+    // Safety break
+    let attempts = 0;
+    while (selected.size < count && attempts < 20) {
+        attempts++;
+        // Cycle through pools to distribute variety
+        const pool = pools[(selected.size) % pools.length];
+        const item = pickSmart(pool, inventory);
+        selected.add(item);
+    }
+
+    return Array.from(selected);
+}
+
+// ============================================
+// Generate RANDOMIZED meals for variety
+// FIXED: Supports ALL modes and Inventory with NO DUPLICATES
+// ============================================
 export function generateRandomizedMeals(mode: Mode, inventory: string[] = []): Record<MealSlot, MealPlan> {
     const base = generateMealsForMode(mode);
 
     // Apply shuffling logic based on mode type
     if (mode === 'STANDARD_DAY' || mode === 'COLLEGE_RUSH' || mode === 'SUNDAY_SPECIAL') {
         // High effort / Normal shuffle
-        const breakfastProtein = pickSmart(BREAKFAST_PROTEINS, inventory);
-        const breakfastCarb = pickSmart(BREAKFAST_CARBS, inventory);
-        const breakfastExtra = pickSmart(BREAKFAST_EXTRAS, inventory);
+
+        // Breakfast: 3 items (Protein, Carb, Extra)
+        const breakfastItems = pickUniqueFromPools(
+            [BREAKFAST_PROTEINS, BREAKFAST_CARBS, BREAKFAST_EXTRAS],
+            inventory,
+            3
+        );
 
         base['BREAKFAST'] = {
             ...base['BREAKFAST'],
-            items: [getFood(breakfastProtein as any), getFood(breakfastCarb as any), getFood(breakfastExtra as any)].filter(Boolean) as FoodItem[],
+            items: breakfastItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
 
-        const lunchMain = pickSmart(LUNCH_MAINS, inventory);
-        const lunchSide = pickSmart(LUNCH_SIDES, inventory);
+        // Lunch: 2 items (Main, Side)
+        const lunchItems = pickUniqueFromPools([LUNCH_MAINS, LUNCH_SIDES], inventory, 2);
 
         base['LUNCH'] = {
             ...base['LUNCH'],
-            items: [getFood(lunchMain as any), getFood(lunchSide as any)].filter(Boolean) as FoodItem[],
+            items: lunchItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
 
-        const dinnerMain = pickSmart(DINNER_MAINS, inventory);
-        const dinnerSide = pickSmart(DINNER_SIDES, inventory);
+        // Dinner: 3 items (Main, Side, Side)
+        const dinnerItems = pickUniqueFromPools([DINNER_MAINS, DINNER_SIDES], inventory, 3);
 
         base['DINNER'] = {
             ...base['DINNER'],
-            items: [getFood(dinnerMain as any), getFood(dinnerSide as any)].filter(Boolean) as FoodItem[],
+            items: dinnerItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
 
         // Randomize snacks
-        const snackProtein = pickSmart(SNACK_PROTEINS, inventory);
-        const snackExtra = pickSmart(SNACK_EXTRAS, inventory);
+        const snackItems = pickUniqueFromPools([SNACK_PROTEINS, SNACK_EXTRAS], inventory, 2);
+
         // Apply to Morning or Evening depending on mode slot
         if (base['MORNING_SNACK']) {
-            base['MORNING_SNACK'].items = [getFood(snackExtra as any), getFood(snackProtein as any)].filter(Boolean) as FoodItem[];
-            // Reverse order sometimes for variety? Nah keep simple
+            base['MORNING_SNACK'].items = snackItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[];
         }
     }
     else if (mode.includes('BURNT_OUT')) {
         // Low effort shuffle (pick from quick pools)
-        const quickBreakfast = pickSmart(QUICK_BREAKFAST, inventory);
-        const quickBreakfastExtra = pickSmart(BREAKFAST_EXTRAS, inventory);
+
+        // Breakfast: 2 items
+        const quickBreakfastItems = pickUniqueFromPools([QUICK_BREAKFAST, BREAKFAST_EXTRAS], inventory, 2);
 
         base['BREAKFAST'] = {
             ...base['BREAKFAST'],
-            items: [getFood(quickBreakfast as any), getFood(quickBreakfastExtra as any)].filter(Boolean) as FoodItem[],
+            items: quickBreakfastItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
 
-        const quickMeal1 = pickSmart(QUICK_MEALS, inventory);
-        const quickSide1 = pickSmart(['DAHI', 'ACHAR', 'SALAD'], inventory);
+        // Lunch: 2 items
+        const quickLunchItems = pickUniqueFromPools([QUICK_MEALS, ['DAHI', 'ACHAR', 'SALAD']], inventory, 2);
 
         base['LUNCH'] = {
             ...base['LUNCH'],
-            items: [getFood(quickMeal1 as any), getFood(quickSide1 as any)].filter(Boolean) as FoodItem[],
+            items: quickLunchItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
 
-        const quickMeal2 = pickSmart(QUICK_MEALS, inventory);
-        const quickSide2 = pickSmart(['DAHI', 'SALAD'], inventory);
+        // Dinner: 2 items
+        const quickDinnerItems = pickUniqueFromPools([QUICK_MEALS, ['DAHI', 'SALAD']], inventory, 2);
 
         base['DINNER'] = {
             ...base['DINNER'],
-            items: [getFood(quickMeal2 as any), getFood(quickSide2 as any)].filter(Boolean) as FoodItem[],
+            items: quickDinnerItems.map(id => getFood(id as any)).filter(Boolean) as FoodItem[],
         };
     }
 
