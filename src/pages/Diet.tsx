@@ -122,9 +122,6 @@ export function Diet() {
                         <h2 className="text-lg font-bold text-white flex items-center gap-2">
                             <span>📊</span> Daily Targets
                         </h2>
-                        <div className="text-xs text-zinc-400 bg-surface-700/50 px-2 py-1 rounded-lg">
-                            {Math.round(todayMacros.calories / effectiveTargets.calories * 100)}% Complete
-                        </div>
                     </div>
 
                     {/* Protein Bar - The Hero */}

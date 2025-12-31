@@ -275,29 +275,32 @@ export function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* Tiffin Ideas Button - only for MORNING_SNACK */}
-                                {slot === 'MORNING_SNACK' && (
-                                    <button
-                                        onClick={() => setShowTiffinIdeas(true)}
-                                        className="px-3 py-1.5 bg-purple-500/20 text-purple-400 rounded-lg text-xs font-medium hover:bg-purple-500/30 transition-colors flex items-center gap-1"
-                                    >
-                                        <span>💡</span>
-                                        <span>Ideas</span>
-                                    </button>
-                                )}
+                                {/* Right side: Ideas button + protein count */}
+                                <div className="flex items-center gap-2">
+                                    {/* Tiffin Ideas Button - only for MORNING_SNACK */}
+                                    {slot === 'MORNING_SNACK' && (
+                                        <button
+                                            onClick={() => setShowTiffinIdeas(true)}
+                                            className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded-lg text-xs font-medium hover:bg-purple-500/30 transition-colors flex items-center gap-1"
+                                        >
+                                            <span>💡</span>
+                                            <span>Ideas</span>
+                                        </button>
+                                    )}
 
-                                {eatenInSlot.length > 0 && (
-                                    <div className="text-sm text-primary">
-                                        +{eatenInSlot.reduce((sum, e) => {
-                                            if (e.foodId === 'CUSTOM' && e.customFood) {
-                                                return sum + e.customFood.protein;
-                                            } else if (e.foodId !== 'CUSTOM') {
-                                                return sum + (FOOD_DATABASE[e.foodId]?.macros.protein || 0);
-                                            }
-                                            return sum;
-                                        }, 0)}g
-                                    </div>
-                                )}
+                                    {eatenInSlot.length > 0 && (
+                                        <div className="text-sm text-primary">
+                                            +{eatenInSlot.reduce((sum, e) => {
+                                                if (e.foodId === 'CUSTOM' && e.customFood) {
+                                                    return sum + e.customFood.protein;
+                                                } else if (e.foodId !== 'CUSTOM') {
+                                                    return sum + (FOOD_DATABASE[e.foodId]?.macros.protein || 0);
+                                                }
+                                                return sum;
+                                            }, 0)}g
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Meal note - Always show since we removed the weird boolean logic */}

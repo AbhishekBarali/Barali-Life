@@ -60,90 +60,109 @@ function pickSmart(pool: string[], inventory: string[]): string {
 
 // ============================================
 // BASE Template definitions for each mode
-// 4 modes: STANDARD_DAY, COLLEGE_RUSH, BURNT_OUT, BURNT_OUT_COLLEGE
+// TARGET: ~2100 kcal baseline (scaling will adjust to user target)
+// FIBER TARGET: 25g+ per day
 // ============================================
 const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention: MealIntention; note?: string }>> = {
     // STANDARD DAY - Normal 7 AM wake, gym at 2 PM
+    // Calories: 400 + 300 + 500 + 250 + 550 = 2000 kcal
     STANDARD_DAY: {
         BREAKFAST: {
-            items: ['EGGS_BOILED', 'BREAD_PEANUT_BUTTER', 'BANANA', 'MILK'],
+            // 140 + 170 + 105 = 415 kcal, 19g protein
+            items: ['EGGS_BOILED', 'OATS', 'BANANA'],
             intention: 'PROTEIN_FOCUS',
-            note: 'Start with protein',
-        },
-        LUNCH: {
-            items: ['DAL_BHAT_CHICKEN', 'SALAD'],
-            intention: 'BALANCED',
-            note: 'Big lunch',
+            note: 'Start with protein + fiber',
         },
         MORNING_SNACK: {
+            // 180 + 95 = 275 kcal, 5g protein
             items: ['MIXED_NUTS', 'APPLE'],
             intention: 'LIGHT',
-            note: 'Pre-workout snack',
+            note: 'Pre-workout energy',
+        },
+        LUNCH: {
+            // 500 + 90 = 590 kcal, 38g protein, 4g fiber
+            items: ['DAL_BHAT_CHICKEN', 'SAAG'],
+            intention: 'BALANCED',
+            note: 'Big lunch with greens',
         },
         EVENING_SNACK: {
+            // 120 + 105 = 225 kcal, 26g protein
             items: ['WHEY', 'BANANA'],
             intention: 'PROTEIN_FOCUS',
             note: 'Post-gym protein',
         },
         DINNER: {
-            items: ['DAL_BHAT_EGG', 'TARKARI', 'DAHI'],
+            // 430 + 90 + 100 = 620 kcal, 18g protein, 7g fiber
+            items: ['DAL_BHAT_TARKARI', 'GOBI_TARKARI', 'DAHI'],
             intention: 'BALANCED',
-            note: 'Light & balanced',
+            note: 'Light dinner with vegetables',
         },
     },
 
     // COLLEGE_RUSH - 5:30 AM wake, tiffin at 9:05, return home 12 PM
+    // Calories: 350 + 320 + 550 + 225 + 530 = 1975 kcal
     COLLEGE_RUSH: {
         BREAKFAST: {
-            items: ['BREAD_PEANUT_BUTTER', 'BANANA', 'MILK'],
+            // 350 (less than before) - bread PB + banana
+            items: ['BREAD_PEANUT_BUTTER', 'BANANA'],
             intention: 'LIGHT',
-            note: '5:30 AM - Quick! No time to cook',
+            note: '5:30 AM - Quick! No cooking',
         },
         MORNING_SNACK: {
-            items: ['PARATHA', 'EGGS_BOILED'],
+            // 140 + 180 = 320 kcal, 18g protein (tiffin)
+            items: ['EGGS_BOILED', 'PARATHA'],
             intention: 'PROTEIN_FOCUS',
             note: '🍱 Tiffin - packed from home',
         },
         LUNCH: {
-            items: ['DAL_BHAT_CHICKEN', 'SALAD'],
+            // 500 + 50 = 550 kcal, 26g protein
+            items: ['DAL_BHAT_EGG', 'SALAD'],
             intention: 'BALANCED',
-            note: '12 PM - Home, big lunch before gym',
+            note: '12 PM - Home lunch with veggies',
         },
         EVENING_SNACK: {
+            // 120 + 105 = 225 kcal, 26g protein
             items: ['WHEY', 'BANANA'],
             intention: 'PROTEIN_FOCUS',
-            note: '4 PM Post-gym',
+            note: '4 PM Post-gym protein',
         },
         DINNER: {
-            items: ['DAL_BHAT_EGG', 'DAHI'],
+            // 430 + 100 = 530 kcal, 14g protein, 6g fiber
+            items: ['DAL_BHAT_TARKARI', 'DAHI'],
             intention: 'BALANCED',
-            note: '7:30 PM Dinner',
+            note: '7:30 PM Light dinner',
         },
     },
 
     // BURNT OUT - Low energy day, 7 AM wake, minimal cooking
+    // Calories: 350 + 200 + 450 + 225 + 400 = 1625 kcal (lighter day)
     BURNT_OUT: {
         BREAKFAST: {
-            items: ['MUESLI', 'BANANA', 'MILK'],
+            // 200 + 105 = 305 kcal, 12g protein
+            items: ['MUESLI_DAHI', 'BANANA'],
             intention: 'LIGHT',
-            note: '7 AM - No cooking needed',
+            note: '7 AM - Zero cooking',
+        },
+        MORNING_SNACK: {
+            // 150 + 95 = 245 kcal, 8g protein
+            items: ['PEANUTS', 'APPLE'],
+            intention: 'LIGHT',
+            note: 'Easy protein snack',
         },
         LUNCH: {
+            // 430 + 100 = 530 kcal, 14g protein
             items: ['DAL_BHAT_TARKARI', 'DAHI'],
             intention: 'LIGHT',
             note: 'Simple dal bhat',
         },
-        MORNING_SNACK: {
-            items: ['PEANUTS', 'ORANGE'],
-            intention: 'LIGHT',
-            note: 'Light snack',
-        },
         EVENING_SNACK: {
-            items: ['WHEY', 'BANANA'],
+            // 120 kcal, 25g protein
+            items: ['WHEY'],
             intention: 'PROTEIN_FOCUS',
-            note: '4 PM - Easy protein',
+            note: '4 PM - Easy protein boost',
         },
         DINNER: {
+            // 420 + 100 = 520 kcal, 18g protein
             items: ['ROTI_DAL', 'DAHI'],
             intention: 'LIGHT',
             note: 'Simple roti dal',
@@ -151,60 +170,72 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
     },
 
     // BURNT OUT COLLEGE - Low energy college day, 5:30 AM wake
+    // Calories: 280 + 450 + 430 + 120 + 350 = 1630 kcal (low energy)
     BURNT_OUT_COLLEGE: {
         BREAKFAST: {
-            items: ['MUESLI', 'BANANA', 'MILK'],
+            // 170 + 105 = 275 kcal, 7g protein
+            items: ['OATS', 'BANANA'],
             intention: 'LIGHT',
             note: 'Zero effort breakfast',
         },
         MORNING_SNACK: {
+            // 350 + 95 = 445 kcal, 13g protein (tiffin)
             items: ['BREAD_PEANUT_BUTTER', 'APPLE'],
             intention: 'LIGHT',
             note: '🍱 Tiffin - easy to pack',
         },
         LUNCH: {
-            items: ['DAL_BHAT_TARKARI', 'DAHI'],
+            // 430 kcal, 14g protein
+            items: ['DAL_BHAT_TARKARI'],
             intention: 'LIGHT',
             note: 'Simple home meal',
         },
         EVENING_SNACK: {
+            // 120 kcal, 25g protein
             items: ['WHEY'],
             intention: 'PROTEIN_FOCUS',
             note: '4 PM - Skip gym if tired',
         },
         DINNER: {
+            // 350 + 100 = 450 kcal, 15g protein
             items: ['KHICHDI', 'DAHI'],
             intention: 'LIGHT',
             note: 'Super easy khichdi',
         },
     },
 
-    // SUNDAY SPECIAL
+    // SUNDAY SPECIAL - Rest day, home cooking
+    // Calories: 450 + 350 + 600 + 200 + 600 = 2200 kcal (feast day)
     SUNDAY_SPECIAL: {
         BREAKFAST: {
-            items: ['MILK', 'BANANA', 'ROASTED_CHANA'],
-            intention: 'LIGHT',
-            note: 'Quick before leaving',
+            // 180 + 180 + 150 = 510 kcal, 16g protein
+            items: ['EGGS_OMELETTE', 'PARATHA', 'MILK'],
+            intention: 'BALANCED',
+            note: 'Leisurely breakfast',
         },
         MORNING_SNACK: {
-            items: ['EGGS_BOILED', 'DAHI'],
-            intention: 'PROTEIN_FOCUS',
-            note: '🍱 Tiffin at 9:15 AM',
+            // 170 + 105 = 275 kcal, 7g protein
+            items: ['OATS', 'BANANA'],
+            intention: 'LIGHT',
+            note: 'Mid-morning fiber',
         },
         LUNCH: {
-            items: ['DAL_BHAT_CHICKEN', 'TARKARI', 'SALAD'],
+            // 550 + 90 = 640 kcal, 40g protein, 4g fiber
+            items: ['DAL_BHAT_MUTTON', 'SAAG'],
             intention: 'BALANCED',
-            note: 'Late lunch after bus',
+            note: 'Sunday feast!',
         },
         EVENING_SNACK: {
-            items: ['DAHI', 'BANANA'],
+            // 180 + 100 = 280 kcal, 12g protein
+            items: ['MIXED_NUTS', 'DAHI'],
             intention: 'LIGHT',
-            note: 'Light snack (no gym)',
+            note: 'Relaxed snacking',
         },
         DINNER: {
-            items: ['DAL_BHAT_EGG', 'TARKARI', 'DAHI'],
+            // 500 + 90 + 100 = 690 kcal, 35g protein, 7g fiber
+            items: ['DAL_BHAT_CHICKEN', 'BODI_TARKARI', 'DAHI'],
             intention: 'BALANCED',
-            note: 'Dinner',
+            note: 'Family dinner with veggies',
         },
     },
 };
