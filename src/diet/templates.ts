@@ -12,22 +12,26 @@ import { getFood, FOOD_DATABASE } from './foods';
 // ============================================
 
 // Variety pools - pick random items from these for variety
+// ============================================
+// Variety pools - pick random items from these for variety
+// ============================================
 const BREAKFAST_PROTEINS = ['EGGS_BOILED', 'EGGS_OMELETTE', 'EGGS_FRIED', 'EGGS_BHURJI'];
 const BREAKFAST_CARBS = ['BREAD_PEANUT_BUTTER', 'PARATHA', 'OATS', 'BREAD_HONEY', 'MUESLI'];
 const BREAKFAST_EXTRAS = ['BANANA', 'MILK', 'APPLE', 'TEA_PLAIN', 'COFFEE_MILK'];
 
-const LUNCH_MAINS = ['DAL_BHAT_CHICKEN', 'DAL_BHAT_MUTTON', 'DAL_BHAT_EGG', 'DAL_BHAT_FISH', 'DAL_BHAT_PANEER'];
+const LUNCH_MAINS = ['DAL_BHAT_CHICKEN', 'DAL_BHAT_MUTTON', 'DAL_BHAT_EGG', 'DAL_BHAT_FISH', 'DAL_BHAT_PANEER', 'DAL_BHAT_TARKARI'];
 const LUNCH_SIDES = ['SALAD', 'TARKARI', 'ACHAR', 'DAHI'];
 
-const DINNER_MAINS = ['DAL_BHAT_EGG', 'DAL_BHAT_SOYA', 'DAL_BHAT_PANEER', 'ROTI_DAL', 'DAL_BHAT_CHICKEN'];
+const DINNER_MAINS = ['DAL_BHAT_EGG', 'DAL_BHAT_SOYA', 'DAL_BHAT_PANEER', 'ROTI_DAL', 'DAL_BHAT_CHICKEN', 'KHICHDI'];
 const DINNER_SIDES = ['DAHI', 'TARKARI', 'SALAD'];
 
-const SNACK_PROTEINS = ['WHEY', 'PEANUTS', 'ALMONDS', 'ROASTED_CHANA', 'MIXED_NUTS'];
-const SNACK_EXTRAS = ['BANANA', 'APPLE', 'ORANGE', 'DIGESTIVE_BISCUITS'];
+const SNACK_PROTEINS = ['WHEY', 'PEANUTS', 'ALMONDS', 'ROASTED_CHANA', 'MIXED_NUTS', 'EGGS_BOILED'];
+const SNACK_EXTRAS = ['BANANA', 'APPLE', 'ORANGE', 'DIGESTIVE_BISCUITS', 'BREAD_PEANUT_BUTTER'];
 
-// Social mode specific
-const SOCIAL_LUNCHES = ['BUFF_MOMO', 'DAL_BHAT_CHICKEN', 'CHOWMEIN', 'BURGER'];
-const SOCIAL_DINNERS = ['BUFF_MOMO', 'PIZZA', 'CHOWMEIN', 'DAL_BHAT_CHICKEN', 'CHICKEN_SEKUWA'];
+// Low effort pools for Burnt Out modes
+const QUICK_BREAKFAST = ['MUESLI', 'BREAD_PEANUT_BUTTER', 'OATS', 'BANANA', 'MILK'];
+const QUICK_MEALS = ['DAL_BHAT_TARKARI', 'KHICHDI', 'ROTI_DAL', 'INSTANT_NOODLES_EGG', 'BREAD_PEANUT_BUTTER'];
+const QUICK_SNACKS = ['PEANUTS', 'ROASTED_CHANA', 'BANANA', 'ALMONDS', 'DAHI'];
 
 // Helper to pick random item from array
 function pickRandom<T>(arr: T[]): T {
@@ -38,6 +42,16 @@ function pickRandom<T>(arr: T[]): T {
 function pickRandomMany<T>(arr: T[], count: number): T[] {
     const shuffled = [...arr].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, Math.min(count, arr.length));
+}
+
+// Helper to pick smart based on inventory
+function pickSmart(pool: string[], inventory: string[]): string {
+    const inStock = pool.filter(id => inventory.includes(id));
+    // 80% chance to pick from inventory if available
+    if (inStock.length > 0 && Math.random() < 0.8) {
+        return pickRandom(inStock);
+    }
+    return pickRandom(pool);
 }
 
 // ============================================
@@ -74,7 +88,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         },
     },
 
-    // COLLEGE RUSH - 5:30 AM wake, tiffin at 9:05, return home 12 PM
+    // COLLEGE_RUSH - 5:30 AM wake, tiffin at 9:05, return home 12 PM
     COLLEGE_RUSH: {
         BREAKFAST: {
             items: ['BREAD_PEANUT_BUTTER', 'BANANA', 'MILK'],
@@ -161,7 +175,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
         },
     },
 
-    // SUNDAY SPECIAL - College + commute, no gym, late lunch
+    // SUNDAY SPECIAL
     SUNDAY_SPECIAL: {
         BREAKFAST: {
             items: ['MILK', 'BANANA', 'ROASTED_CHANA'],
@@ -197,7 +211,7 @@ const MEAL_TEMPLATES: Record<Mode, Record<MealSlot, { items: string[]; intention
 export function generateMealsForMode(mode: Mode): Record<MealSlot, MealPlan> {
     const template = MEAL_TEMPLATES[mode];
 
-    // Fallback to STANDARD_DAY if mode doesn't exist in templates
+    // Fallback if template doesn't exist
     if (!template) {
         console.warn(`Template not found for mode "${mode}", falling back to STANDARD_DAY`);
         return generateMealsForMode('STANDARD_DAY');
@@ -220,41 +234,72 @@ export function generateMealsForMode(mode: Mode): Record<MealSlot, MealPlan> {
 
 // ============================================
 // Generate RANDOMIZED meals for variety
+// FIXED: Supports ALL modes and Inventory prioritization
 // ============================================
-export function generateRandomizedMeals(mode: Mode): Record<MealSlot, MealPlan> {
+export function generateRandomizedMeals(mode: Mode, inventory: string[] = []): Record<MealSlot, MealPlan> {
     const base = generateMealsForMode(mode);
 
-    // For standard and college modes, randomize some options
-    if (mode === 'STANDARD_DAY' || mode === 'COLLEGE_RUSH') {
-        // Randomize breakfast protein
-        const breakfastProtein = pickRandom(BREAKFAST_PROTEINS);
-        const breakfastCarb = pickRandom(BREAKFAST_CARBS);
-        const breakfastExtra = pickRandom(BREAKFAST_EXTRAS);
+    // Apply shuffling logic based on mode type
+    if (mode === 'STANDARD_DAY' || mode === 'COLLEGE_RUSH' || mode === 'SUNDAY_SPECIAL') {
+        // High effort / Normal shuffle
+        const breakfastProtein = pickSmart(BREAKFAST_PROTEINS, inventory);
+        const breakfastCarb = pickSmart(BREAKFAST_CARBS, inventory);
+        const breakfastExtra = pickSmart(BREAKFAST_EXTRAS, inventory);
 
         base['BREAKFAST'] = {
-            slot: 'BREAKFAST',
+            ...base['BREAKFAST'],
             items: [getFood(breakfastProtein as any), getFood(breakfastCarb as any), getFood(breakfastExtra as any)].filter(Boolean) as FoodItem[],
-            intention: 'PROTEIN_FOCUS',
         };
 
-        // Randomize lunch main
-        const lunchMain = pickRandom(LUNCH_MAINS);
-        const lunchSide = pickRandom(LUNCH_SIDES);
+        const lunchMain = pickSmart(LUNCH_MAINS, inventory);
+        const lunchSide = pickSmart(LUNCH_SIDES, inventory);
 
         base['LUNCH'] = {
-            slot: 'LUNCH',
+            ...base['LUNCH'],
             items: [getFood(lunchMain as any), getFood(lunchSide as any)].filter(Boolean) as FoodItem[],
-            intention: 'BALANCED',
         };
 
-        // Randomize dinner
-        const dinnerMain = pickRandom(DINNER_MAINS);
-        const dinnerSide = pickRandom(DINNER_SIDES);
+        const dinnerMain = pickSmart(DINNER_MAINS, inventory);
+        const dinnerSide = pickSmart(DINNER_SIDES, inventory);
 
         base['DINNER'] = {
-            slot: 'DINNER',
+            ...base['DINNER'],
             items: [getFood(dinnerMain as any), getFood(dinnerSide as any)].filter(Boolean) as FoodItem[],
-            intention: 'BALANCED',
+        };
+
+        // Randomize snacks
+        const snackProtein = pickSmart(SNACK_PROTEINS, inventory);
+        const snackExtra = pickSmart(SNACK_EXTRAS, inventory);
+        // Apply to Morning or Evening depending on mode slot
+        if (base['MORNING_SNACK']) {
+            base['MORNING_SNACK'].items = [getFood(snackExtra as any), getFood(snackProtein as any)].filter(Boolean) as FoodItem[];
+            // Reverse order sometimes for variety? Nah keep simple
+        }
+    }
+    else if (mode.includes('BURNT_OUT')) {
+        // Low effort shuffle (pick from quick pools)
+        const quickBreakfast = pickSmart(QUICK_BREAKFAST, inventory);
+        const quickBreakfastExtra = pickSmart(BREAKFAST_EXTRAS, inventory);
+
+        base['BREAKFAST'] = {
+            ...base['BREAKFAST'],
+            items: [getFood(quickBreakfast as any), getFood(quickBreakfastExtra as any)].filter(Boolean) as FoodItem[],
+        };
+
+        const quickMeal1 = pickSmart(QUICK_MEALS, inventory);
+        const quickSide1 = pickSmart(['DAHI', 'ACHAR', 'SALAD'], inventory);
+
+        base['LUNCH'] = {
+            ...base['LUNCH'],
+            items: [getFood(quickMeal1 as any), getFood(quickSide1 as any)].filter(Boolean) as FoodItem[],
+        };
+
+        const quickMeal2 = pickSmart(QUICK_MEALS, inventory);
+        const quickSide2 = pickSmart(['DAHI', 'SALAD'], inventory);
+
+        base['DINNER'] = {
+            ...base['DINNER'],
+            items: [getFood(quickMeal2 as any), getFood(quickSide2 as any)].filter(Boolean) as FoodItem[],
         };
     }
 

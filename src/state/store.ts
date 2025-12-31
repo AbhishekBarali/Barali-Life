@@ -546,8 +546,8 @@ export const useStore = create<AppState>()(
 
                 switch (action.type) {
                     case 'SHUFFLE_DAY':
-                        // Regenerate meals with some variety
-                        const shuffledMeals = generateRandomizedMeals(state.mode);
+                        // Regenerate meals with some variety, prioritizing inventory
+                        const shuffledMeals = generateRandomizedMeals(state.mode, state.inventory.availableFoodIds);
                         set((s) => ({
                             logs: {
                                 ...s.logs,
