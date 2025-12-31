@@ -85,6 +85,90 @@ const DEFAULT_TARGETS: MacroTargets = {
 // ============================================
 // Store
 // ============================================
+// ============================================
+// Helper: Calculate total calories in a meal plan
+// ============================================
+function calculateMealCalories(meals: Partial<Record<MealSlot, MealPlan>>): number {
+    let total = 0;
+    Object.values(meals).forEach(plan => {
+        if (!plan) return;
+        plan.items.forEach(item => {
+            total += item.macros.calories;
+        });
+    });
+    return total;
+}
+
+// ============================================
+// Helper: Scale meals to specific calorie target
+// ============================================
+function scaleMealsToTarget(meals: Record<MealSlot, MealPlan>, targetCalories: number): Record<MealSlot, MealPlan> {
+    const currentCalories = calculateMealCalories(meals);
+    if (currentCalories === 0) return meals;
+
+    const ratio = targetCalories / currentCalories;
+
+    // Safety bounds: Don't scale too wildly (0.5x to 1.5x)
+    // If ratio is extreme, maybe the template is just too far off, but we'll cap it
+    const safeRatio = Math.max(0.5, Math.min(1.5, ratio));
+
+    if (Math.abs(safeRatio - 1) < 0.05) return meals; // Ignore small changes
+
+    const newMeals = { ...meals };
+
+    // Iterate and scale
+    (Object.keys(newMeals) as MealSlot[]).forEach(slot => {
+        const plan = newMeals[slot];
+        if (!plan) return;
+
+        const newItems = plan.items.map(item => {
+            // Only scale items that make sense to scale (e.g. rice, chicken, oats)
+            // Don't scale "1 banana" or "2 slices bread" as easily (unless we want 1.2 bananas?)
+            // Let's scale 'g', 'ml', 'plate', 'bowl'.
+            // Exclude 'pieces', 'slices', 'medium', 'eggs' (discrete units)
+            const scalableUnits = ['g', 'ml', 'plate', 'bowl', 'cup'];
+
+            if (scalableUnits.includes(item.unit)) {
+                const newQty = item.qty * safeRatio;
+                // Round nicely:
+                // If g/ml, round to nearest 5 or 10
+                // If plate/bowl, round to 1 decimal
+                let roundedQty = newQty;
+                if (item.unit === 'g' || item.unit === 'ml') {
+                    roundedQty = Math.round(newQty / 5) * 5;
+                } else {
+                    roundedQty = Math.round(newQty * 10) / 10;
+                }
+
+                // Recalculate macros based on ACTUAL ratio of change (rounded / old)
+                const actualItemRatio = roundedQty / item.qty;
+
+                return {
+                    ...item,
+                    qty: roundedQty,
+                    macros: {
+                        protein: Math.round(item.macros.protein * actualItemRatio),
+                        carbs: Math.round(item.macros.carbs * actualItemRatio),
+                        fat: Math.round(item.macros.fat * actualItemRatio),
+                        calories: Math.round(item.macros.calories * actualItemRatio),
+                    }
+                };
+            }
+            return item;
+        });
+
+        newMeals[slot] = {
+            ...plan,
+            items: newItems
+        };
+    });
+
+    return newMeals;
+}
+
+// ============================================
+// Store
+// ============================================
 export const useStore = create<AppState>()(
     persist(
         (set, get) => ({
@@ -133,7 +217,18 @@ export const useStore = create<AppState>()(
                 const today = getTodayDateString();
 
                 if (!state.logs[today]) {
-                    const newLog = createDefaultDayLog(state.mode, state.workoutSchedule);
+                    let newLog = createDefaultDayLog(state.mode, state.workoutSchedule);
+
+                    // Scale newly created log to current targets
+                    // Note: We cast to Record<MealSlot, MealPlan> because createDefaultDayLog returns that
+                    // but types might be loose.
+                    const scaledMeals = scaleMealsToTarget(
+                        newLog.meals as Record<MealSlot, MealPlan>,
+                        state.targets.caloriesPerDay
+                    );
+
+                    newLog = { ...newLog, meals: scaledMeals };
+
                     set((s) => ({
                         logs: { ...s.logs, [today]: newLog },
                     }));
@@ -151,12 +246,16 @@ export const useStore = create<AppState>()(
                 const state = get();
                 const currentLog = state.logs[today];
                 if (currentLog) {
+                    let newMeals = generateMealsForMode(mode);
+                    // Scale new meals to target
+                    newMeals = scaleMealsToTarget(newMeals, state.targets.caloriesPerDay);
+
                     set((s) => ({
                         logs: {
                             ...s.logs,
                             [today]: {
                                 ...currentLog,
-                                meals: generateMealsForMode(mode),
+                                meals: newMeals,
                             },
                         },
                     }));
@@ -305,16 +404,69 @@ export const useStore = create<AppState>()(
 
             // Set targets
             setTargets: (targets: Partial<MacroTargets>) => {
-                set((s) => ({
-                    targets: { ...s.targets, ...targets },
-                }));
+                set((s) => {
+                    const newTargets = { ...s.targets, ...targets };
+
+                    // Update current day's meals if total calories changed
+                    const today = getTodayDateString();
+                    const currentLog = s.logs[today];
+                    let newLogs = s.logs;
+
+                    if (currentLog && targets.caloriesPerDay) {
+                        // Scale existing meals to new target
+                        const scaledMeals = scaleMealsToTarget(
+                            currentLog.meals as Record<MealSlot, MealPlan>,
+                            targets.caloriesPerDay
+                        );
+
+                        newLogs = {
+                            ...s.logs,
+                            [today]: {
+                                ...currentLog,
+                                meals: scaledMeals
+                            }
+                        };
+                    }
+
+                    return {
+                        targets: newTargets,
+                        logs: newLogs
+                    };
+                });
             },
 
             // Update targets (alias for setTargets)
             updateTargets: (targets: Partial<MacroTargets>) => {
-                set((s) => ({
-                    targets: { ...s.targets, ...targets },
-                }));
+                // Reuse logic by calling internal setter logic or just duplicating for simplicity with Zustand
+                set((s) => {
+                    const newTargets = { ...s.targets, ...targets };
+
+                    // Update current day's meals if total calories changed
+                    const today = getTodayDateString();
+                    const currentLog = s.logs[today];
+                    let newLogs = s.logs;
+
+                    if (currentLog && targets.caloriesPerDay) {
+                        // Scale existing meals to new target
+                        const scaledMeals = scaleMealsToTarget(
+                            currentLog.meals as Record<MealSlot, MealPlan>,
+                            targets.caloriesPerDay
+                        );
+
+                        newLogs = {
+                            ...s.logs,
+                            [today]: {
+                                ...currentLog,
+                                meals: scaledMeals
+                            }
+                        };
+                    }
+
+                    return {
+                        targets: newTargets,
+                        logs: newLogs
+                    };
+                });
             },
 
             // Set profile

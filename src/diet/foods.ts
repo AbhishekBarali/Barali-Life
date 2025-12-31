@@ -127,8 +127,9 @@ export const FOOD_DATABASE: Record<FoodId, FoodItem> = {
         label: 'Bread + Peanut Butter',
         qty: 2,
         unit: 'slices',
+        grams: 100, // 2 slices bread (60g) + 2 tbsp PB (32g)
         tags: ['protein', 'breakfast', 'quick'],
-        macros: { protein: 12, carbs: 35, fat: 16, calories: 330 },
+        macros: { protein: 12, carbs: 38, fat: 18, calories: 350 },
     },
     BREAD_HONEY: {
         id: 'BREAD_HONEY',
@@ -153,9 +154,10 @@ export const FOOD_DATABASE: Record<FoodId, FoodItem> = {
     MILK: {
         id: 'MILK',
         emoji: '🥛',
-        label: 'Milk',
-        qty: 1,
-        unit: 'glass',
+        label: 'Milk (Full Cream)',
+        qty: 250,
+        unit: 'ml',
+        grams: 250,
         tags: ['protein', 'breakfast', 'drink'],
         macros: { protein: 8, carbs: 12, fat: 8, calories: 150 },
     },
@@ -577,8 +579,9 @@ export const FOOD_DATABASE: Record<FoodId, FoodItem> = {
         label: 'Paneer',
         qty: 100,
         unit: 'g',
+        grams: 100,
         tags: ['protein', 'veg'],
-        macros: { protein: 18, carbs: 4, fat: 20, calories: 260 },
+        macros: { protein: 20, carbs: 3, fat: 22, calories: 280 },
     },
     PANEER_CURRY: {
         id: 'PANEER_CURRY',

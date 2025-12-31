@@ -61,8 +61,8 @@ export function RecipeModal({ foodId, isOpen, onClose }: RecipeModalProps) {
                                         <div className="flex items-center gap-3 text-sm text-zinc-400 mt-1">
                                             <span>⏱️ {recipe.time}</span>
                                             <span className={`px-2 py-0.5 rounded-full text-xs ${recipe.difficulty === 'Easy' ? 'bg-green-900 text-green-300' :
-                                                    recipe.difficulty === 'Medium' ? 'bg-yellow-900 text-yellow-300' :
-                                                        'bg-red-900 text-red-300'
+                                                recipe.difficulty === 'Medium' ? 'bg-yellow-900 text-yellow-300' :
+                                                    'bg-red-900 text-red-300'
                                                 }`}>
                                                 {recipe.difficulty}
                                             </span>
@@ -151,6 +151,16 @@ export function RecipeModal({ foodId, isOpen, onClose }: RecipeModalProps) {
                                         <div className="text-xs text-zinc-500">kcal</div>
                                     </div>
                                 </div>
+
+                                {/* Portion Note */}
+                                {recipe.portionNote && (
+                                    <div className="mt-3 pt-3 border-t border-zinc-700">
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span>📏</span>
+                                            <span className="text-zinc-300">{recipe.portionNote}</span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
