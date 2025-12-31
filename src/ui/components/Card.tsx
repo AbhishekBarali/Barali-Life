@@ -35,7 +35,7 @@ export function Card({
 
     // Status styles - completely consistent, no visual differences between cards
     const statusStyles = {
-        current: 'border-neon-teal/30 bg-gradient-to-br from-surface-800 to-surface-800/80 shadow-lg shadow-neon-teal/5 ring-1 ring-neon-teal/20',
+        current: 'border-primary/30 bg-gradient-to-br from-surface-800 to-surface-800/80 shadow-lg shadow-primary/5 ring-1 ring-primary/20',
         done: 'opacity-70 grayscale-[0.3]',
         default: '',
     };

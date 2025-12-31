@@ -413,57 +413,57 @@ export function Settings() {
                     <button
                         onClick={() => setTheme('default')}
                         className={`p-3 rounded-xl border text-left transition-all ${theme === 'default'
-                            ? 'bg-zinc-800 border-neon-teal'
-                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            ? 'bg-[var(--surface-800)] border-[var(--primary)] ring-1 ring-[var(--primary)]'
+                            : 'bg-[var(--surface-900)] border-transparent hover:bg-[var(--surface-800)]'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
-                            <div className="w-4 h-4 rounded-full bg-[#34d399]" />
-                            <span className="text-sm font-medium text-white">Vibey</span>
+                            <div className="w-4 h-4 rounded-full bg-[#38bdf8]" />
+                            <span className="text-sm font-medium text-[var(--text-primary)]">Midnight Pro</span>
                         </div>
-                        <div className="text-xs text-zinc-500">Dark + Emerald</div>
+                        <div className="text-xs text-[var(--text-secondary)]">Deep Blue & Sky</div>
                     </button>
 
                     <button
                         onClick={() => setTheme('apple')}
                         className={`p-3 rounded-xl border text-left transition-all ${theme === 'apple'
-                            ? 'bg-zinc-800 border-[#0A84FF]'
-                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            ? 'bg-[var(--surface-800)] border-[var(--primary)] ring-1 ring-[var(--primary)]'
+                            : 'bg-[var(--surface-900)] border-transparent hover:bg-[var(--surface-800)]'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
-                            <div className="w-4 h-4 rounded-full bg-[#0A84FF]" />
-                            <span className="text-sm font-medium text-white">Apple Pro</span>
+                            <div className="w-4 h-4 rounded-full bg-[#a78bfa]" />
+                            <span className="text-sm font-medium text-[var(--text-primary)]">Nebula</span>
                         </div>
-                        <div className="text-xs text-zinc-500">Sleek Blue</div>
+                        <div className="text-xs text-[var(--text-secondary)]">Soft Violet</div>
                     </button>
 
                     <button
                         onClick={() => setTheme('sunset')}
                         className={`p-3 rounded-xl border text-left transition-all ${theme === 'sunset'
-                            ? 'bg-zinc-800 border-orange-500'
-                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            ? 'bg-[var(--surface-800)] border-[var(--primary)] ring-1 ring-[var(--primary)]'
+                            : 'bg-[var(--surface-900)] border-transparent hover:bg-[var(--surface-800)]'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
-                            <div className="w-4 h-4 rounded-full bg-orange-500" />
-                            <span className="text-sm font-medium text-white">Sunset</span>
+                            <div className="w-4 h-4 rounded-full bg-[#e5e5e5]" />
+                            <span className="text-sm font-medium text-[var(--text-primary)]">Slate</span>
                         </div>
-                        <div className="text-xs text-zinc-500">Warm Stone</div>
+                        <div className="text-xs text-[var(--text-secondary)]">Monochrome</div>
                     </button>
 
                     <button
                         onClick={() => setTheme('neon')}
                         className={`p-3 rounded-xl border text-left transition-all ${theme === 'neon'
-                            ? 'bg-zinc-800 border-fuchsia-500'
-                            : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+                            ? 'bg-[var(--surface-800)] border-[var(--primary)] ring-1 ring-[var(--primary)]'
+                            : 'bg-[var(--surface-900)] border-transparent hover:bg-[var(--surface-800)]'
                             }`}
                     >
                         <div className="flex items-center gap-2 mb-2">
-                            <div className="w-4 h-4 rounded-full bg-fuchsia-500" />
-                            <span className="text-sm font-medium text-white">Neon</span>
+                            <div className="w-4 h-4 rounded-full bg-[#ffffff] border border-zinc-700" />
+                            <span className="text-sm font-medium text-[var(--text-primary)]">Obsidian</span>
                         </div>
-                        <div className="text-xs text-zinc-500">Cyberpunk</div>
+                        <div className="text-xs text-[var(--text-secondary)]">True Black</div>
                     </button>
                 </div>
             </Card>

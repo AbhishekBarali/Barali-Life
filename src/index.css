@@ -45,92 +45,112 @@
   --color-text-muted: var(--text-muted);
 }
 
-/* Base Theme Variables (Default / Vibey) */
+/* Base Theme Variables (Default = Midnight Pro) */
+/* Deep, professional slate blue. Think GitHub Dark / VS Code */
 :root {
-  --bg-base: #0c0c14;
-  --bg-elevated: #121219;
+  --bg-base: #0f172a;
+  /* Slate 900 */
+  --bg-elevated: #1e293b;
+  /* Slate 800 */
 
-  --surface-900: #16161f;
-  --surface-800: #1c1c27;
-  --surface-700: #24243a;
-  --surface-600: #2d2d42;
+  --surface-900: #1e293b;
+  /* Slate 800 */
+  --surface-800: #334155;
+  /* Slate 700 */
+  --surface-700: #475569;
+  /* Slate 600 */
+  --surface-600: #64748b;
+  /* Slate 500 */
 
-  --primary: #34d399;
-  /* Soft Emerald */
-  --primary-light: #6ee7b7;
-  --primary-dark: #10b981;
+  --primary: #38bdf8;
+  /* Sky 400 - Clear, professional blue */
+  --primary-light: #7dd3fc;
+  /* Sky 300 */
+  --primary-dark: #0284c7;
+  /* Sky 600 */
 
-  --secondary: #a78bfa;
-  /* Soft Violet */
-  --accent: #fbbf24;
+  --secondary: #818cf8;
+  /* Indigo 400 */
+  --accent: #f472b6;
+  /* Pink 400 - Subtle accent */
 
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --text-primary: #f8fafc;
+  /* Slate 50 */
+  --text-secondary: #94a3b8;
+  /* Slate 400 */
+  --text-muted: #64748b;
+  /* Slate 500 */
 }
 
-/* Apple Pro Theme (Sleek Blue/Black) */
+/* Nebula Theme (formerly Apple) */
+/* Soft, dreamy dark theme. Easy on eyes. */
 [data-theme="apple"] {
-  --bg-base: #000000;
-  --bg-elevated: #0a0a0a;
+  --bg-base: #18181b;
+  /* Zinc 950 */
+  --bg-elevated: #27272a;
+  /* Zinc 900 */
 
-  --surface-900: #1c1c1e;
-  --surface-800: #2c2c2e;
-  --surface-700: #3a3a3c;
-  --surface-600: #48484a;
+  --surface-900: #27272a;
+  --surface-800: #3f3f46;
+  --surface-700: #52525b;
+  --surface-600: #71717a;
 
-  --primary: #0A84FF;
-  /* System Blue */
-  --primary-light: #64D2FF;
-  --primary-dark: #0040DD;
+  --primary: #a78bfa;
+  /* Violet 400 */
+  --primary-light: #c4b5fd;
+  /* Violet 300 */
+  --primary-dark: #7c3aed;
+  /* Violet 600 */
 
-  --secondary: #5E5CE6;
-  /* Indigo */
-  --accent: #30D158;
-  /* Green */
+  --secondary: #2dd4bf;
+  /* Teal 400 */
+  --accent: #f43f5e;
+  /* Rose 500 */
 }
 
-/* Sunset Theme (Warm) */
+/* Slate / Corporate (formerly Sunset) */
+/* Neutral, monochromatic, serious. */
 [data-theme="sunset"] {
-  --bg-base: #1c1917;
-  /* Stone 900 */
-  --bg-elevated: #292524;
+  --bg-base: #171717;
+  /* Neutral 950 */
+  --bg-elevated: #262626;
+  /* Neutral 900 */
 
-  --surface-900: #44403c;
-  --surface-800: #57534e;
-  --surface-700: #78716c;
-  --surface-600: #a8a29e;
+  --surface-900: #262626;
+  --surface-800: #404040;
+  --surface-700: #525252;
+  --surface-600: #737373;
 
-  --primary: #f97316;
-  /* Orange */
-  --primary-light: #fdba74;
-  --primary-dark: #ea580c;
+  --primary: #e5e5e5;
+  /* Neutral 200 - Monochrome primary */
+  --primary-light: #ffffff;
+  --primary-dark: #a3a3a3;
 
-  --secondary: #e11d48;
-  /* Rose */
-  --accent: #f59e0b;
-  /* Amber */
+  --secondary: #d4d4d4;
+  --accent: #ef4444;
+  /* Red 500 - Only for important things */
 }
 
-/* Neon Theme (Cyberpunk) */
+/* Obsidian / Focus (formerly Neon) */
+/* True Black. High contrast. Zero visual noise. */
 [data-theme="neon"] {
-  --bg-base: #050505;
-  --bg-elevated: #0a0a0a;
+  --bg-base: #000000;
+  --bg-elevated: #121212;
 
-  --surface-900: #171717;
-  --surface-800: #262626;
-  --surface-700: #404040;
-  --surface-600: #525252;
+  --surface-900: #121212;
+  --surface-800: #1e1e1e;
+  --surface-700: #2d2d2d;
+  --surface-600: #3f3f3f;
 
-  --primary: #d946ef;
-  /* Fuchsia */
-  --primary-light: #f0abfc;
-  --primary-dark: #c026d3;
+  --primary: #ffffff;
+  /* Pure White */
+  --primary-light: #e5e5e5;
+  --primary-dark: #a3a3a3;
 
-  --secondary: #06b6d4;
-  /* Cyan */
-  --accent: #eab308;
-  /* Yellow */
+  --secondary: #525252;
+  /* Neutral 600 */
+  --accent: #22c55e;
+  /* Green 500 */
 }
 
 /* Scrollbar */

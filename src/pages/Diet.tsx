@@ -30,6 +30,7 @@ export function Diet() {
     const [showTiffinLibrary, setShowTiffinLibrary] = useState(false);
     const [tiffinCategory, setTiffinCategory] = useState<TiffinCategory>('QUICK_RUSH');
     const [selectedRecipe, setSelectedRecipe] = useState<FoodId | null>(null);
+    const [expandedTiffinId, setExpandedTiffinId] = useState<string | null>(null);
     const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * DIET_TIPS.length));
 
     const dayInfo = getDayInfo();
@@ -112,14 +113,14 @@ export function Diet() {
 
             {/* Macro Progress */}
             {/* Macro Progress - Premium UI */}
-            <Card className="relative overflow-hidden border border-white/5 bg-gradient-to-br from-surface-800 to-surface-900 shadow-xl">
+            <Card className="relative overflow-hidden border border-[var(--surface-700)] bg-gradient-to-br from-[var(--surface-800)] to-[var(--surface-900)] shadow-xl">
                 {/* Background decorative glow */}
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[var(--primary)]/5 rounded-full blur-3xl"></div>
 
                 <div className="space-y-6 relative">
                     {/* Header */}
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                        <h2 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
                             <span>📊</span> Daily Targets
                         </h2>
                     </div>
@@ -127,15 +128,15 @@ export function Diet() {
                     {/* Protein Bar - The Hero */}
                     <div>
                         <div className="flex justify-between items-end mb-2">
-                            <span className="text-zinc-400 text-sm font-medium">Protein</span>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-2xl font-bold text-neon-teal">{todayMacros.protein}g</span>
-                                <span className="text-sm text-zinc-500">/ {effectiveTargets.protein}g</span>
+                            <span className="text-[var(--text-secondary)] text-sm font-medium">Protein</span>
+                            <div className="flex items-baseline gap-1.5">
+                                <span className="text-xl font-bold text-[var(--primary)]">{todayMacros.protein}g</span>
+                                <span className="text-base text-[var(--text-muted)]">/ {effectiveTargets.protein}g</span>
                             </div>
                         </div>
-                        <div className="w-full h-4 bg-surface-950 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                        <div className="w-full h-4 bg-[var(--surface-950)] rounded-full overflow-hidden border border-white/5 shadow-inner">
                             <div
-                                className="h-full bg-gradient-to-r from-teal-600 via-neon-teal to-emerald-400 transition-all duration-700 ease-out relative"
+                                className="h-full bg-[var(--primary)] transition-all duration-700 ease-out relative"
                                 style={{ width: `${Math.min(proteinProgress, 100)}%` }}
                             >
                                 <div className="absolute inset-0 bg-white/20 opacity-0 animate-pulse-slow"></div>
@@ -146,15 +147,15 @@ export function Diet() {
                     {/* Calories Bar */}
                     <div>
                         <div className="flex justify-between items-end mb-2">
-                            <span className="text-zinc-400 text-sm font-medium">Calories</span>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-xl font-bold text-white">{todayMacros.calories}</span>
-                                <span className="text-sm text-zinc-500">/ {effectiveTargets.calories}</span>
+                            <span className="text-[var(--text-secondary)] text-sm font-medium">Calories</span>
+                            <div className="flex items-baseline gap-1.5">
+                                <span className="text-lg font-bold text-[var(--text-primary)]">{todayMacros.calories}</span>
+                                <span className="text-sm text-[var(--text-muted)]">/ {effectiveTargets.calories}</span>
                             </div>
                         </div>
-                        <div className="w-full h-3 bg-surface-950 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                        <div className="w-full h-3 bg-[var(--surface-950)] rounded-full overflow-hidden border border-white/5 shadow-inner">
                             <div
-                                className="h-full bg-gradient-to-r from-orange-500 to-yellow-400 transition-all duration-700 ease-out"
+                                className="h-full bg-[var(--text-secondary)] transition-all duration-700 ease-out"
                                 style={{ width: `${Math.min(calorieProgress, 100)}%` }}
                             />
                         </div>
@@ -162,17 +163,17 @@ export function Diet() {
 
                     {/* Mini Stats Grid */}
                     <div className="grid grid-cols-3 gap-3 pt-2">
-                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5">
-                            <div className="text-xs text-zinc-400">Carbs</div>
-                            <div className="text-lg font-bold text-blue-400">{todayMacros.carbs}g</div>
+                        <div className="p-3 bg-[var(--surface-700)]/30 rounded-xl border border-[var(--surface-700)]">
+                            <div className="text-xs text-[var(--text-secondary)]">Carbs</div>
+                            <div className="text-lg font-bold text-[var(--text-primary)]">{todayMacros.carbs}g</div>
                         </div>
-                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5">
-                            <div className="text-xs text-zinc-400">Fats</div>
-                            <div className="text-lg font-bold text-purple-400">{todayMacros.fat}g</div>
+                        <div className="p-3 bg-[var(--surface-700)]/30 rounded-xl border border-[var(--surface-700)]">
+                            <div className="text-xs text-[var(--text-secondary)]">Fats</div>
+                            <div className="text-lg font-bold text-[var(--text-primary)]">{todayMacros.fat}g</div>
                         </div>
-                        <div className="p-3 bg-surface-700/30 rounded-xl border border-white/5">
-                            <div className="text-xs text-zinc-400">Fiber</div>
-                            <div className="text-lg font-bold text-green-400">{todayMacros.fiber}g</div>
+                        <div className="p-3 bg-[var(--surface-700)]/30 rounded-xl border border-[var(--surface-700)]">
+                            <div className="text-xs text-[var(--text-secondary)]">Fiber</div>
+                            <div className="text-lg font-bold text-[var(--text-primary)]">{todayMacros.fiber}g</div>
                         </div>
                     </div>
                 </div>
@@ -181,22 +182,21 @@ export function Diet() {
             {/* Meal Timeline */}
             <MealTimeline />
 
-            {/* Training Day Nutrition Note - Moved to bottom */}
             {/* Daily Diet Tip - Shufflable */}
-            <Card className="border-neon-teal/20 bg-neon-teal/5">
+            <Card className="border-[var(--primary)]/20 bg-[var(--primary)]/5">
                 <div className="flex items-start gap-4">
-                    <span className="text-3xl animate-bounce-slow">{DIET_TIPS[tipIndex].emoji}</span>
+                    <span className="text-3xl animate-bounce-slow grayscale">{DIET_TIPS[tipIndex].emoji}</span>
                     <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
-                            <h3 className="font-bold text-neon-teal">Pro Tip</h3>
+                            <h3 className="font-bold text-[var(--primary)]">Pro Tip</h3>
                             <button
                                 onClick={() => setTipIndex(prev => (prev + 1) % DIET_TIPS.length)}
-                                className="text-xs bg-surface-800 hover:bg-surface-700 text-zinc-300 px-2 py-1 rounded-md transition-colors flex items-center gap-1"
+                                className="text-xs bg-[var(--surface-800)] hover:bg-[var(--surface-700)] text-[var(--text-secondary)] px-2 py-1 rounded-md transition-colors flex items-center gap-1"
                             >
                                 <span>🎲</span> Shuffle
                             </button>
                         </div>
-                        <p className="text-sm text-zinc-300 leading-relaxed">
+                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
                             {DIET_TIPS[tipIndex].text}
                         </p>
                     </div>
@@ -209,14 +209,14 @@ export function Diet() {
                 mode.includes('COLLEGE') && (
                     <button
                         onClick={() => setShowTiffinLibrary(!showTiffinLibrary)}
-                        className="w-full py-3 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-xl text-purple-400 font-medium transition-colors"
+                        className="w-full py-3 bg-[var(--surface-800)] hover:bg-[var(--surface-700)] border border-[var(--surface-700)] rounded-xl text-[var(--text-primary)] font-medium transition-colors"
                     >
                         🍱 {showTiffinLibrary ? 'Hide' : 'View'} Tiffin Ideas
                     </button>
                 )
             }
 
-            {/* Tiffin Library - Now with Categories! */}
+            {/* Tiffin Library - Now with Categories & Accordion! */}
             {
                 showTiffinLibrary && (
                     <div className="space-y-4">
@@ -230,11 +230,11 @@ export function Diet() {
                                         key={cat}
                                         onClick={() => setTiffinCategory(cat)}
                                         className={`flex-1 py-2 px-2 rounded-xl text-xs font-medium transition-all ${isActive
-                                            ? 'bg-purple-500 text-white'
-                                            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+                                            ? 'bg-[var(--surface-700)] text-[var(--text-primary)] border border-[var(--surface-600)]'
+                                            : 'bg-transparent text-[var(--text-secondary)] hover:bg-[var(--surface-800)] border border-transparent'
                                             }`}
                                     >
-                                        <span className="mr-1">{info.emoji}</span>
+                                        <span className="mr-1 grayscale">{info.emoji}</span>
                                         <span>{info.label}</span>
                                     </button>
                                 );
@@ -242,74 +242,97 @@ export function Diet() {
                         </div>
 
                         {/* Category Description */}
-                        <p className="text-xs text-zinc-500 text-center">
-                            {TIFFIN_CATEGORIES[tiffinCategory].emoji} {TIFFIN_CATEGORIES[tiffinCategory].description}
+                        <p className="text-xs text-[var(--text-muted)] text-center">
+                            {TIFFIN_CATEGORIES[tiffinCategory].description}
                         </p>
 
-                        {/* Tiffin List */}
                         <div className="space-y-3">
-                            {getTiffinsByCategory(tiffinCategory).map((tiffin) => (
-                                <Card key={tiffin.id} className="border-purple-500/20">
-                                    <div className="flex items-start gap-3">
-                                        <span className="text-2xl">{tiffin.emoji}</span>
-                                        <div className="flex-1">
-                                            <div className="font-medium text-white">{tiffin.name}</div>
-                                            <div className="text-sm text-zinc-400 mt-1">{tiffin.prepNote}</div>
+                            {getTiffinsByCategory(tiffinCategory).map((tiffin) => {
+                                const isExpanded = expandedTiffinId === tiffin.id;
+                                return (
+                                    <div
+                                        key={tiffin.id}
+                                        onClick={() => setExpandedTiffinId(isExpanded ? null : tiffin.id)}
+                                        className={`rounded-2xl border transition-all duration-200 cursor-pointer overflow-hidden ${isExpanded
+                                            ? 'bg-[var(--surface-800)] border-[var(--surface-600)]'
+                                            : 'bg-[var(--surface-800)]/40 border-[var(--surface-700)] hover:bg-[var(--surface-800)]'
+                                            }`}
+                                    >
+                                        <div className="p-4">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-2xl grayscale opacity-80">{tiffin.emoji}</span>
+                                                    <div>
+                                                        <div className="font-medium text-[var(--text-primary)]">{tiffin.name}</div>
+                                                        <div className="flex items-center gap-2 mt-1 text-xs">
+                                                            <span className="text-[var(--text-secondary)]">{tiffin.totalProtein}g protein</span>
+                                                            <span className="text-[var(--text-muted)]">•</span>
+                                                            <span className="text-[var(--text-muted)]">{tiffin.totalCalories} kcal</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className={`text-[var(--text-muted)] transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
+                                                    ▼
+                                                </div>
+                                            </div>
 
-                                            {/* Tip */}
-                                            {tiffin.tip && (
-                                                <div className="text-xs text-purple-400 mt-1 flex items-center gap-1">
-                                                    <span>💡</span>
-                                                    <span>{tiffin.tip}</span>
+                                            {/* Expanded Content */}
+                                            {isExpanded && (
+                                                <div className="mt-4 pt-4 border-t border-[var(--surface-700)] animate-in fade-in slide-in-from-top-2">
+                                                    <p className="text-sm text-[var(--text-secondary)] mb-3">{tiffin.prepNote}</p>
+
+                                                    {/* Tip */}
+                                                    {tiffin.tip && (
+                                                        <div className="text-xs text-[var(--text-muted)] mb-3 flex items-center gap-2 bg-[var(--surface-900)] p-2 rounded-lg border border-[var(--surface-700)]">
+                                                            <span>💡</span>
+                                                            <span>{tiffin.tip}</span>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Items with Recipe Links */}
+                                                    <div className="flex flex-wrap gap-2 mb-4">
+                                                        {tiffin.items.map((foodId) => {
+                                                            const food = getFood(foodId);
+                                                            const hasRecipeForItem = hasRecipe(foodId);
+                                                            return (
+                                                                <span
+                                                                    key={foodId}
+                                                                    className={`px-2 py-1 bg-[var(--surface-900)] rounded text-xs text-[var(--text-secondary)] border border-[var(--surface-700)] ${hasRecipeForItem ? 'cursor-pointer hover:bg-[var(--surface-800)] hover:border-[var(--text-muted)]' : ''
+                                                                        }`}
+                                                                    onClick={(e) => {
+                                                                        if (hasRecipeForItem) {
+                                                                            e.stopPropagation();
+                                                                            setSelectedRecipe(foodId);
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    {food.emoji} {food.label}
+                                                                    {hasRecipeForItem && ' 📖'}
+                                                                </span>
+                                                            );
+                                                        })}
+                                                    </div>
+
+                                                    {/* Quick Add Button */}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            tiffin.items.forEach(foodId => {
+                                                                logFood('MORNING_SNACK', foodId);
+                                                            });
+                                                            showToast(`Added ${tiffin.name} to Tiffin! 🍱`, 'success');
+                                                        }}
+                                                        className="w-full py-2 bg-[var(--surface-700)] hover:bg-[var(--surface-600)] text-[var(--text-primary)] rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 border border-[var(--surface-600)]"
+                                                    >
+                                                        <span>➕</span>
+                                                        <span>Quick Add to Tiffin</span>
+                                                    </button>
                                                 </div>
                                             )}
-
-                                            <div className="flex items-center gap-3 mt-2 text-xs">
-                                                <span className="text-green-400 font-medium">{tiffin.totalProtein}g protein</span>
-                                                <span className="text-zinc-500">{tiffin.totalCalories} kcal</span>
-                                                <span className="text-zinc-500">⏱ {tiffin.prepTime}</span>
-                                            </div>
-
-                                            {/* Items with Recipe Links */}
-                                            <div className="flex flex-wrap gap-1 mt-2">
-                                                {tiffin.items.map((foodId) => {
-                                                    const food = getFood(foodId);
-                                                    const hasRecipeForItem = hasRecipe(foodId);
-                                                    return (
-                                                        <span
-                                                            key={foodId}
-                                                            className={`px-2 py-0.5 bg-zinc-700/50 rounded text-xs text-zinc-400 ${hasRecipeForItem ? 'cursor-pointer hover:bg-zinc-600' : ''
-                                                                }`}
-                                                            onClick={() => {
-                                                                if (hasRecipeForItem) {
-                                                                    setSelectedRecipe(foodId);
-                                                                }
-                                                            }}
-                                                        >
-                                                            {food.emoji} {food.label}
-                                                            {hasRecipeForItem && ' 📖'}
-                                                        </span>
-                                                    );
-                                                })}
-                                            </div>
-
-                                            {/* Quick Add Button */}
-                                            <button
-                                                onClick={() => {
-                                                    tiffin.items.forEach(foodId => {
-                                                        logFood('MORNING_SNACK', foodId);
-                                                    });
-                                                    showToast(`Added ${tiffin.name} to Tiffin! 🍱`, 'success');
-                                                }}
-                                                className="mt-3 w-full py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
-                                            >
-                                                <span>➕</span>
-                                                <span>Quick Add to Tiffin</span>
-                                            </button>
                                         </div>
                                     </div>
-                                </Card>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 )

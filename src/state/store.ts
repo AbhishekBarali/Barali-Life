@@ -184,7 +184,7 @@ export const useStore = create<AppState>()(
         (set, get) => ({
             // Initial state
             mode: 'STANDARD_DAY' as Mode,
-            theme: 'default' as ThemeType, // Added theme
+            theme: 'neon' as ThemeType, // Added theme
             targets: DEFAULT_TARGETS,
             weightMode: 'MAINTAIN' as WeightMode,
             workoutSchedule: 'FOUR_DAY_PUSH_PULL' as WorkoutSchedule,

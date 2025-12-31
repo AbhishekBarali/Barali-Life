@@ -165,14 +165,14 @@ export function Dashboard() {
                     <span className="text-2xl select-none grayscale group-hover:grayscale-0 transition-all">{currentTip.emoji}</span>
                     <div className="flex-1 flex items-center justify-between gap-4">
                         <div>
-                            <div className="text-[10px] font-bold text-neon-teal uppercase tracking-widest mb-0.5 opacity-80">
+                            <div className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5 opacity-80">
                                 Daily Wisdom
                             </div>
                             <div className="text-sm text-zinc-300 font-medium leading-snug">
                                 {currentTip.text}
                             </div>
                         </div>
-                        <div className="text-zinc-600 group-hover:text-neon-teal transition-colors text-lg opacity-50 group-hover:opacity-100">
+                        <div className="text-zinc-600 group-hover:text-primary transition-colors text-lg opacity-50 group-hover:opacity-100">
                             →
                         </div>
                     </div>
@@ -187,14 +187,14 @@ export function Dashboard() {
                 <div className="text-center">
                     <div className="text-sm text-zinc-400 mb-2">Today's Protein</div>
                     <div className="text-4xl font-bold text-white mb-2">
-                        <span className="text-neon-teal">{todayMacros.protein}g</span>
+                        <span className="text-primary">{todayMacros.protein}g</span>
                         <span className="text-zinc-500 text-2xl"> / {effectiveTargets.proteinPerDay}g</span>
                     </div>
 
                     {/* Progress Bar */}
                     <div className="w-full h-4 bg-surface-600 rounded-full overflow-hidden mb-3">
                         <div
-                            className="h-full bg-gradient-to-r from-neon-teal to-green-400 transition-all duration-500"
+                            className="h-full bg-gradient-to-r from-primary to-green-400 transition-all duration-500"
                             style={{ width: `${proteinProgress}%` }}
                         />
                     </div>
@@ -211,32 +211,29 @@ export function Dashboard() {
                 </div>
             </Card>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-4 gap-2">
-                <Card className="text-center p-3 relative overflow-hidden">
-                    <div className="text-xl font-bold text-white relative z-10">
-                        {todayMacros.calories}
-                        <span className="text-[10px] font-normal text-zinc-500 ml-0.5">/{effectiveTargets.caloriesPerDay}</span>
+            {/* Quick Stats - Simplified */}
+            {/* Quick Stats - Simplified */}
+            <div className="grid grid-cols-3 gap-3">
+                <Card className="text-center p-3">
+                    <div className="flex items-baseline justify-center gap-1">
+                        <span className="text-lg font-bold text-[var(--text-primary)]">
+                            {todayMacros.calories}
+                        </span>
+                        <span className="text-sm font-normal text-[var(--text-muted)]">
+                            /{effectiveTargets.caloriesPerDay}
+                        </span>
                     </div>
-                    <div className="text-[10px] text-zinc-500 relative z-10">Calories</div>
-                    {/* Calorie Cycling Indicator */}
-                    {calorieCycling.enabled && (
-                        <div className={`absolute top-0 right-0 p-1`}>
-                            <div className={`w-2 h-2 rounded-full ${dayInfo.isGymDay ? 'bg-green-500' : 'bg-orange-500'}`}></div>
-                        </div>
-                    )}
+                    <div className="text-[10px] text-[var(--text-secondary)]">Calories</div>
                 </Card>
                 <Card className="text-center p-3">
-                    <div className="text-xl font-bold text-white">{todayMacros.carbs}g</div>
-                    <div className="text-[10px] text-zinc-500">Carbs</div>
+                    <div className="text-lg font-bold text-[var(--text-primary)]">
+                        {todayMacros.carbs}g
+                    </div>
+                    <div className="text-[10px] text-[var(--text-secondary)]">Carbs</div>
                 </Card>
                 <Card className="text-center p-3">
-                    <div className="text-xl font-bold text-white">{todayMacros.fat}g</div>
-                    <div className="text-[10px] text-zinc-500">Fat</div>
-                </Card>
-                <Card className="text-center p-3">
-                    <div className="text-xl font-bold text-green-400">{todayMacros.fiber}g</div>
-                    <div className="text-[10px] text-zinc-500">Fiber</div>
+                    <div className="text-lg font-bold text-[var(--text-primary)]">{todayMacros.fiber}g</div>
+                    <div className="text-[10px] text-[var(--text-secondary)]">Fiber</div>
                 </Card>
             </div>
 
@@ -305,7 +302,7 @@ export function Dashboard() {
 
                             {/* Meal note - Always show since we removed the weird boolean logic */}
                             {meal?.note && (
-                                <div className="text-sm text-zinc-400 mb-3 italic">
+                                <div className="text-sm text-zinc-400 mb-3">
                                     💡 {meal.note}
                                 </div>
                             )}
