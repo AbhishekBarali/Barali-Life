@@ -73,13 +73,13 @@ export function Dashboard() {
     const todayMacros = React.useMemo(() => {
         let protein = 0, carbs = 0, fat = 0, calories = 0, fiber = 0;
         for (const entry of todayLog.eaten) {
-            if (entry.foodId === 'CUSTOM' && entry.customFood) {
+            if (entry.foodId.startsWith('CUSTOM') && entry.customFood) {
                 protein += entry.customFood.protein;
                 carbs += entry.customFood.carbs;
                 fat += entry.customFood.fat;
                 calories += entry.customFood.calories;
                 // Custom foods may not have fiber
-            } else if (entry.foodId !== 'CUSTOM') {
+            } else if (!entry.foodId.startsWith('CUSTOM')) {
                 const food = FOOD_DATABASE[entry.foodId];
                 if (food) {
                     protein += food.macros.protein;

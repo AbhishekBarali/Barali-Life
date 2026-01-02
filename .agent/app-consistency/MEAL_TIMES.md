@@ -21,5 +21,6 @@
 ## Logic Updates
 - **Dynamic Ordering**: `MODE_MEAL_ORDER[mode]` ensures College mode displays `MORNING_SNACK` (Tiffin) *before* `LUNCH`.
 - **Labels**: "Dal Bhat" explicitly added to food labels (e.g. "Dal Bhat + Chicken") to clarify full meal.
+
 - **Tiffin**: 9:05 AM slot is explicitly Tiffin.
 - **Lunch**: 12:00 PM slot is explicitly "Lunch (Home)" for college modes.

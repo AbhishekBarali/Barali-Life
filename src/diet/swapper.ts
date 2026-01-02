@@ -188,6 +188,44 @@ const SPECIFIC_SWAPS: Partial<Record<FoodId, { alternatives: FoodId[]; hints: Pa
             ROASTED_CHANA: 'Dry snack version',
         },
     },
+    CHANA_EGG: {
+        alternatives: ['EGGS_BOILED', 'KALA_CHANA', 'CHANA_EGG_FRY', 'CHANA_BOILED', 'TOAST_EGG', 'DAL_BHAT_EGG'],
+        hints: {
+            EGGS_BOILED: 'Just eggs, less carbs',
+            KALA_CHANA: 'Veg option, no egg',
+            CHANA_EGG_FRY: 'Fried version',
+            CHANA_BOILED: 'Plain chana',
+            TOAST_EGG: 'Bread-based alternative',
+            DAL_BHAT_EGG: 'Full meal option',
+        },
+    },
+    CHANA_EGG_FRY: {
+        alternatives: ['CHANA_EGG', 'EGGS_OMELETTE', 'PANEER_BHURJI', 'DAL_BHAT_EGG'],
+        hints: {
+            CHANA_EGG: 'Less oil version',
+            EGGS_OMELETTE: 'Just eggs',
+            PANEER_BHURJI: 'Veg protein',
+            DAL_BHAT_EGG: 'Full meal',
+        },
+    },
+    CHANA_ALOO: {
+        alternatives: ['KALA_CHANA', 'CHANA_MASALA', 'CHANA_BOILED', 'ALOO_TARKARI'],
+        hints: {
+            KALA_CHANA: 'Without potato',
+            CHANA_MASALA: 'Spicier version',
+            CHANA_BOILED: 'Plain option',
+            ALOO_TARKARI: 'More potato',
+        },
+    },
+    CHANA_CHAAT: {
+        alternatives: ['ROASTED_CHANA', 'CHANA_BOILED', 'KALA_CHANA', 'SALAD'],
+        hints: {
+            ROASTED_CHANA: 'Dry snack version',
+            CHANA_BOILED: 'Plain boiled',
+            KALA_CHANA: 'Black chana',
+            SALAD: 'Fresh vegetables',
+        },
+    },
 
     // Whey
     WHEY: {
@@ -273,7 +311,7 @@ const FOOD_CATEGORIES: Record<string, FoodId[]> = {
     DAIRY: ['MILK', 'DAHI', 'LASSI', 'BUTTERMILK', 'PANEER', 'CHIURA_DAHI'],
     NUTS: ['PEANUTS', 'ALMONDS', 'CASHEWS', 'WALNUTS', 'MIXED_NUTS', 'ROASTED_CHANA', 'PEANUT_BUTTER'],
     FRUITS: ['BANANA', 'APPLE', 'ORANGE', 'MANGO', 'PAPAYA', 'POMEGRANATE'],
-    BREAKFAST: ['OATS', 'OATS_BANANA', 'OATS_HONEY', 'MUESLI', 'MUESLI_MILK', 'CORNFLAKES', 'CHIURA_DAHI', 'BREAD_PEANUT_BUTTER', 'TOAST_EGG', 'PARATHA', 'PARATHA_ALOO', 'SEL_ROTI', 'MALPUWA'],
+    BREAKFAST: ['OATS', 'OATS_BANANA', 'OATS_HONEY', 'MUESLI', 'MUESLI_MILK', 'CORNFLAKES', 'BREAD_PEANUT_BUTTER', 'TOAST_EGG', 'PARATHA', 'PARATHA_ALOO', 'SEL_ROTI', 'MALPUWA', 'CHANA_EGG', 'CHANA_EGG_FRY'],
     SNACKS: ['PEANUTS', 'ALMONDS', 'ROASTED_CHANA', 'MAKHANA', 'DIGESTIVE_BISCUIT', 'PROTEIN_BAR', 'DARK_CHOCOLATE', 'MARIE_BISCUIT', 'POPCORN', 'WAI_WAI_DRY', 'KURKURE', 'SUKUTI'],
     CHEAT: ['MOMO_BUFF', 'MOMO_FRIED', 'CHOWMEIN', 'WAI_WAI_DRY', 'KURKURE', 'SEL_ROTI', 'MALPUWA', 'COKE', 'BEER', 'SAMOSA'],
 };
